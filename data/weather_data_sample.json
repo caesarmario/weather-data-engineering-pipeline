@@ -1,0 +1,112 @@
+{
+    "Madrid, Spain": {
+        "location": {
+            "name": "Madrid",
+            "region": "Madrid",
+            "country": "Spain",
+            "lat": 40.4168,
+            "lon": -3.7038,
+            "tz_id": "Europe/Madrid",
+            "localtime_epoch": 1728266500,
+            "localtime": "2024-10-07 09:01"
+        },
+        "current": {
+            "last_updated": "2024-10-07 09:00",
+            "temp_c": 27.5,
+            "temp_f": 81.5,
+            "is_day": 1,
+            "condition": {
+                "text": "Sunny",
+                "code": 1000
+            }
+        },
+        "forecast": {
+            "forecastday": [
+                {
+                    "date": "2024-10-07",
+                    "date_epoch": 1728259200,
+                    "day": {
+                        "maxtemp_c": 30.0,
+                        "maxtemp_f": 86.0,
+                        "mintemp_c": 20.0,
+                        "mintemp_f": 68.0,
+                        "avgtemp_c": 25.0,
+                        "avgtemp_f": 77.0,
+                        "maxwind_mph": 9.0,
+                        "maxwind_kph": 14.5,
+                        "totalprecip_mm": 0.5,
+                        "totalprecip_in": 0.02,
+                        "totalsnow_cm": 0.0,
+                        "avgvis_km": 10.0,
+                        "avgvis_miles": 6.2,
+                        "avghumidity": 55,
+                        "daily_will_it_rain": 0,
+                        "daily_chance_of_rain": 5,
+                        "daily_will_it_snow": 0,
+                        "daily_chance_of_snow": 0,
+                        "condition": {
+                            "text": "Sunny",
+                            "code": 1000
+                        },
+                        "uv": 8.0
+                    }
+                }
+            ]
+        }
+    },
+    "Barcelona, Spain": {
+        "location": {
+            "name": "Barcelona",
+            "region": "Catalonia",
+            "country": "Spain",
+            "lat": 41.3874,
+            "lon": 2.1686,
+            "tz_id": "Europe/Madrid",
+            "localtime_epoch": 1728266501,
+            "localtime": "2024-10-07 09:02"
+        },
+        "current": {
+            "last_updated": "2024-10-07 08:50",
+            "temp_c": 26.8,
+            "temp_f": 80.2,
+            "is_day": 1,
+            "condition": {
+                "text": "Cloudy",
+                "code": 1003
+            }
+        },
+        "forecast": {
+            "forecastday": [
+                {
+                    "date": "2024-10-07",
+                    "date_epoch": 1728259200,
+                    "day": {
+                        "maxtemp_c": 28.0,
+                        "maxtemp_f": 82.4,
+                        "mintemp_c": 22.0,
+                        "mintemp_f": 71.6,
+                        "avgtemp_c": 25.0,
+                        "avgtemp_f": 77.0,
+                        "maxwind_mph": 7.0,
+                        "maxwind_kph": 11.2,
+                        "totalprecip_mm": 1.2,
+                        "totalprecip_in": 0.05,
+                        "totalsnow_cm": 0.0,
+                        "avgvis_km": 9.5,
+                        "avgvis_miles": 5.9,
+                        "avghumidity": 60,
+                        "daily_will_it_rain": 1,
+                        "daily_chance_of_rain": 20,
+                        "daily_will_it_snow": 0,
+                        "daily_chance_of_snow": 0,
+                        "condition": {
+                            "text": "Cloudy",
+                            "code": 1003
+                        },
+                        "uv": 7.0
+                    }
+                }
+            ]
+        }
+    }
+}
