@@ -1,0 +1,6 @@
+location_id,name,region,country,latitude,longitude,timezone_id,localtime_epoch,localtime,batch_id,load_dt
+"Bangkok, Thailand",Bangkok,Krung Thep,Thailand,13.75,100.5167,Asia/Bangkok,1728266500,2024-05-27 14:01,571acd69-ae5d-4a6e-afb3-26075d07e77c,2025-01-16 21:20:03
+"Chiang Mai, Thailand",Chiang Mai,Chiang Mai,Thailand,18.7903,98.9817,Asia/Bangkok,1728266501,2024-05-27 14:01,571acd69-ae5d-4a6e-afb3-26075d07e77c,2025-01-16 21:20:03
+"Phuket, Thailand",Phuket,Phuket,Thailand,7.8833,98.4,Asia/Bangkok,1728266501,2024-05-27 14:01,571acd69-ae5d-4a6e-afb3-26075d07e77c,2025-01-16 21:20:03
+"Pattaya, Thailand",Pattaya,Chon Buri,Thailand,12.9333,100.8833,Asia/Bangkok,1728266501,2024-05-27 14:01,571acd69-ae5d-4a6e-afb3-26075d07e77c,2025-01-16 21:20:03
+"Hat Yai, Thailand",Hat Yai,Songkhla,Thailand,7.0167,100.4667,Asia/Bangkok,1728266501,2024-05-27 14:01,571acd69-ae5d-4a6e-afb3-26075d07e77c,2025-01-16 21:20:03

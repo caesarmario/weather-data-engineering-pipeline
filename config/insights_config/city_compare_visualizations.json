@@ -1,0 +1,22 @@
+{
+    "name": {
+        "data_type": "STRING",
+        "validation": null
+    },
+    "avg_max_temp_c": {
+        "data_type": "FLOAT",
+        "validation": "validate_temperature_celsius"
+    },
+    "avg_min_temp_c": {
+        "data_type": "FLOAT",
+        "validation": "validate_temperature_celsius"
+    },
+    "avg_temp_c": {
+        "data_type": "FLOAT",
+        "validation": "validate_temperature_celsius"
+    },
+    "avg_current_temp_c": {
+        "data_type": "FLOAT",
+        "validation": "validate_temperature_celsius"
+    }
+}

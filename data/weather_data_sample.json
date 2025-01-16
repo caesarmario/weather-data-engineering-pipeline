@@ -1,109 +1,564 @@
 {
-    "Madrid, Spain": {
+    "Bangkok, Thailand": {
         "location": {
-            "name": "Madrid",
-            "region": "Madrid",
-            "country": "Spain",
-            "lat": 40.4168,
-            "lon": -3.7038,
-            "tz_id": "Europe/Madrid",
+            "name": "Bangkok",
+            "region": "Krung Thep",
+            "country": "Thailand",
+            "lat": 13.75,
+            "lon": 100.5167,
+            "tz_id": "Asia/Bangkok",
             "localtime_epoch": 1728266500,
-            "localtime": "2024-10-07 09:01"
+            "localtime": "2024-05-27 14:01"
         },
         "current": {
-            "last_updated": "2024-10-07 09:00",
-            "temp_c": 27.5,
-            "temp_f": 81.5,
+            "last_updated": "2024-05-27 14:00",
+            "temp_c": 29.3,
+            "temp_f": 84.7,
             "is_day": 1,
             "condition": {
-                "text": "Sunny",
-                "code": 1000
+                "text": "Partly cloudy",
+                "code": 1103
             }
         },
         "forecast": {
             "forecastday": [
                 {
-                    "date": "2024-10-07",
+                    "date": "2024-05-27",
                     "date_epoch": 1728259200,
                     "day": {
-                        "maxtemp_c": 30.0,
-                        "maxtemp_f": 86.0,
-                        "mintemp_c": 20.0,
-                        "mintemp_f": 68.0,
-                        "avgtemp_c": 25.0,
-                        "avgtemp_f": 77.0,
-                        "maxwind_mph": 9.0,
-                        "maxwind_kph": 14.5,
-                        "totalprecip_mm": 0.5,
-                        "totalprecip_in": 0.02,
+                        "maxtemp_c": 32.9,
+                        "maxtemp_f": 91.2,
+                        "mintemp_c": 25.5,
+                        "mintemp_f": 78.0,
+                        "avgtemp_c": 28.7,
+                        "avgtemp_f": 83.7,
+                        "maxwind_mph": 6.7,
+                        "maxwind_kph": 10.8,
+                        "totalprecip_mm": 1.09,
+                        "totalprecip_in": 0.04,
                         "totalsnow_cm": 0.0,
                         "avgvis_km": 10.0,
-                        "avgvis_miles": 6.2,
-                        "avghumidity": 55,
-                        "daily_will_it_rain": 0,
-                        "daily_chance_of_rain": 5,
+                        "avgvis_miles": 6.0,
+                        "avghumidity": 72,
+                        "daily_will_it_rain": 1,
+                        "daily_chance_of_rain": 86,
                         "daily_will_it_snow": 0,
                         "daily_chance_of_snow": 0,
                         "condition": {
-                            "text": "Sunny",
-                            "code": 1000
+                            "text": "Patchy rain nearby",
+                            "code": 1167
                         },
-                        "uv": 8.0
+                        "uv": 10.0
+                    }
+                },
+                {
+                    "date": "2024-05-28",
+                    "date_epoch": 1728345600,
+                    "day": {
+                        "maxtemp_c": 32.2,
+                        "maxtemp_f": 89.9,
+                        "mintemp_c": 25.7,
+                        "mintemp_f": 78.2,
+                        "avgtemp_c": 28.7,
+                        "avgtemp_f": 83.7,
+                        "maxwind_mph": 7.2,
+                        "maxwind_kph": 11.5,
+                        "totalprecip_mm": 7.81,
+                        "totalprecip_in": 0.31,
+                        "totalsnow_cm": 0.0,
+                        "avgvis_km": 9.8,
+                        "avgvis_miles": 6.0,
+                        "avghumidity": 71,
+                        "daily_will_it_rain": 1,
+                        "daily_chance_of_rain": 89,
+                        "daily_will_it_snow": 0,
+                        "daily_chance_of_snow": 0,
+                        "condition": {
+                            "text": "Moderate rain",
+                            "code": 1324
+                        },
+                        "uv": 9.0
+                    }
+                },
+                {
+                    "date": "2024-05-29",
+                    "date_epoch": 1728432000,
+                    "day": {
+                        "maxtemp_c": "invalid_data",
+                        "maxtemp_f": 87.7,
+                        "mintemp_c": 25.8,
+                        "mintemp_f": 78.5,
+                        "avgtemp_c": 27.7,
+                        "avgtemp_f": 81.9,
+                        "maxwind_mph": 6.5,
+                        "maxwind_kph": 10.4,
+                        "totalprecip_mm": 26.8,
+                        "totalprecip_in": 1.06,
+                        "totalsnow_cm": 0.0,
+                        "avgvis_km": 9.4,
+                        "avgvis_miles": 5.0,
+                        "avghumidity": 79,
+                        "daily_will_it_rain": 1,
+                        "daily_chance_of_rain": 87,
+                        "daily_will_it_snow": 0,
+                        "daily_chance_of_snow": 0,
+                        "condition": {
+                            "text": "Heavy rain",
+                            "code": 2410
+                        },
+                        "uv": 9.0
                     }
                 }
             ]
         }
     },
-    "Barcelona, Spain": {
+    "Chiang Mai, Thailand": {
         "location": {
-            "name": "Barcelona",
-            "region": "Catalonia",
-            "country": "Spain",
-            "lat": 41.3874,
-            "lon": 2.1686,
-            "tz_id": "Europe/Madrid",
+            "name": "Chiang Mai",
+            "region": "Chiang Mai",
+            "country": "Thailand",
+            "lat": 18.7903,
+            "lon": 98.9817,
+            "tz_id": "Asia/Bangkok",
             "localtime_epoch": 1728266501,
-            "localtime": "2024-10-07 09:02"
+            "localtime": "2024-05-27 14:01"
         },
         "current": {
-            "last_updated": "2024-10-07 08:50",
-            "temp_c": 26.8,
-            "temp_f": 80.2,
+            "last_updated": "2024-05-27 14:00",
+            "temp_c": 26.2,
+            "temp_f": 79.2,
             "is_day": 1,
             "condition": {
-                "text": "Cloudy",
-                "code": 1003
+                "text": "Light rain",
+                "code": 1183
             }
         },
         "forecast": {
             "forecastday": [
                 {
-                    "date": "2024-10-07",
+                    "date": "2024-05-27",
                     "date_epoch": 1728259200,
                     "day": {
-                        "maxtemp_c": 28.0,
-                        "maxtemp_f": 82.4,
-                        "mintemp_c": 22.0,
-                        "mintemp_f": 71.6,
+                        "maxtemp_c": 31.1,
+                        "maxtemp_f": 88.0,
+                        "mintemp_c": 20.7,
+                        "mintemp_f": 69.3,
                         "avgtemp_c": 25.0,
-                        "avgtemp_f": 77.0,
-                        "maxwind_mph": 7.0,
-                        "maxwind_kph": 11.2,
-                        "totalprecip_mm": 1.2,
-                        "totalprecip_in": 0.05,
+                        "avgtemp_f": 76.9,
+                        "maxwind_mph": 2.7,
+                        "maxwind_kph": 4.3,
+                        "totalprecip_mm": 4.79,
+                        "totalprecip_in": 0.19,
                         "totalsnow_cm": 0.0,
-                        "avgvis_km": 9.5,
-                        "avgvis_miles": 5.9,
-                        "avghumidity": 60,
+                        "avgvis_km": 7.3,
+                        "avgvis_miles": 4.0,
+                        "avghumidity": 84,
                         "daily_will_it_rain": 1,
-                        "daily_chance_of_rain": 20,
+                        "daily_chance_of_rain": 89,
                         "daily_will_it_snow": 0,
                         "daily_chance_of_snow": 0,
                         "condition": {
-                            "text": "Cloudy",
-                            "code": 1003
+                            "text": "Patchy rain nearby",
+                            "code": 1167
                         },
-                        "uv": 7.0
+                        "uv": 10.0
+                    }
+                },
+                {
+                    "date": "2024-05-28",
+                    "date_epoch": 1728345600,
+                    "day": {
+                        "maxtemp_c": 31.7,
+                        "maxtemp_f": 89.1,
+                        "mintemp_c": 20.5,
+                        "mintemp_f": 68.8,
+                        "avgtemp_c": 24.9,
+                        "avgtemp_f": 76.8,
+                        "maxwind_mph": 4.3,
+                        "maxwind_kph": 6.8,
+                        "totalprecip_mm": 2.39,
+                        "totalprecip_in": 0.09,
+                        "totalsnow_cm": 0.0,
+                        "avgvis_km": 7.9,
+                        "avgvis_miles": 4.0,
+                        "avghumidity": 83,
+                        "daily_will_it_rain": 1,
+                        "daily_chance_of_rain": 88,
+                        "daily_will_it_snow": 0,
+                        "daily_chance_of_snow": 0,
+                        "condition": {
+                            "text": "Patchy rain nearby",
+                            "code": 1167
+                        },
+                        "uv": 10.0
+                    }
+                },
+                {
+                    "date": "2024-05-29",
+                    "date_epoch": 1728432000,
+                    "day": {
+                        "maxtemp_c": 31.6,
+                        "maxtemp_f": 88.9,
+                        "mintemp_c": 20.6,
+                        "mintemp_f": 69.2,
+                        "avgtemp_c": 24.8,
+                        "avgtemp_f": 76.6,
+                        "maxwind_mph": 3.8,
+                        "maxwind_kph": 6.1,
+                        "totalprecip_mm": 5.19,
+                        "totalprecip_in": 0.2,
+                        "totalsnow_cm": 0.0,
+                        "avgvis_km": 6.7,
+                        "avgvis_miles": 4.0,
+                        "avghumidity": 85,
+                        "daily_will_it_rain": 1,
+                        "daily_chance_of_rain": 89,
+                        "daily_will_it_snow": 0,
+                        "daily_chance_of_snow": 0,
+                        "condition": {
+                            "text": "Moderate rain",
+                            "code": 1324
+                        },
+                        "uv": 10.0
+                    }
+                }
+            ]
+        }
+    },
+    "Phuket, Thailand": {
+        "location": {
+            "name": "Phuket",
+            "region": "Phuket",
+            "country": "Thailand",
+            "lat": 7.8833,
+            "lon": 98.4,
+            "tz_id": "Asia/Bangkok",
+            "localtime_epoch": 1728266501,
+            "localtime": "2024-05-27 14:01"
+        },
+        "current": {
+            "last_updated": "2024-05-27 14:00",
+            "temp_c": 28.2,
+            "temp_f": 82.8,
+            "is_day": 1,
+            "condition": {
+                "text": "Partly cloudy",
+                "code": 1103
+            }
+        },
+        "forecast": {
+            "forecastday": [
+                {
+                    "date": "2024-05-27",
+                    "date_epoch": 1728259200,
+                    "day": {
+                        "maxtemp_c": 28.2,
+                        "maxtemp_f": 82.7,
+                        "mintemp_c": 25.3,
+                        "mintemp_f": 77.6,
+                        "avgtemp_c": 26.7,
+                        "avgtemp_f": 80.1,
+                        "maxwind_mph": 11.6,
+                        "maxwind_kph": 18.7,
+                        "totalprecip_mm": 4.56,
+                        "totalprecip_in": 0.18,
+                        "totalsnow_cm": 0.0,
+                        "avgvis_km": 9.3,
+                        "avgvis_miles": 5.0,
+                        "avghumidity": 80,
+                        "daily_will_it_rain": 1,
+                        "daily_chance_of_rain": 88,
+                        "daily_will_it_snow": 0,
+                        "daily_chance_of_snow": 0,
+                        "condition": {
+                            "text": "Patchy rain nearby",
+                            "code": 1167
+                        },
+                        "uv": 11.0
+                    }
+                },
+                {
+                    "date": "2024-05-28",
+                    "date_epoch": 1728345600,
+                    "day": {
+                        "maxtemp_c": 29.0,
+                        "maxtemp_f": 84.2,
+                        "mintemp_c": 25.4,
+                        "mintemp_f": 77.8,
+                        "avgtemp_c": 27.3,
+                        "avgtemp_f": 81.1,
+                        "maxwind_mph": 6.9,
+                        "maxwind_kph": 11.2,
+                        "totalprecip_mm": 9.62,
+                        "totalprecip_in": 0.38,
+                        "totalsnow_cm": 0.0,
+                        "avgvis_km": 9.7,
+                        "avgvis_miles": 6.0,
+                        "avghumidity": 78,
+                        "daily_will_it_rain": 1,
+                        "daily_chance_of_rain": 88,
+                        "daily_will_it_snow": 0,
+                        "daily_chance_of_snow": 0,
+                        "condition": {
+                            "text": "Moderate rain",
+                            "code": 1324
+                        },
+                        "uv": 11.0
+                    }
+                },
+                {
+                    "date": "2024-05-29",
+                    "date_epoch": 1728432000,
+                    "day": {
+                        "maxtemp_c": 28.9,
+                        "maxtemp_f": 84.0,
+                        "mintemp_c": 26.3,
+                        "mintemp_f": 79.4,
+                        "avgtemp_c": 27.6,
+                        "avgtemp_f": 81.7,
+                        "maxwind_mph": 6.0,
+                        "maxwind_kph": 9.7,
+                        "totalprecip_mm": 1.3,
+                        "totalprecip_in": 0.05,
+                        "totalsnow_cm": 0.0,
+                        "avgvis_km": 9.8,
+                        "avgvis_miles": 6.0,
+                        "avghumidity": 73,
+                        "daily_will_it_rain": 1,
+                        "daily_chance_of_rain": 88,
+                        "daily_will_it_snow": 0,
+                        "daily_chance_of_snow": 0,
+                        "condition": {
+                            "text": "Patchy rain nearby",
+                            "code": 1167
+                        },
+                        "uv": 11.0
+                    }
+                }
+            ]
+        }
+    },
+    "Pattaya, Thailand": {
+        "location": {
+            "name": "Pattaya",
+            "region": "Chon Buri",
+            "country": "Thailand",
+            "lat": 12.9333,
+            "lon": 100.8833,
+            "tz_id": "Asia/Bangkok",
+            "localtime_epoch": 1728266501,
+            "localtime": "2024-05-27 14:01"
+        },
+        "current": {
+            "last_updated": "2024-05-27 13:45",
+            "temp_c": 26.9,
+            "temp_f": 80.5,
+            "is_day": 1,
+            "condition": {
+                "text": "Patchy rain nearby",
+                "code": 1167
+            }
+        },
+        "forecast": {
+            "forecastday": [
+                {
+                    "date": "2024-05-27",
+                    "date_epoch": 1728259200,
+                    "day": {
+                        "maxtemp_c": 30.6,
+                        "maxtemp_f": 87.1,
+                        "mintemp_c": 25.9,
+                        "mintemp_f": 78.7,
+                        "avgtemp_c": 28.1,
+                        "avgtemp_f": 82.6,
+                        "maxwind_mph": 9.2,
+                        "maxwind_kph": 14.8,
+                        "totalprecip_mm": 7.34,
+                        "totalprecip_in": 0.29,
+                        "totalsnow_cm": 0.0,
+                        "avgvis_km": 9.6,
+                        "avgvis_miles": 5.0,
+                        "avghumidity": 75,
+                        "daily_will_it_rain": 1,
+                        "daily_chance_of_rain": 96,
+                        "daily_will_it_snow": 0,
+                        "daily_chance_of_snow": 0,
+                        "condition": {
+                            "text": "Moderate rain",
+                            "code": 1324
+                        },
+                        "uv": 10.0
+                    }
+                },
+                {
+                    "date": "2024-05-28",
+                    "date_epoch": 1728345600,
+                    "day": {
+                        "maxtemp_c": 29.8,
+                        "maxtemp_f": 85.6,
+                        "mintemp_c": 25.3,
+                        "mintemp_f": 77.5,
+                        "avgtemp_c": 27.6,
+                        "avgtemp_f": 81.6,
+                        "maxwind_mph": 9.8,
+                        "maxwind_kph": 15.8,
+                        "totalprecip_mm": 27.37,
+                        "totalprecip_in": 1.08,
+                        "totalsnow_cm": 0.0,
+                        "avgvis_km": 9.0,
+                        "avgvis_miles": 5.0,
+                        "avghumidity": 79,
+                        "daily_will_it_rain": 1,
+                        "daily_chance_of_rain": 87,
+                        "daily_will_it_snow": 0,
+                        "daily_chance_of_snow": 0,
+                        "condition": {
+                            "text": "Heavy rain",
+                            "code": 2410
+                        },
+                        "uv": 10.0
+                    }
+                },
+                {
+                    "date": "2024-05-29",
+                    "date_epoch": 1728432000,
+                    "day": {
+                        "maxtemp_c": 29.7,
+                        "maxtemp_f": 85.5,
+                        "mintemp_c": 25.7,
+                        "mintemp_f": 78.2,
+                        "avgtemp_c": 27.5,
+                        "avgtemp_f": 81.6,
+                        "maxwind_mph": 5.8,
+                        "maxwind_kph": 9.4,
+                        "totalprecip_mm": 2.92,
+                        "totalprecip_in": 0.12,
+                        "totalsnow_cm": 0.0,
+                        "avgvis_km": 9.9,
+                        "avgvis_miles": 6.0,
+                        "avghumidity": 77,
+                        "daily_will_it_rain": 1,
+                        "daily_chance_of_rain": 89,
+                        "daily_will_it_snow": 0,
+                        "daily_chance_of_snow": 0,
+                        "condition": {
+                            "text": "Patchy rain nearby",
+                            "code": 1167
+                        },
+                        "uv": 11.0
+                    }
+                }
+            ]
+        }
+    },
+    "Hat Yai, Thailand": {
+        "location": {
+            "name": "Hat Yai",
+            "region": "Songkhla",
+            "country": "Thailand",
+            "lat": 7.0167,
+            "lon": 100.4667,
+            "tz_id": "Asia/Bangkok",
+            "localtime_epoch": 1728266501,
+            "localtime": "2024-05-27 14:01"
+        },
+        "current": {
+            "last_updated": "2024-05-27 14:00",
+            "temp_c": 25.4,
+            "temp_f": 77.7,
+            "is_day": 1,
+            "condition": {
+                "text": "Partly cloudy",
+                "code": 1103
+            }
+        },
+        "forecast": {
+            "forecastday": [
+                {
+                    "date": "2024-05-27",
+                    "date_epoch": 1728259200,
+                    "day": {
+                        "maxtemp_c": 28.2,
+                        "maxtemp_f": 82.8,
+                        "mintemp_c": 23.2,
+                        "mintemp_f": 73.8,
+                        "avgtemp_c": 25.3,
+                        "avgtemp_f": 77.6,
+                        "maxwind_mph": 6.7,
+                        "maxwind_kph": 10.8,
+                        "totalprecip_mm": 7.48,
+                        "totalprecip_in": 0.29,
+                        "totalsnow_cm": 0.0,
+                        "avgvis_km": 8.5,
+                        "avgvis_miles": 5.0,
+                        "avghumidity": 87,
+                        "daily_will_it_rain": 1,
+                        "daily_chance_of_rain": 87,
+                        "daily_will_it_snow": 0,
+                        "daily_chance_of_snow": 0,
+                        "condition": {
+                            "text": "Moderate rain",
+                            "code": 1324
+                        },
+                        "uv": 8.0
+                    }
+                },
+                {
+                    "date": "2024-05-28",
+                    "date_epoch": 1728345600,
+                    "day": {
+                        "maxtemp_c": 31.2,
+                        "maxtemp_f": 88.2,
+                        "mintemp_c": 23.5,
+                        "mintemp_f": 74.2,
+                        "avgtemp_c": 26.7,
+                        "avgtemp_f": 80.0,
+                        "maxwind_mph": 5.6,
+                        "maxwind_kph": 9.0,
+                        "totalprecip_mm": 8.64,
+                        "totalprecip_in": 0.34,
+                        "totalsnow_cm": 0.0,
+                        "avgvis_km": 9.6,
+                        "avgvis_miles": 5.0,
+                        "avghumidity": 81,
+                        "daily_will_it_rain": 1,
+                        "daily_chance_of_rain": 88,
+                        "daily_will_it_snow": 0,
+                        "daily_chance_of_snow": 0,
+                        "condition": {
+                            "text": "Moderate rain",
+                            "code": 1324
+                        },
+                        "uv": 11.0
+                    }
+                },
+                {
+                    "date": "2024-05-29",
+                    "date_epoch": 1728432000,
+                    "day": {
+                        "maxtemp_c": 31.4,
+                        "maxtemp_f": 88.4,
+                        "mintemp_c": 23.8,
+                        "mintemp_f": 74.9,
+                        "avgtemp_c": 26.6,
+                        "avgtemp_f": 79.9,
+                        "maxwind_mph": 3.6,
+                        "maxwind_kph": 5.8,
+                        "totalprecip_mm": 13.12,
+                        "totalprecip_in": 0.52,
+                        "totalsnow_cm": 0.0,
+                        "avgvis_km": 9.4,
+                        "avgvis_miles": 5.0,
+                        "avghumidity": 81,
+                        "daily_will_it_rain": 1,
+                        "daily_chance_of_rain": 87,
+                        "daily_will_it_snow": 0,
+                        "daily_chance_of_snow": 0,
+                        "condition": {
+                            "text": "Moderate rain",
+                            "code": 1324
+                        },
+                        "uv": 11.0
                     }
                 }
             ]
