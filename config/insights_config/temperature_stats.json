@@ -1,0 +1,54 @@
+{
+    "location_id": {
+        "data_type": "STRING",
+        "validation": null
+    },
+    "min_temp_c": {
+        "data_type": "FLOAT",
+        "validation": "validate_temperature_celsius"
+    },
+    "max_temp_c": {
+        "data_type": "FLOAT",
+        "validation": "validate_temperature_celsius"
+    },
+    "avg_temp_c": {
+        "data_type": "FLOAT",
+        "validation": "validate_temperature_celsius"
+    },
+    "min_temp_f": {
+        "data_type": "FLOAT",
+        "validation": "validate_temperature_fahrenheit"
+    },
+    "max_temp_f": {
+        "data_type": "FLOAT",
+        "validation": "validate_temperature_fahrenheit"
+    },
+    "avg_temp_f": {
+        "data_type": "FLOAT",
+        "validation": "validate_temperature_fahrenheit"
+    },
+    "date_range_start": {
+        "data_type": "DATE",
+        "validation": "validation_date"
+    },
+    "date_range_end": {
+        "data_type": "DATE",
+        "validation": "validation_date"
+    },
+    "temperature_variation_c": {
+        "data_type": "FLOAT",
+        "validation": "validate_temperature_celsius"
+    },
+    "temperature_variation_f": {
+        "data_type": "FLOAT",
+        "validation": "validate_temperature_fahrenheit"
+    },
+    "total_days": {
+        "data_type": "INTEGER",
+        "validation": null
+    },
+    "load_process_dt": {
+        "data_type": "TIMESTAMP",
+        "validation": null
+    }
+}

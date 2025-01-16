@@ -1,0 +1,4 @@
+location_id,date,maxtemp_c,totalprecip_mm,maxwind_kph,alert_extreme_heat,alert_storm,load_process_dt
+"Bangkok, Thailand",2024-10-09,,26.8,10.4,False,True,2025-01-16 15:27:55
+"Phuket, Thailand",2024-10-07,28.2,4.56,18.7,False,True,2025-01-16 15:27:55
+"Pattaya, Thailand",2024-10-08,29.8,27.37,15.8,False,True,2025-01-16 15:27:55
