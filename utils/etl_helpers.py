@@ -201,7 +201,27 @@ class ETLHelper:
 
     
     def add_remark_columns(self, data, batch_id, load_dt, key):
-        
+        """
+        Adds remark columns to the data for tracking and identification.
+
+        Parameters:
+        - data (dict): The input dictionary containing the raw data to which the remark columns will be added.
+        - batch_id (str): A unique identifier for the ETL process batch.
+        - load_dt (str): The timestamp indicating when the data was processed (format: "%Y-%m-%d %H:%M:%S").
+        - key (str): A unique identifier for the city or data group.
+
+        Returns:
+        - dict: The updated dictionary with the added metadata columns.
+
+        Raises:
+        - TypeError: If the `data` parameter is not a dictionary.
+        - ValueError: If `batch_id`, `load_dt`, or `key` are not provided or invalid.
+        """
+        if not isinstance(data, dict):
+            raise TypeError("The data parameter must be a dictionary.")
+        if not batch_id or not load_dt or not key:
+            raise ValueError("batch_id, load_dt, and key must be provided and non-empty.")
+    
         data['batch_id']   = batch_id
         data['load_dt']    = load_dt
         data['city_key']   = key
@@ -209,17 +229,50 @@ class ETLHelper:
         return data
 
 
-    def transform_helper(self, config, data):
-            
+    def transform_helper(self, config, data, table_name, day:None):
+        """
+        Transforms and processes raw data based on the given configuration.
+
+        Parameters:
+        - config (dict): Configuration dictionary specifying the mappings, transformations, 
+                        data types, and validation rules for each column.
+        - data (dict): Input data dictionary containing raw data to be processed.
+        - table_name (str): table name to specify data processing technique.
+        - day (dict): Input forecast daily data in dictionary format to be processed (callable to process forecast data only)
+
+        Returns:
+        - dict: A dictionary representing a processed record with transformed and validated fields.
+
+        Raises:
+        - KeyError: If the specified mapping key in the configuration does not exist in the data.
+        - ValueError: If a data type conversion fails or validation fails for a field.
+        - Exception: If an unexpected error occurs during transformation or validation.
+        """
         processed_record = {}
         timestamps_to_validate = []
 
         for column, column_config in config.items():
-            field_value = data
-            for key in column_config['mapping'].split('.'):
-                field_value = field_value.get(key, None)
-                if field_value is None:
-                    break
+            # Checking table name
+            if table_name == "forecast":
+                field_value = None
+                try:
+                    # Handle nested key extraction properly
+                    if column_config['mapping'].startswith('forecast.forecastday[].day.condition.'):
+                        field_value = day['day']['condition'].get(column_config['mapping'].split('.')[-1])
+                    elif column_config['mapping'].startswith('forecast.forecastday[].day.'):
+                        field_value = day['day'].get(column_config['mapping'].split('.')[-1])
+                    elif column_config['mapping'].startswith('forecast.forecastday[].'):
+                        field_value = day.get(column_config['mapping'].split('.')[-1])
+                    else:
+                        field_value = data.get(column_config['mapping'])
+                except Exception as e:
+                    logger.error(f"!! Nested data extraction error: {e}")
+            else:
+                field_value = data
+                for key in column_config['mapping'].split('.'):
+                    field_value = field_value.get(key, None)
+                    if field_value is None:
+                        break
                         
             # Perform transformation if specified in config
             try:
