@@ -44,8 +44,6 @@ class ProcessCurrent:
                     
                     logger.info(f"Successfully processed data for city: {key}")
 
-                    processed_data.append(processed_record)
-                    logger.info(f"Successfully processed data for city: {key}")
                 except Exception as e:
                     # Log errors for individual city processing
                     logger.error(f"!! Error processing data for city: {key}, Error: {e}")
