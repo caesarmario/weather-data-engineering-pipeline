@@ -39,7 +39,7 @@ class ProcessLocation:
                     data = self.helper.add_remark_columns(data, self.batch_id, self.load_dt, key)
 
                     # Extract the columns based on the configuration
-                    processed_record = self.helper.transform_helper(self.config, data)
+                    processed_record = self.helper.transform_helper(self.config, data, self.table_name, None)
                     processed_data.append(processed_record)
                     
                     logger.info(f"Successfully processed data for city: {key}")
@@ -52,9 +52,7 @@ class ProcessLocation:
             raise
         
         try:
-
             # Write to a CSV file
-            print(processed_data)
             date_csv    = self.helper.date_filename(processed_data[0]['localtime'])
             file_path   = self.helper.write_csv(processed_data, self.folder_path, self.subfolder_path, self.table_name, date_csv)
 

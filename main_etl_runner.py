@@ -57,8 +57,8 @@ class MainETLRunner:
             logger.info("Flattening and storing data...")
             json_data = self.helper.read_json(self.data_path)
             self.location_processor.process(json_data)
-            # self.current_processor.process(json_data)
-            # self.forecast_processor.process(json_data)
+            self.current_processor.process(json_data)
+            self.forecast_processor.process(json_data)
             logger.info("Flattening process completed successfully.")
 
             # # Compare current temperature with forecasted data
