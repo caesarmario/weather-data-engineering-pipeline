@@ -9,6 +9,7 @@ from utils.logging_config import logger
 from utils.validation_helpers import ValidationHelper
 
 import pandas as pd
+import pandasql import sqldf
 
 class WeatherAlerts:
     """
