@@ -1,6 +1,6 @@
 location_id,date,last_updated,temp_c,temp_f,is_day,condition_text,condition_code,batch_id,load_dt
-"Bangkok, Thailand",2024-05-27,2024-05-27 14:00,29.3,84.7,True,Partly cloudy,1103,5d15f9b4-8af9-4016-ae12-e96eb2e17e0e,2025-01-16 22:07:52
-"Chiang Mai, Thailand",2024-05-27,2024-05-27 14:00,26.2,79.2,True,Light rain,1183,5d15f9b4-8af9-4016-ae12-e96eb2e17e0e,2025-01-16 22:07:52
-"Phuket, Thailand",2024-05-27,2024-05-27 14:00,28.2,82.8,True,Partly cloudy,1103,5d15f9b4-8af9-4016-ae12-e96eb2e17e0e,2025-01-16 22:07:52
-"Pattaya, Thailand",2024-05-27,2024-05-27 13:45,26.9,80.5,True,Patchy rain nearby,1167,5d15f9b4-8af9-4016-ae12-e96eb2e17e0e,2025-01-16 22:07:52
-"Hat Yai, Thailand",2024-05-27,2024-05-27 14:00,25.4,77.7,True,Partly cloudy,1103,5d15f9b4-8af9-4016-ae12-e96eb2e17e0e,2025-01-16 22:07:52
+"Bangkok, Thailand",2024-05-27,2024-05-27 14:00,29.3,84.7,True,Partly cloudy,1103,00a80b8d-235a-4277-9067-b2dcc970155d,2025-02-13 21:15:52
+"Chiang Mai, Thailand",2024-05-27,2024-05-27 14:00,26.2,79.2,True,Light rain,1183,00a80b8d-235a-4277-9067-b2dcc970155d,2025-02-13 21:15:52
+"Phuket, Thailand",2024-05-27,2024-05-27 14:00,28.2,82.8,True,Partly cloudy,1103,00a80b8d-235a-4277-9067-b2dcc970155d,2025-02-13 21:15:52
+"Pattaya, Thailand",2024-05-27,2024-05-27 13:45,26.9,80.5,True,Patchy rain nearby,1167,00a80b8d-235a-4277-9067-b2dcc970155d,2025-02-13 21:15:52
+"Hat Yai, Thailand",2024-05-27,2024-05-27 14:00,25.4,77.7,True,Partly cloudy,1103,00a80b8d-235a-4277-9067-b2dcc970155d,2025-02-13 21:15:52
