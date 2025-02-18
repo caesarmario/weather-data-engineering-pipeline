@@ -22,14 +22,14 @@ class ProcessLocation:
             self.subfolder_path    = "raw"
             self.table_name        = "location"
 
-            logger.info("Configuration for location table loaded successfully")
+            logger.info("Initialized location table class successfully.")
         except Exception as e:
             logger.error(f"!! Failed to load configuration: {e}")
             raise
 
     def process(self, data):
         # Main processing function
-        logger.info("- Starting the data processing for location table...")
+        logger.info(">> Starting the data processing for location table...")
         processed_data = []
 
         try:
@@ -42,7 +42,7 @@ class ProcessLocation:
                     processed_record = self.helper.transform_helper(self.config, data, self.table_name, None)
                     processed_data.append(processed_record)
                     
-                    logger.info(f"Successfully processed data for city: {key}")
+                    logger.info(f">> Successfully processed data for city: {key}")
                 except Exception as e:
                     # Log errors for individual city processing
                     logger.error(f"!! Error processing data for city: {key}, Error: {e}")
@@ -54,9 +54,9 @@ class ProcessLocation:
         try:
             # Write to a CSV file
             date_csv    = self.helper.date_filename(processed_data[0]['localtime'])
-            file_path   = self.helper.write_csv(processed_data, self.folder_path, self.subfolder_path, self.table_name, date_csv)
+            file_path   = self.helper.write_parquet(processed_data, self.folder_path, self.subfolder_path, self.table_name, date_csv)
 
-            logger.info(f"Data successfully written to {file_path} !")
+            logger.info(f">> Data successfully written to {file_path} !")
         except Exception as e:
             # Log errors during file writing
             logger.error(f"!! Error writing data to CSV: {e}")

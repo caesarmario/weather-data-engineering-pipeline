@@ -25,7 +25,7 @@ class WeatherAlerts:
             self.subfolder_insights = "insights"
             self.load_process_dt    = self.helper.get_load_timestamp()
             self.config             = self.helper.load_config(self.subfolder_insights, "weather_alerts")
-            logger.info("-- Initialized WeatherAlerts class successfully.")
+            logger.info("Initialized WeatherAlerts class successfully.")
         except Exception as e:
             logger.error(f"!! Failed to initialize WeatherAlerts class: {e}")
             raise

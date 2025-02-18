@@ -22,14 +22,14 @@ class ProcessForecast:
             self.subfolder_path    = "raw"
             self.table_name        = "forecast"
 
-            logger.info("Configuration for forecast table loaded successfully")
+            logger.info("Initialized forecast table class successfully.")
         except Exception as e:
             logger.error(f"!! Failed to load configuration: {e}")
             raise
 
     def process(self, data):
         # Main processing
-        logger.info("- Starting the data processing for forecast table...")
+        logger.info(">> Starting the data processing for forecast table...")
         processed_data = []
 
         try:
@@ -46,7 +46,7 @@ class ProcessForecast:
                         processed_record = self.helper.transform_helper(self.config, data, self.table_name, day)
                         processed_data.append(processed_record)
 
-                        logger.info(f"Successfully processed forecast data for city: {key} on {day.get('date')}")
+                        logger.info(f">> Successfully processed forecast data for city: {key} on {day.get('date')}")
                 except Exception as e:
                     # Log errors for individual city processing
                     logger.error(f"!! Error processing forecast data for city: {key}, Error: {e}")
@@ -59,9 +59,9 @@ class ProcessForecast:
         try:
             # Write to a CSV file
             date_csv    = self.helper.date_filename(processed_data[0]['date'])
-            file_path   = self.helper.write_csv(processed_data, self.folder_path, self.subfolder_path, self.table_name, date_csv)
+            file_path   = self.helper.write_parquet(processed_data, self.folder_path, self.subfolder_path, self.table_name, date_csv)
 
-            logger.info(f"Data successfully written to {file_path}")
+            logger.info(f">> Data successfully written to {file_path}")
         except Exception as e:
             # Log errors during file writing
             logger.error(f"!! Error writing data to CSV: {e}")
