@@ -30,6 +30,7 @@ class MainETLRunner:
 
         :param data_path: Path to the JSON data file.
         """
+        logger.info("-- ETL Runner initialization... --")
         self.data_path = data_path
         self.helper = ETLHelper()
         self.validation_helper = ValidationHelper()
@@ -41,7 +42,7 @@ class MainETLRunner:
         self.temperature_stats_calculator = TemperatureStatistics()
         self.visualizer = CityComparisonVisualization()
         self.weather_alert_identifier = WeatherAlerts()
-        logger.info("ETL Runner initialized successfully.")
+        logger.info("-- ETL Runner initialized successfully. --")
 
     def run_etl(self, processes=None):
         """
@@ -49,7 +50,7 @@ class MainETLRunner:
 
         :param processes: List of processes to run. If None, run all processes.
         """
-        logger.info("-- STARTING THE ETL PIPELINE --")
+        logger.info("-- Starting ETL Pipeline --")
 
         try:
             if processes is None or "all" in processes:
@@ -73,7 +74,7 @@ class MainETLRunner:
                 if "alerts" in processes:
                     self._identify_weather_alerts()
 
-            logger.info("-- ETL PIPELINE COMPLETED SUCCESSFULLY --")
+            logger.info("-- ETL Pipeline COMPLETED!! --")
         except Exception as e:
             logger.error(f"Critical error during ETL pipeline execution: {e}")
             raise

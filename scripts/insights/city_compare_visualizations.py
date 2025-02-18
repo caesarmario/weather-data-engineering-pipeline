@@ -25,7 +25,7 @@ class CityComparisonVisualization:
             self.subfolder_insights = "insights"
             self.load_process_dt    = self.helper.get_load_timestamp()
             self.config             = self.helper.load_config(self.subfolder_insights, "city_compare_visualizations")
-            logger.info("-- Initialized CityComparisonVisualization class successfully.")
+            logger.info("Initialized CityComparisonVisualization class successfully.")
         except Exception as e:
             logger.error(f"!! Failed to initialize CityComparisonVisualization class: {e}")
             raise
@@ -36,9 +36,9 @@ class CityComparisonVisualization:
         """
         try:
             logger.info("-- Loading forecast and current data from CSV files")
-            forecast_data = self.helper.read_csv(self.folder_output, self.subfolder_raw, "forecast")
-            current_data  = self.helper.read_csv(self.folder_output, self.subfolder_raw, "current")
-            location_data = self.helper.read_csv(self.folder_output, self.subfolder_raw, "location")
+            forecast_data = self.helper.read_parquet(self.folder_output, self.subfolder_raw, "forecast")
+            current_data  = self.helper.read_parquet(self.folder_output, self.subfolder_raw, "current")
+            location_data = self.helper.read_parquet(self.folder_output, self.subfolder_raw, "location")
 
             # Extract the process date from the data
             self.process_date = forecast_data['date'].min()

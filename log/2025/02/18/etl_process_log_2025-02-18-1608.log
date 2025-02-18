@@ -1,0 +1,90 @@
+2025-02-18 16:08:44,219 - main_etl_runner.py - Line: 137 - INFO - Launching the ETL pipeline...
+2025-02-18 16:08:44,219 - main_etl_runner.py - Line: 33 - INFO - -- ETL Runner initialization... --
+2025-02-18 16:08:44,223 - process_location.py - Line: 25 - INFO - Initialized location table class successfully.
+2025-02-18 16:08:44,225 - process_current.py - Line: 25 - INFO - Initialized current table class successfully.
+2025-02-18 16:08:44,229 - process_forecast.py - Line: 25 - INFO - Initialized forecast table class successfully.
+2025-02-18 16:08:44,233 - compare_temperatures.py - Line: 27 - INFO - Initialized CompareTemperatures class successfully.
+2025-02-18 16:08:44,235 - identify_highest_temperature.py - Line: 27 - INFO - Initialized IdentifyHighestTemperature class successfully.
+2025-02-18 16:08:44,238 - temperature_statistics_by_city.py - Line: 27 - INFO - Initialized TemperatureStatistics class successfully.
+2025-02-18 16:08:44,243 - city_compare_visualizations.py - Line: 28 - INFO - Initialized CityComparisonVisualization class successfully.
+2025-02-18 16:08:44,247 - weather_alerts.py - Line: 28 - INFO - Initialized WeatherAlerts class successfully.
+2025-02-18 16:08:44,248 - main_etl_runner.py - Line: 45 - INFO - -- ETL Runner initialized successfully. --
+2025-02-18 16:08:44,248 - main_etl_runner.py - Line: 53 - INFO - -- Starting ETL Pipeline --
+2025-02-18 16:08:44,253 - process_location.py - Line: 32 - INFO - >> Starting the data processing for location table...
+2025-02-18 16:08:44,254 - process_location.py - Line: 45 - INFO - >> Successfully processed data for city: Bangkok, Thailand
+2025-02-18 16:08:44,255 - process_location.py - Line: 45 - INFO - >> Successfully processed data for city: Chiang Mai, Thailand
+2025-02-18 16:08:44,255 - process_location.py - Line: 45 - INFO - >> Successfully processed data for city: Phuket, Thailand
+2025-02-18 16:08:44,255 - process_location.py - Line: 45 - INFO - >> Successfully processed data for city: Pattaya, Thailand
+2025-02-18 16:08:44,256 - process_location.py - Line: 45 - INFO - >> Successfully processed data for city: Hat Yai, Thailand
+2025-02-18 16:08:44,332 - process_location.py - Line: 59 - INFO - >> Data successfully written to output\raw\location\2024\05\27\location_2024-05-27.parquet !
+2025-02-18 16:08:44,333 - process_current.py - Line: 32 - INFO - >> Starting the data processing for current table...
+2025-02-18 16:08:44,333 - process_current.py - Line: 45 - INFO - >> Successfully processed data for city: Bangkok, Thailand
+2025-02-18 16:08:44,334 - process_current.py - Line: 45 - INFO - >> Successfully processed data for city: Chiang Mai, Thailand
+2025-02-18 16:08:44,334 - process_current.py - Line: 45 - INFO - >> Successfully processed data for city: Phuket, Thailand
+2025-02-18 16:08:44,334 - process_current.py - Line: 45 - INFO - >> Successfully processed data for city: Pattaya, Thailand
+2025-02-18 16:08:44,335 - process_current.py - Line: 45 - INFO - >> Successfully processed data for city: Hat Yai, Thailand
+2025-02-18 16:08:44,341 - process_current.py - Line: 60 - INFO -  >> Data successfully written to output\raw\current\2024\05\27\current_2024-05-27.parquet !
+2025-02-18 16:08:44,342 - process_forecast.py - Line: 32 - INFO - >> Starting the data processing for forecast table...
+2025-02-18 16:08:44,342 - process_forecast.py - Line: 49 - INFO - >> Successfully processed forecast data for city: Bangkok, Thailand on 2024-05-27
+2025-02-18 16:08:44,343 - process_forecast.py - Line: 49 - INFO - >> Successfully processed forecast data for city: Bangkok, Thailand on 2024-05-28
+2025-02-18 16:08:44,343 - etl_helpers.py - Line: 168 - ERROR - Data type conversion error for value 'invalid_data' to FLOAT: could not convert string to float: 'invalid_data'
+2025-02-18 16:08:44,344 - process_forecast.py - Line: 49 - INFO - >> Successfully processed forecast data for city: Bangkok, Thailand on 2024-05-29
+2025-02-18 16:08:44,344 - process_forecast.py - Line: 49 - INFO - >> Successfully processed forecast data for city: Chiang Mai, Thailand on 2024-05-27
+2025-02-18 16:08:44,344 - process_forecast.py - Line: 49 - INFO - >> Successfully processed forecast data for city: Chiang Mai, Thailand on 2024-05-28
+2025-02-18 16:08:44,344 - process_forecast.py - Line: 49 - INFO - >> Successfully processed forecast data for city: Chiang Mai, Thailand on 2024-05-29
+2025-02-18 16:08:44,345 - process_forecast.py - Line: 49 - INFO - >> Successfully processed forecast data for city: Phuket, Thailand on 2024-05-27
+2025-02-18 16:08:44,345 - process_forecast.py - Line: 49 - INFO - >> Successfully processed forecast data for city: Phuket, Thailand on 2024-05-28
+2025-02-18 16:08:44,346 - process_forecast.py - Line: 49 - INFO - >> Successfully processed forecast data for city: Phuket, Thailand on 2024-05-29
+2025-02-18 16:08:44,346 - process_forecast.py - Line: 49 - INFO - >> Successfully processed forecast data for city: Pattaya, Thailand on 2024-05-27
+2025-02-18 16:08:44,347 - process_forecast.py - Line: 49 - INFO - >> Successfully processed forecast data for city: Pattaya, Thailand on 2024-05-28
+2025-02-18 16:08:44,347 - process_forecast.py - Line: 49 - INFO - >> Successfully processed forecast data for city: Pattaya, Thailand on 2024-05-29
+2025-02-18 16:08:44,348 - process_forecast.py - Line: 49 - INFO - >> Successfully processed forecast data for city: Hat Yai, Thailand on 2024-05-27
+2025-02-18 16:08:44,348 - process_forecast.py - Line: 49 - INFO - >> Successfully processed forecast data for city: Hat Yai, Thailand on 2024-05-28
+2025-02-18 16:08:44,349 - process_forecast.py - Line: 49 - INFO - >> Successfully processed forecast data for city: Hat Yai, Thailand on 2024-05-29
+2025-02-18 16:08:44,359 - process_forecast.py - Line: 64 - INFO - >> Data successfully written to output\raw\forecast\2024\05\27\forecast_2024-05-27.parquet
+2025-02-18 16:08:44,360 - main_etl_runner.py - Line: 77 - INFO - -- ETL Pipeline COMPLETED!! --
+2025-02-18 16:08:51,988 - main_etl_runner.py - Line: 137 - INFO - Launching the ETL pipeline...
+2025-02-18 16:08:51,989 - main_etl_runner.py - Line: 33 - INFO - -- ETL Runner initialization... --
+2025-02-18 16:08:51,991 - process_location.py - Line: 25 - INFO - Initialized location table class successfully.
+2025-02-18 16:08:51,993 - process_current.py - Line: 25 - INFO - Initialized current table class successfully.
+2025-02-18 16:08:51,995 - process_forecast.py - Line: 25 - INFO - Initialized forecast table class successfully.
+2025-02-18 16:08:51,998 - compare_temperatures.py - Line: 27 - INFO - Initialized CompareTemperatures class successfully.
+2025-02-18 16:08:52,001 - identify_highest_temperature.py - Line: 27 - INFO - Initialized IdentifyHighestTemperature class successfully.
+2025-02-18 16:08:52,003 - temperature_statistics_by_city.py - Line: 27 - INFO - Initialized TemperatureStatistics class successfully.
+2025-02-18 16:08:52,005 - city_compare_visualizations.py - Line: 28 - INFO - Initialized CityComparisonVisualization class successfully.
+2025-02-18 16:08:52,008 - weather_alerts.py - Line: 28 - INFO - Initialized WeatherAlerts class successfully.
+2025-02-18 16:08:52,008 - main_etl_runner.py - Line: 45 - INFO - -- ETL Runner initialized successfully. --
+2025-02-18 16:08:52,008 - main_etl_runner.py - Line: 53 - INFO - -- Starting ETL Pipeline --
+2025-02-18 16:08:52,010 - process_location.py - Line: 32 - INFO - >> Starting the data processing for location table...
+2025-02-18 16:08:52,010 - process_location.py - Line: 45 - INFO - >> Successfully processed data for city: Bangkok, Thailand
+2025-02-18 16:08:52,011 - process_location.py - Line: 45 - INFO - >> Successfully processed data for city: Chiang Mai, Thailand
+2025-02-18 16:08:52,011 - process_location.py - Line: 45 - INFO - >> Successfully processed data for city: Phuket, Thailand
+2025-02-18 16:08:52,013 - process_location.py - Line: 45 - INFO - >> Successfully processed data for city: Pattaya, Thailand
+2025-02-18 16:08:52,014 - process_location.py - Line: 45 - INFO - >> Successfully processed data for city: Hat Yai, Thailand
+2025-02-18 16:08:52,037 - process_location.py - Line: 59 - INFO - >> Data successfully written to output\raw\location\2024\05\27\location_2024-05-27.parquet !
+2025-02-18 16:08:52,037 - process_current.py - Line: 32 - INFO - >> Starting the data processing for current table...
+2025-02-18 16:08:52,037 - process_current.py - Line: 45 - INFO - >> Successfully processed data for city: Bangkok, Thailand
+2025-02-18 16:08:52,038 - process_current.py - Line: 45 - INFO - >> Successfully processed data for city: Chiang Mai, Thailand
+2025-02-18 16:08:52,038 - process_current.py - Line: 45 - INFO - >> Successfully processed data for city: Phuket, Thailand
+2025-02-18 16:08:52,039 - process_current.py - Line: 45 - INFO - >> Successfully processed data for city: Pattaya, Thailand
+2025-02-18 16:08:52,039 - process_current.py - Line: 45 - INFO - >> Successfully processed data for city: Hat Yai, Thailand
+2025-02-18 16:08:52,044 - process_current.py - Line: 60 - INFO -  >> Data successfully written to output\raw\current\2024\05\27\current_2024-05-27.parquet !
+2025-02-18 16:08:52,045 - process_forecast.py - Line: 32 - INFO - >> Starting the data processing for forecast table...
+2025-02-18 16:08:52,047 - process_forecast.py - Line: 49 - INFO - >> Successfully processed forecast data for city: Bangkok, Thailand on 2024-05-27
+2025-02-18 16:08:52,047 - process_forecast.py - Line: 49 - INFO - >> Successfully processed forecast data for city: Bangkok, Thailand on 2024-05-28
+2025-02-18 16:08:52,048 - etl_helpers.py - Line: 168 - ERROR - Data type conversion error for value 'invalid_data' to FLOAT: could not convert string to float: 'invalid_data'
+2025-02-18 16:08:52,048 - process_forecast.py - Line: 49 - INFO - >> Successfully processed forecast data for city: Bangkok, Thailand on 2024-05-29
+2025-02-18 16:08:52,049 - process_forecast.py - Line: 49 - INFO - >> Successfully processed forecast data for city: Chiang Mai, Thailand on 2024-05-27
+2025-02-18 16:08:52,049 - process_forecast.py - Line: 49 - INFO - >> Successfully processed forecast data for city: Chiang Mai, Thailand on 2024-05-28
+2025-02-18 16:08:52,050 - process_forecast.py - Line: 49 - INFO - >> Successfully processed forecast data for city: Chiang Mai, Thailand on 2024-05-29
+2025-02-18 16:08:52,050 - process_forecast.py - Line: 49 - INFO - >> Successfully processed forecast data for city: Phuket, Thailand on 2024-05-27
+2025-02-18 16:08:52,050 - process_forecast.py - Line: 49 - INFO - >> Successfully processed forecast data for city: Phuket, Thailand on 2024-05-28
+2025-02-18 16:08:52,050 - process_forecast.py - Line: 49 - INFO - >> Successfully processed forecast data for city: Phuket, Thailand on 2024-05-29
+2025-02-18 16:08:52,051 - process_forecast.py - Line: 49 - INFO - >> Successfully processed forecast data for city: Pattaya, Thailand on 2024-05-27
+2025-02-18 16:08:52,051 - process_forecast.py - Line: 49 - INFO - >> Successfully processed forecast data for city: Pattaya, Thailand on 2024-05-28
+2025-02-18 16:08:52,051 - process_forecast.py - Line: 49 - INFO - >> Successfully processed forecast data for city: Pattaya, Thailand on 2024-05-29
+2025-02-18 16:08:52,051 - process_forecast.py - Line: 49 - INFO - >> Successfully processed forecast data for city: Hat Yai, Thailand on 2024-05-27
+2025-02-18 16:08:52,052 - process_forecast.py - Line: 49 - INFO - >> Successfully processed forecast data for city: Hat Yai, Thailand on 2024-05-28
+2025-02-18 16:08:52,052 - process_forecast.py - Line: 49 - INFO - >> Successfully processed forecast data for city: Hat Yai, Thailand on 2024-05-29
+2025-02-18 16:08:52,060 - process_forecast.py - Line: 64 - INFO - >> Data successfully written to output\raw\forecast\2024\05\27\forecast_2024-05-27.parquet
+2025-02-18 16:08:52,060 - main_etl_runner.py - Line: 77 - INFO - -- ETL Pipeline COMPLETED!! --

@@ -1,5 +1,5 @@
 ####
-## Helper file for processing JSON 
+## Helper file for processing data 
 ## Mario Caesar // caesarmario87@gmail.com
 ####
 
@@ -65,23 +65,73 @@ class ETLHelper:
 
         with open(f'config/{subfolder}/{config_name}.json', 'r') as file:
             return json.load(file)
-
+    
 
     def write_csv(self, data, folder_path, subfolder_path, context, date_csv):
         """
-        Write data into a CSV file using pandas DataFrame.
+        Write data into a structured CSV file following a year/month/day hierarchy.
 
         Args:
             data (list of dict): The data to write to the CSV file.
-            file_path (str): The destination file path for the CSV file.
+            folder_path (str): The base output directory.
+            subfolder_path (str): The subfolder output directory.
+            context (str): The table name used for structuring the directory.
+            date_csv (str): The date string for filename in YYYY-MM-DD format.
 
         Returns:
-            None
+            str: The file path where the CSV file was saved.
         """
-        file_path = f'{folder_path}/{subfolder_path}/{context}_{date_csv}.csv'
+        # Extract year, month, and day from the date string
+        date_obj = datetime.strptime(date_csv, "%Y-%m-%d")
+        year, month, day = date_obj.strftime("%Y"), date_obj.strftime("%m"), date_obj.strftime("%d")
 
+        # Construct the directory path
+        directory_path = os.path.join(folder_path, subfolder_path, context, year, month, day)
+
+        # Ensure the directory exists
+        os.makedirs(directory_path, exist_ok=True)
+
+        # Define the file path
+        file_path = os.path.join(directory_path, f"{context}_{date_csv}.csv")
+
+        # Convert data to DataFrame and write to CSV
         df = pd.DataFrame(data)
         df.to_csv(file_path, index=False)
+        
+        return file_path
+    
+
+    def write_parquet(self, data, folder_path, subfolder_path, context, date_parquet):
+        """
+        Write data into a structured Parquet file following a year/month/day hierarchy.
+
+        Args:
+            data (list of dict): The data to write to the Parquet file.
+            folder_path (str): The base output directory.
+            subfolder_path (str): The subfolder output directory.
+            context (str): The table name used for structuring the directory.
+            date_parquet (str): The date string for filename in YYYY-MM-DD format.
+
+        Returns:
+            str: The file path where the Parquet file was saved.
+        """
+        # Extract year, month, and day from the date string
+        date_obj = datetime.strptime(date_parquet, "%Y-%m-%d")
+        year, month, day = date_obj.strftime("%Y"), date_obj.strftime("%m"), date_obj.strftime("%d")
+
+        # Construct the directory path
+        directory_path = os.path.join(folder_path, subfolder_path, context, year, month, day)
+
+        # Ensure the directory exists
+        os.makedirs(directory_path, exist_ok=True)
+
+        # Define the file path
+        file_path = os.path.join(directory_path, f"{context}_{date_parquet}.parquet")
+
+        # Convert data to DataFrame and write to Parquet
+        df = pd.DataFrame(data)
+        df.to_parquet(file_path, index=False)
+        
         return file_path
 
 
@@ -200,6 +250,55 @@ class ETLHelper:
             raise
 
     
+    def read_parquet(self, folder_path, subfolder_path, table_name):
+        """
+        Read the latest data from a Parquet file based on the most recent file date.
+
+        Parameters:
+        - folder_path (str): Path to the folder containing Parquet files.
+        - subfolder_path (str): The subfolder path within the base folder.
+        - table_name (str): Name of the table to locate the correct file.
+
+        Returns:
+        - DataFrame: Pandas DataFrame containing the Parquet data.
+
+        Raises:
+        - FileNotFoundError: If no matching file is found.
+        - ValueError: If the file is empty or cannot be read properly.
+        """
+        try:
+            full_folder_path = f"{folder_path}/{subfolder_path}"
+            logger.info(f"Searching for the latest Parquet file for {table_name} in {full_folder_path}")
+            
+            # List all files in the folder
+            all_files = [f for f in os.listdir(full_folder_path) if f.startswith(table_name) and f.endswith(".parquet")]
+
+            if not all_files:
+                raise FileNotFoundError(f"No Parquet files found for {table_name} in {full_folder_path}")
+
+            # Sort files by date using the date in the filename (assuming format table_name_YYYY-MM-DD.parquet)
+            latest_file = sorted(all_files, key=lambda x: x.split('_')[-1].split('.')[0], reverse=True)[0]
+            file_path = os.path.join(full_folder_path, latest_file)
+
+            # Load the data
+            logger.info(f"Loading data from: {file_path}")
+            data = pd.read_parquet(file_path)
+
+            if data.empty:
+                logger.warning(f"The Parquet file {file_path} is empty!")
+                raise ValueError("The file is empty.")
+
+            logger.info(f"Data successfully loaded from {file_path} with {data.shape[0]} rows and {data.shape[1]} columns.")
+            return data
+
+        except FileNotFoundError as e:
+            logger.error(f"File not found error: {e}")
+            raise
+        except Exception as e:
+            logger.error(f"Error occurred while reading Parquet file: {e}")
+            raise
+
+
     def add_remark_columns(self, data, batch_id, load_dt, key):
         """
         Adds remark columns to the data for tracking and identification.

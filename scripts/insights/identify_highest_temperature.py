@@ -24,7 +24,7 @@ class IdentifyHighestTemperature:
             self.subfolder_insights = "insights"
             self.load_process_dt    = self.helper.get_load_timestamp()
             self.config             = self.helper.load_config(self.subfolder_insights, "identify_highest_temp")
-            logger.info("-- Initialized IdentifyHighestTemperature class successfully.")
+            logger.info("Initialized IdentifyHighestTemperature class successfully.")
         except Exception as e:
             logger.error(f"!! Failed to initialize IdentifyHighestTemperature class: {e}")
             raise
