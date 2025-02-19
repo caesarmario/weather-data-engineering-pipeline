@@ -5,7 +5,7 @@
 
 # Importing Libraries
 from utils.etl_helpers import ETLHelper
-from utils.logging_helper import get_logger
+from utils.logging_helpers import get_logger
 from utils.validation_helpers import ValidationHelper
 
 import pandas as pd
@@ -37,8 +37,8 @@ class CompareTemperatures:
         """
         try:
             logger.info("-- Loading data from CSV files")
-            current_data  = self.helper.read_csv(self.folder_output, self.subfolder_raw, "current")
-            forecast_data = self.helper.read_csv(self.folder_output, self.subfolder_raw, "forecast")
+            current_data  = self.helper.read_parquet(self.folder_output, self.subfolder_raw, "current")
+            forecast_data = self.helper.read_parquet(self.folder_output, self.subfolder_raw, "forecast")
             logger.info("Successfully loaded current and forecast CSV files.")
 
             return current_data, forecast_data
@@ -86,25 +86,6 @@ class CompareTemperatures:
                         "load_process_dt"   : self.load_process_dt
                     }
                     comparisons.append(comparison_result)
-
-                for column, column_config in self.config.items():
-                    # Convert data type using the helper function
-                    try:
-                        field_value = comparison_result[column]
-                        field_value = self.helper.convert_data_type(field_value, column_config.get("data_type"))
-                        comparison_result[column] = field_value
-                    except Exception as e:
-                        logger.error(f"!! Data type conversion error: {e}")
-
-                    # Perform validation if specified in config
-                    try:
-                        if column_config.get('validation'):
-                            validation_function = getattr(self.validation_helper, column_config['validation'], None)
-                            if validation_function:
-                                field_value = comparison_result[column]  # Fetch the field value for validation
-                                comparison_result[column] = validation_function(field_value)  # Apply validation
-                    except Exception as e:
-                        logger.error(f"!! Validation error for {column} in comparison result: {e}")
 
             # Convert the results to a DataFrame and save
             comparisons_df = pd.DataFrame(comparisons)

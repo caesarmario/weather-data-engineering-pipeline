@@ -6,7 +6,7 @@ Mario Caesar // caesarmario87@gmail.com
 import argparse
 
 from utils.etl_helpers import ETLHelper
-from utils.logging_helper import get_logger
+from utils.logging_helpers import get_logger
 from utils.validation_helpers import ValidationHelper
 
 from scripts.raw.process_location import ProcessLocation
@@ -19,7 +19,7 @@ from scripts.insights.temperature_statistics_by_city import TemperatureStatistic
 from scripts.insights.city_compare_visualizations import CityComparisonVisualization
 from scripts.insights.weather_alerts import WeatherAlerts
 
-logger = get_logger("main_process")
+logger = get_logger("etl_process")
 
 class MainETLRunner:
     """
