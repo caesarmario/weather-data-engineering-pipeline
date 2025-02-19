@@ -5,8 +5,9 @@
 
 # Importing Libraries
 from utils.etl_helpers import ETLHelper
-from utils.logging_helper import get_logger
+from utils.logging_helpers import get_logger
 from utils.validation_helpers import ValidationHelper
+from utils.visual_helpers import VisualHelper
 
 import pandas as pd
 import matplotlib.pyplot as plt

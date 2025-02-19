@@ -1,0 +1,24 @@
+etl_name: Compare Temperatures
+class_name: CompareTemperatures
+etl_config: compare_temperatures
+datasets:
+  - current
+  - forecast
+output_filename: temperature_comparison
+sql_query: |
+  SELECT 
+      c.location_id,
+      c.date AS current_date,
+      f.date AS forecast_date,
+      c.temp_c AS current_temp_c,
+      f.avgtemp_c AS forecast_temp_c,
+      (c.temp_c - f.avgtemp_c) AS difference_temp_c,
+      CASE 
+          WHEN c.temp_c > f.avgtemp_c THEN 'Higher'
+          WHEN c.temp_c < f.avgtemp_c THEN 'Lower'
+          ELSE 'Equal'
+      END AS comparison,
+      '{{ load_process_dt }}' AS load_process_dt
+  FROM current_data c
+  LEFT JOIN forecast_data f
+  ON c.location_id = f.location_id

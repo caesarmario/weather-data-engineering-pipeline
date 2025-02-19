@@ -1,0 +1,87 @@
+####
+## ETL file for {{ etl_name }} using Pandas and SQL
+## Generated via Jinja Template
+####
+
+# Importing Libraries
+from utils.etl_helpers import ETLHelper
+from utils.logging_helpers import get_logger
+from utils.validation_helpers import ValidationHelper
+
+import pandas as pd
+import pandasql as ps
+
+logger = get_logger("etl_process")
+
+class {{ class_name }}:
+    """
+    Class for performing {{ etl_name }} processing.
+    """
+    def __init__(self):
+        try:
+            # Initialize helper and set folder paths
+            self.helper             = ETLHelper()
+            self.validation_helper  = ValidationHelper()
+            self.folder_output      = "output"
+            self.subfolder_raw      = "raw"
+            self.subfolder_insights = "insights"
+            self.load_process_dt    = self.helper.get_load_timestamp()
+            self.config             = self.helper.load_config(self.subfolder_insights, "{{ etl_config }}")
+            logger.info("Initialized {{ class_name }} class successfully.")
+        except Exception as e:
+            logger.error(f"!! Failed to initialize {{ class_name }} class: {e}")
+            raise
+
+    def load_data(self):
+        """
+        Load the processed data from Parquet files based on the YAML configuration.
+        """
+        try:
+            logger.info("-- Loading data from Parquet files")
+
+            {% for dataset in datasets %}
+            {{ dataset }}_data = self.helper.read_parquet(self.folder_output, self.subfolder_raw, "{{ dataset }}")
+            {% endfor %}
+
+            logger.info("Successfully loaded data from Parquet files.")
+            return {% for dataset in datasets %}{{ dataset }}_data, {% endfor %}
+        
+        except Exception as e:
+            logger.error(f"!! Error loading Parquet files: {e}")
+            raise
+
+    def process_data(self):
+        """
+        Perform data transformation using SQL.
+        """
+        try:
+            logger.info("-- Starting {{ etl_name }} process")
+
+            {% for dataset in datasets %}
+            {{ dataset }}_data = self.load_data()[{{ loop.index0 }}]
+            {% endfor %}
+
+            # SQL Transformation
+            sql_query = """
+            {{ sql_query }}
+            """
+            result_df = ps.sqldf(sql_query, locals())
+
+            # Generate Output
+            full_output_folder  = f"{self.folder_output}/{self.subfolder_insights}"
+            output_file         = f"{full_output_folder}/{{ output_filename }}_{self.load_process_dt}.csv"
+            result_df.to_csv(output_file, index=False)
+            logger.info(f"{{ etl_name }} completed successfully and saved to {output_file}.")
+
+        except Exception as e:
+            logger.error(f"!! Error during {{ etl_name }} process: {e}")
+            raise
+
+if __name__ == "__main__":
+    try:
+        logger.info("-- Starting {{ etl_name }} script")
+        processor = {{ class_name }}()
+        processor.process_data()
+        logger.info("-- {{ etl_name }} script completed successfully")
+    except Exception as e:
+        logger.error(f"!! Critical error running the {{ etl_name }} script: {e}")

@@ -5,7 +5,7 @@
 
 # Importing Libraries
 from utils.etl_helpers import ETLHelper
-from utils.logging_helper import get_logger
+from utils.logging_helpers import get_logger
 from utils.validation_helpers import ValidationHelper
 
 logger = get_logger("etl_process")

@@ -5,7 +5,7 @@
 
 # Importing Libraries
 from datetime import datetime, timedelta
-from utils.logging_helper import get_logger
+from utils.logging_helpers import get_logger
 
 logger = get_logger("etl_process")
 

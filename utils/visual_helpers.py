@@ -9,7 +9,7 @@ from datetime import datetime
 import os
 import matplotlib.pyplot as plt
 
-from utils.logging_helper import get_logger
+from utils.logging_helpers import get_logger
 
 logger = get_logger("etl_process")
 
