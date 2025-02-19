@@ -5,11 +5,13 @@
 
 # Importing Libraries
 from utils.etl_helpers import ETLHelper
-from utils.logging_config import logger
+from utils.logging_helper import get_logger
 from utils.validation_helpers import ValidationHelper
 
 import pandas as pd
 # import pandasql import sqldf
+
+logger = get_logger("etl_process")
 
 class WeatherAlerts:
     """

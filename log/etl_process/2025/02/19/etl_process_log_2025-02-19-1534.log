@@ -1,0 +1,40 @@
+2025-02-19 15:34:07,614 - process_location.py - Line: 27 - INFO - Initialized location table class successfully.
+2025-02-19 15:34:07,616 - process_current.py - Line: 27 - INFO - Initialized current table class successfully.
+2025-02-19 15:34:07,621 - process_forecast.py - Line: 27 - INFO - Initialized forecast table class successfully.
+2025-02-19 15:34:07,624 - compare_temperatures.py - Line: 29 - INFO - Initialized CompareTemperatures class successfully.
+2025-02-19 15:34:07,631 - identify_highest_temperature.py - Line: 29 - INFO - Initialized IdentifyHighestTemperature class successfully.
+2025-02-19 15:34:07,637 - temperature_statistics_by_city.py - Line: 29 - INFO - Initialized TemperatureStatistics class successfully.
+2025-02-19 15:34:07,642 - city_compare_visualizations.py - Line: 30 - INFO - Initialized CityComparisonVisualization class successfully.
+2025-02-19 15:34:07,646 - weather_alerts.py - Line: 30 - INFO - Initialized WeatherAlerts class successfully.
+2025-02-19 15:34:07,652 - process_location.py - Line: 34 - INFO - >> Starting the data processing for location table...
+2025-02-19 15:34:07,653 - process_location.py - Line: 48 - INFO - >> Successfully processed data for city: Bangkok, Thailand
+2025-02-19 15:34:07,653 - process_location.py - Line: 48 - INFO - >> Successfully processed data for city: Chiang Mai, Thailand
+2025-02-19 15:34:07,653 - process_location.py - Line: 48 - INFO - >> Successfully processed data for city: Phuket, Thailand
+2025-02-19 15:34:07,654 - process_location.py - Line: 48 - INFO - >> Successfully processed data for city: Pattaya, Thailand
+2025-02-19 15:34:07,654 - process_location.py - Line: 48 - INFO - >> Successfully processed data for city: Hat Yai, Thailand
+2025-02-19 15:34:07,719 - process_location.py - Line: 62 - INFO - >> Data successfully written to output\raw\location\2024\05\27\location_2024-05-27.parquet
+2025-02-19 15:34:07,719 - process_current.py - Line: 34 - INFO - >> Starting the data processing for current table...
+2025-02-19 15:34:07,720 - process_current.py - Line: 48 - INFO - >> Successfully processed data for city: Bangkok, Thailand
+2025-02-19 15:34:07,720 - process_current.py - Line: 48 - INFO - >> Successfully processed data for city: Chiang Mai, Thailand
+2025-02-19 15:34:07,720 - process_current.py - Line: 48 - INFO - >> Successfully processed data for city: Phuket, Thailand
+2025-02-19 15:34:07,721 - process_current.py - Line: 48 - INFO - >> Successfully processed data for city: Pattaya, Thailand
+2025-02-19 15:34:07,721 - process_current.py - Line: 48 - INFO - >> Successfully processed data for city: Hat Yai, Thailand
+2025-02-19 15:34:07,728 - process_current.py - Line: 62 - INFO - >> Data successfully written to output\raw\current\2024\05\27\current_2024-05-27.parquet
+2025-02-19 15:34:07,728 - process_forecast.py - Line: 34 - INFO - >> Starting the data processing for forecast table...
+2025-02-19 15:34:07,728 - process_forecast.py - Line: 50 - INFO - >> Successfully processed forecast data for city: Bangkok, Thailand on 2024-05-27
+2025-02-19 15:34:07,729 - process_forecast.py - Line: 50 - INFO - >> Successfully processed forecast data for city: Bangkok, Thailand on 2024-05-28
+2025-02-19 15:34:07,729 - etl_helpers.py - Line: 169 - ERROR - Data type conversion error for value 'invalid_data' to FLOAT: could not convert string to float: 'invalid_data'
+2025-02-19 15:34:07,730 - process_forecast.py - Line: 50 - INFO - >> Successfully processed forecast data for city: Bangkok, Thailand on 2024-05-29
+2025-02-19 15:34:07,731 - process_forecast.py - Line: 50 - INFO - >> Successfully processed forecast data for city: Chiang Mai, Thailand on 2024-05-27
+2025-02-19 15:34:07,731 - process_forecast.py - Line: 50 - INFO - >> Successfully processed forecast data for city: Chiang Mai, Thailand on 2024-05-28
+2025-02-19 15:34:07,731 - process_forecast.py - Line: 50 - INFO - >> Successfully processed forecast data for city: Chiang Mai, Thailand on 2024-05-29
+2025-02-19 15:34:07,732 - process_forecast.py - Line: 50 - INFO - >> Successfully processed forecast data for city: Phuket, Thailand on 2024-05-27
+2025-02-19 15:34:07,732 - process_forecast.py - Line: 50 - INFO - >> Successfully processed forecast data for city: Phuket, Thailand on 2024-05-28
+2025-02-19 15:34:07,733 - process_forecast.py - Line: 50 - INFO - >> Successfully processed forecast data for city: Phuket, Thailand on 2024-05-29
+2025-02-19 15:34:07,733 - process_forecast.py - Line: 50 - INFO - >> Successfully processed forecast data for city: Pattaya, Thailand on 2024-05-27
+2025-02-19 15:34:07,733 - process_forecast.py - Line: 50 - INFO - >> Successfully processed forecast data for city: Pattaya, Thailand on 2024-05-28
+2025-02-19 15:34:07,734 - process_forecast.py - Line: 50 - INFO - >> Successfully processed forecast data for city: Pattaya, Thailand on 2024-05-29
+2025-02-19 15:34:07,734 - process_forecast.py - Line: 50 - INFO - >> Successfully processed forecast data for city: Hat Yai, Thailand on 2024-05-27
+2025-02-19 15:34:07,734 - process_forecast.py - Line: 50 - INFO - >> Successfully processed forecast data for city: Hat Yai, Thailand on 2024-05-28
+2025-02-19 15:34:07,735 - process_forecast.py - Line: 50 - INFO - >> Successfully processed forecast data for city: Hat Yai, Thailand on 2024-05-29
+2025-02-19 15:34:07,745 - process_forecast.py - Line: 64 - INFO - >> Data successfully written to output\raw\forecast\2024\05\27\forecast_2024-05-27.parquet
