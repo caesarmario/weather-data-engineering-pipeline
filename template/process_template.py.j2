@@ -1,5 +1,5 @@
 ####
-## ETL file for processing forecast data
+## ETL file for processing {{ table_name }} data
 ## Mario Caesar // caesarmario87@gmail.com
 ####
 
@@ -11,27 +11,27 @@ from utils.validation_helpers import ValidationHelper
 logger = get_logger("etl_process")
 
 # Processing data
-class ProcessForecast:
+class Process{{ table_name | capitalize }}:
     def __init__(self):
         try:
             # Setting up variables and config
             self.helper            = ETLHelper()
             self.validation_helper = ValidationHelper()
             self.batch_id          = self.helper.generate_batch_id()
-            self.config            = self.helper.load_config("raw", "forecast_config")
+            self.config            = self.helper.load_config("raw", "{{ config_file }}")
             self.load_dt           = self.helper.get_load_timestamp()
             self.folder_path       = "output"
             self.subfolder_path    = "raw"
-            self.table_name        = "forecast"
+            self.table_name        = "{{ table_name }}"
 
-            logger.info("Initialized forecast table class successfully.")
+            logger.info("Initialized {{ table_name }} table class successfully.")
         except Exception as e:
             logger.error(f"!! Failed to load configuration: {e}")
             raise
 
     def process(self, data):
         # Main processing function
-        logger.info(">> Starting the data processing for forecast table...")
+        logger.info(">> Starting the data processing for {{ table_name }} table...")
         processed_data = []
 
         try:
@@ -40,7 +40,7 @@ class ProcessForecast:
                     # Add batch ID, load timestamp, and city key
                     record = self.helper.add_remark_columns(record, self.batch_id, self.load_dt, key)
 
-                    
+                    {% if table_name == "forecast" %}
                     # Extract forecast data correctly
                     forecast_days = record.get('forecast', {}).get('forecastday', [])
                     for day in forecast_days:
@@ -48,7 +48,13 @@ class ProcessForecast:
                         processed_data.append(processed_record)
 
                         logger.info(f">> Successfully processed forecast data for city: {key} on {day.get('date')}")
-                    
+                    {% else %}
+                    # Extract columns based on the configuration
+                    processed_record = self.helper.transform_helper(self.config, record, self.table_name, None)
+                    processed_data.append(processed_record)
+
+                    logger.info(f">> Successfully processed data for city: {key}")
+                    {% endif %}
 
                 except Exception as e:
                     logger.error(f"!! Error processing data for city: {key}, Error: {e}")
@@ -58,7 +64,7 @@ class ProcessForecast:
 
         try:
             # Write to a CSV file
-            date_csv = self.helper.date_filename(processed_data[0]["date"])
+            date_csv = self.helper.date_filename(processed_data[0]["{{ date_csv_cols }}"])
             file_path = self.helper.write_parquet(processed_data, self.folder_path, self.subfolder_path, self.table_name, date_csv)
 
             logger.info(f">> Data successfully written to {file_path}")

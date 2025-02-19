@@ -1,0 +1,5 @@
+2025-02-19 15:34:07,610 - main_etl_runner.py - Line: 139 - INFO - Launching the ETL pipeline...
+2025-02-19 15:34:07,610 - main_etl_runner.py - Line: 35 - INFO - -- ETL Runner initialization... --
+2025-02-19 15:34:07,647 - main_etl_runner.py - Line: 47 - INFO - -- ETL Runner initialized successfully. --
+2025-02-19 15:34:07,647 - main_etl_runner.py - Line: 55 - INFO - -- Starting ETL Pipeline --
+2025-02-19 15:34:07,746 - main_etl_runner.py - Line: 79 - INFO - -- ETL Pipeline COMPLETED!! --
