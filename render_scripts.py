@@ -25,7 +25,7 @@ class ScriptRenderer:
         self.template_dir   = "template"
         self.config_folder  = "config"
         self.output_dirs    = {
-            "etl"    : "scripts/etl",
+            "etl"    : "scripts/insights",
             "process": "scripts/raw"
         }
         self.templates      = {
@@ -41,6 +41,7 @@ class ScriptRenderer:
         # Ensure output directories exist
         for key, path in self.output_dirs.items():
             os.makedirs(path, exist_ok=True)
+
 
     def load_config(self):
         """
@@ -63,6 +64,7 @@ class ScriptRenderer:
             logger.error(f"!! Error parsing YAML file: {e}")
             raise
 
+
     def render_scripts(self):
         """
         Renders Python scripts dynamically using Jinja2 templates based on the selected mode.
@@ -72,15 +74,16 @@ class ScriptRenderer:
             template_loader = jinja2.FileSystemLoader(searchpath=self.template_dir)
             template_env    = jinja2.Environment(loader=template_loader)
 
-            if self.mode in ["etl", "all"]:
+            if self.mode in ["etl"]:
                 self.render_etl(template_env)
 
-            if self.mode in ["process", "all"]:
+            if self.mode in ["process"]:
                 self.render_process(template_env)
 
         except Exception as e:
             logger.error(f"!! Error during script rendering: {e}")
             raise
+
 
     def render_etl(self, template_env):
         """
@@ -88,14 +91,18 @@ class ScriptRenderer:
         """
         template = template_env.get_template(self.templates["etl"])
 
-        for etl_name, etl_config in self.config.get("etl_processes", {}).items():
-            output_file = os.path.join(self.output_dirs["etl"], f"etl_{etl_name}.py")
+        for name, config in self.config.get("etl", {}).items():
+            output_file = os.path.join(self.output_dirs["etl"], f"etl_{name}.py")
 
             rendered_script = template.render(
-                etl_name        = etl_name,
-                input_sources   = etl_config["input_sources"],
-                transformations = etl_config["transformations"],
-                output_format   = etl_config["output_format"]
+                etl_config      = name,
+                class_name      = config["class_name"],
+                etl_name        = config["etl_name"],
+                config_file     = config["config_file"],
+                date_csv_cols   = config["date_csv_cols"],
+                datasets        = config["datasets"],
+                output_filename = config["output_filename"],
+                sql_query       = config["sql_query"]
             )
 
             with open(output_file, "w") as f:
@@ -103,26 +110,37 @@ class ScriptRenderer:
 
             logger.info(f">> Generated ETL script: {output_file}")
 
+
     def render_process(self, template_env):
         """
-        Renders Flatten Process scripts based on Jinja2 template and YAML config.
+        Renders Python process files dynamically using Jinja2 templates.
         """
-        template = template_env.get_template(self.templates["process"])
+        try:
+            # Load Jinja template
+            template_loader = jinja2.FileSystemLoader(searchpath=self.template_dir)
+            template_env    = jinja2.Environment(loader=template_loader)
+            template        = template_env.get_template(self.templates["process"])
 
-        for process_name, process_config in self.config.get("processes", {}).items():
-            output_file = os.path.join(self.output_dirs["process"], f"process_{process_name}.py")
+            # Generate process files based on YAML config
+            for name, config in self.config.get("processes", {}).items():
+                output_file = os.path.join(self.output_dirs["process"], f"process_{name}.py")
 
-            rendered_script = template.render(
-                process_name    = process_name,
-                input_sources   = process_config["input_sources"],
-                mappings        = process_config["mappings"],
-                output_format   = process_config["output_format"]
-            )
+                # Render template with provided configurations
+                rendered_script   = template.render(
+                    table_name    = name,
+                    config_file   = config["config_file"],
+                    date_csv_cols = config["date_csv_cols"]
+                )
 
-            with open(output_file, "w") as f:
-                f.write(rendered_script)
+                # Write rendered content to file
+                with open(output_file, "w") as f:
+                    f.write(rendered_script)
 
-            logger.info(f">> Generated Flatten Process script: {output_file}")
+                logger.info(f">> Generated: {output_file}")
+        except Exception as e:
+            logger.error(f"!! Error during rendering process: {e}")
+            raise
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Render Python scripts for ETL and Flatten Process from Jinja templates and YAML config.")
@@ -135,10 +153,9 @@ if __name__ == "__main__":
     parser.add_argument(
         "--mode", 
         type     = str, 
-        choices  = ["etl", "process", "all"],
-        default  = ["all"],
+        choices  = ["etl", "process"],
         required = True, 
-        help     = "Specify whether to render 'etl', 'process', or 'all'"
+        help     = "Specify whether to render 'etl' or 'process'"
     )
 
     args = parser.parse_args()

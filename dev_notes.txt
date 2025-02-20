@@ -1,3 +1,4 @@
 python main_etl_runner.py --processes all --data_path data/weather_data_sample.json
 
-python render_scripts.py --config etl_config.yaml --mode all
+python render_scripts.py --config etl_config.yaml --mode etl
+python render_scripts.py --config process_config.yaml --mode process

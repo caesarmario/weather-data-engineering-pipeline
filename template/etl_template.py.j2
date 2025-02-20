@@ -1,15 +1,15 @@
 ####
 ## ETL file for {{ etl_name }} using Pandas and SQL
-## Generated via Jinja Template
+## Mario Caesar // caesarmario87@gmail.com
 ####
 
 # Importing Libraries
+import pandas as pd
+import pandasql as ps
+
 from utils.etl_helpers import ETLHelper
 from utils.logging_helpers import get_logger
 from utils.validation_helpers import ValidationHelper
-
-import pandas as pd
-import pandasql as ps
 
 logger = get_logger("etl_process")
 
