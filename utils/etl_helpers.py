@@ -203,13 +203,16 @@ class ETLHelper:
             return None
 
 
-    def read_csv(self, folder_path, subfolder_path, table_name):
+    def read_csv(self, folder_path, subfolder_path, table_name, date_csv=None):
         """
         Read the latest data from a CSV file based on the most recent file date.
 
         Parameters:
-        - folder_path (str): Path to the folder containing CSV files.
-        - table_name (str): Name of the table to locate the correct file.
+        - folder_path (str): Base folder path (e.g., "output").
+        - subfolder_path (str): Subfolder path (e.g., "raw").
+        - table_name (str): Name of the table (e.g., "current").
+        - date_csv (str, optional): The specific date to read data from in format "YYYY-MM-DD". 
+                                    If not provided, it reads the latest available file.
 
         Returns:
         - DataFrame: Pandas DataFrame containing the CSV data.
@@ -219,20 +222,41 @@ class ETLHelper:
         - ValueError: If the file is empty or cannot be read properly.
         """
         try:
-            full_folder_path = f"{folder_path}/{subfolder_path}"
-            logger.info(f"Searching for the latest CSV file for {table_name} in {full_folder_path}")
-            
-            # List all files in the folder
-            all_files = [f for f in os.listdir(full_folder_path) if f.startswith(table_name) and f.endswith(".csv")]
+            base_path = os.path.join(folder_path, subfolder_path, table_name)
 
-            if not all_files:
-                raise FileNotFoundError(f"No CSV files found for {table_name} in {full_folder_path}")
+            # If a specific date is given, construct the expected file path
+            if date_csv:
+                date_obj = datetime.strptime(date_csv, "%Y-%m-%d")
+                year, month, day = date_obj.strftime("%Y"), date_obj.strftime("%m"), date_obj.strftime("%d")
+                file_path = os.path.join(base_path, year, month, day, f"{table_name}_{date_csv}.csv")
+            else:
+                # Scan for the latest available CSV file
+                year_dirs = sorted([d for d in os.listdir(base_path) if d.isdigit()], reverse=True)
+                if not year_dirs:
+                    raise FileNotFoundError(f"No year directories found for {table_name} in {base_path}")
 
-            # Sort files by date using the date in the filename (assuming format table_name_YYYY-MM-DD.csv)
-            latest_file = sorted(all_files, key=lambda x: x.split('_')[-1].split('.')[0], reverse=True)[0]
-            file_path = os.path.join(full_folder_path, latest_file)
+                for year in year_dirs:
+                    month_dirs = sorted([d for d in os.listdir(os.path.join(base_path, year)) if d.isdigit()], reverse=True)
+                    if not month_dirs:
+                        continue
+                    
+                    for month in month_dirs:
+                        day_dirs = sorted([d for d in os.listdir(os.path.join(base_path, year, month)) if d.isdigit()], reverse=True)
+                        if not day_dirs:
+                            continue
+                        
+                        for day in day_dirs:
+                            file_path = os.path.join(base_path, year, month, day, f"{table_name}_{year}-{month}-{day}.csv")
+                            if os.path.exists(file_path):
+                                break
+                        if os.path.exists(file_path):
+                            break
+                    if os.path.exists(file_path):
+                        break
 
-            # Load the data
+            if not os.path.exists(file_path):
+                raise FileNotFoundError(f"No CSV file found for {table_name} in {base_path}")
+
             logger.info(f"Loading data from: {file_path}")
             data = pd.read_csv(file_path)
 
@@ -251,14 +275,16 @@ class ETLHelper:
             raise
 
     
-    def read_parquet(self, folder_path, subfolder_path, table_name):
+    def read_parquet(self, folder_path, subfolder_path, table_name, date_parquet=None):
         """
         Read the latest data from a Parquet file based on the most recent file date.
 
         Parameters:
-        - folder_path (str): Path to the folder containing Parquet files.
-        - subfolder_path (str): The subfolder path within the base folder.
-        - table_name (str): Name of the table to locate the correct file.
+        - folder_path (str): Base folder path (e.g., "output").
+        - subfolder_path (str): Subfolder path (e.g., "raw").
+        - table_name (str): Name of the table (e.g., "current").
+        - date_parquet (str, optional): The specific date to read data from in format "YYYY-MM-DD". 
+                                        If not provided, it reads the latest available file.
 
         Returns:
         - DataFrame: Pandas DataFrame containing the Parquet data.
@@ -268,20 +294,41 @@ class ETLHelper:
         - ValueError: If the file is empty or cannot be read properly.
         """
         try:
-            full_folder_path = f"{folder_path}/{subfolder_path}"
-            logger.info(f"Searching for the latest Parquet file for {table_name} in {full_folder_path}")
+            base_path = os.path.join(folder_path, subfolder_path, table_name)
             
-            # List all files in the folder
-            all_files = [f for f in os.listdir(full_folder_path) if f.startswith(table_name) and f.endswith(".parquet")]
+            # If a specific date is given, construct the expected file path
+            if date_parquet:
+                date_obj = datetime.strptime(date_parquet, "%Y-%m-%d")
+                year, month, day = date_obj.strftime("%Y"), date_obj.strftime("%m"), date_obj.strftime("%d")
+                file_path = os.path.join(base_path, year, month, day, f"{table_name}_{date_parquet}.parquet")
+            else:
+                # Scan for the latest available Parquet file
+                year_dirs = sorted([d for d in os.listdir(base_path) if d.isdigit()], reverse=True)
+                if not year_dirs:
+                    raise FileNotFoundError(f"No year directories found for {table_name} in {base_path}")
 
-            if not all_files:
-                raise FileNotFoundError(f"No Parquet files found for {table_name} in {full_folder_path}")
+                for year in year_dirs:
+                    month_dirs = sorted([d for d in os.listdir(os.path.join(base_path, year)) if d.isdigit()], reverse=True)
+                    if not month_dirs:
+                        continue
+                    
+                    for month in month_dirs:
+                        day_dirs = sorted([d for d in os.listdir(os.path.join(base_path, year, month)) if d.isdigit()], reverse=True)
+                        if not day_dirs:
+                            continue
+                        
+                        for day in day_dirs:
+                            file_path = os.path.join(base_path, year, month, day, f"{table_name}_{year}-{month}-{day}.parquet")
+                            if os.path.exists(file_path):
+                                break
+                        if os.path.exists(file_path):
+                            break
+                    if os.path.exists(file_path):
+                        break
 
-            # Sort files by date using the date in the filename (assuming format table_name_YYYY-MM-DD.parquet)
-            latest_file = sorted(all_files, key=lambda x: x.split('_')[-1].split('.')[0], reverse=True)[0]
-            file_path = os.path.join(full_folder_path, latest_file)
+            if not os.path.exists(file_path):
+                raise FileNotFoundError(f"No Parquet file found for {table_name} in {base_path}")
 
-            # Load the data
             logger.info(f"Loading data from: {file_path}")
             data = pd.read_parquet(file_path)
 
@@ -298,6 +345,7 @@ class ETLHelper:
         except Exception as e:
             logger.error(f"Error occurred while reading Parquet file: {e}")
             raise
+
 
 
     def add_remark_columns(self, data, batch_id, load_dt, key):
@@ -408,4 +456,3 @@ class ETLHelper:
             logger.warning(f"Timestamp inconsistency detected!! Please review the data source.")
 
         return processed_record
-

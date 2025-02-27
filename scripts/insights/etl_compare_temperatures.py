@@ -4,7 +4,6 @@
 ####
 
 # Importing Libraries
-import pandas as pd
 import pandasql as ps
 
 from utils.etl_helpers import ETLHelper
