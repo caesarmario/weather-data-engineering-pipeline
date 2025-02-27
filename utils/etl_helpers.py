@@ -456,4 +456,3 @@ class ETLHelper:
             logger.warning(f"Timestamp inconsistency detected!! Please review the data source.")
 
         return processed_record
-
