@@ -13,7 +13,7 @@ from scripts.raw.process_location import ProcessLocation
 from scripts.raw.process_current import ProcessCurrent
 from scripts.raw.process_forecast import ProcessForecast
 
-from scripts.insights.compare_temperatures import CompareTemperatures
+from scripts.insights.etl_compare_temperatures import CompareTemperatures
 from scripts.insights.identify_highest_temperature import IdentifyHighestTemperature
 from scripts.insights.temperature_statistics_by_city import TemperatureStatistics
 from scripts.insights.city_compare_visualizations import CityComparisonVisualization
