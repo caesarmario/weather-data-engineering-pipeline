@@ -14,7 +14,7 @@ from utils.logging_helpers import get_logger
 from datetime import datetime, timedelta
 from pathlib import Path
 
-logger = get_logger("etl_process")
+logger = get_logger("data_generator")
 
 # Mapping Dicts.
 CONDITIONS_MAPPING = {

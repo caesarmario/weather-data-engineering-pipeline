@@ -1,0 +1,454 @@
+{
+    "Tokyo, Japan": {
+        "location": {
+            "name": "Tokyo",
+            "region": "Kanto",
+            "country": "Japan",
+            "lat": 35.6762,
+            "lon": 139.6503,
+            "tz_id": "Asia/Tokyo",
+            "localtime_epoch": 1746687974,
+            "localtime": "2025-05-08 14:06"
+        },
+        "current": {
+            "last_updated": "2025-05-08 14:06",
+            "temp_c": 15.5,
+            "temp_f": 59.9,
+            "is_day": 1,
+            "condition": {
+                "text": "Cloudy",
+                "code": 1006
+            }
+        },
+        "forecast": {
+            "forecastday": [
+                {
+                    "date": "2025-05-08",
+                    "date_epoch": 1746687974,
+                    "day": {
+                        "maxtemp_c": 22.12,
+                        "maxtemp_f": 71.82,
+                        "mintemp_c": 18.35,
+                        "mintemp_f": 65.03,
+                        "avgtemp_c": 20.23,
+                        "avgtemp_f": 68.41,
+                        "maxwind_mph": 5.0,
+                        "maxwind_kph": 8.05,
+                        "totalprecip_mm": 2.09,
+                        "totalprecip_in": 0.08,
+                        "totalsnow_cm": 1.2,
+                        "avgvis_km": 5.12,
+                        "avgvis_miles": 3.18,
+                        "avghumidity": 60,
+                        "daily_will_it_rain": 1,
+                        "daily_chance_of_rain": 21,
+                        "daily_will_it_snow": 1,
+                        "daily_chance_of_snow": 30,
+                        "condition": {
+                            "text": "Patchy rain nearby",
+                            "code": 1063
+                        },
+                        "uv": 4.13
+                    }
+                },
+                {
+                    "date": "2025-05-09",
+                    "date_epoch": 1746774374,
+                    "day": {
+                        "maxtemp_c": 29.34,
+                        "maxtemp_f": 84.81,
+                        "mintemp_c": 16.44,
+                        "mintemp_f": 61.59,
+                        "avgtemp_c": 22.89,
+                        "avgtemp_f": 73.2,
+                        "maxwind_mph": 8.17,
+                        "maxwind_kph": 13.15,
+                        "totalprecip_mm": 5.33,
+                        "totalprecip_in": 0.21,
+                        "totalsnow_cm": 0.75,
+                        "avgvis_km": 5.87,
+                        "avgvis_miles": 3.65,
+                        "avghumidity": 84,
+                        "daily_will_it_rain": 1,
+                        "daily_chance_of_rain": 66,
+                        "daily_will_it_snow": 1,
+                        "daily_chance_of_snow": 24,
+                        "condition": {
+                            "text": "Moderate rain",
+                            "code": 1186
+                        },
+                        "uv": 6.61
+                    }
+                },
+                {
+                    "date": "2025-05-10",
+                    "date_epoch": 1746860774,
+                    "day": {
+                        "maxtemp_c": 30.6,
+                        "maxtemp_f": 87.08,
+                        "mintemp_c": 19.52,
+                        "mintemp_f": 67.14,
+                        "avgtemp_c": 25.06,
+                        "avgtemp_f": 77.11,
+                        "maxwind_mph": 5.22,
+                        "maxwind_kph": 8.4,
+                        "totalprecip_mm": 5.25,
+                        "totalprecip_in": 0.21,
+                        "totalsnow_cm": 0.87,
+                        "avgvis_km": 9.73,
+                        "avgvis_miles": 6.05,
+                        "avghumidity": 66,
+                        "daily_will_it_rain": 1,
+                        "daily_chance_of_rain": 56,
+                        "daily_will_it_snow": 1,
+                        "daily_chance_of_snow": 25,
+                        "condition": {
+                            "text": "Light rain",
+                            "code": 1150
+                        },
+                        "uv": 6.41
+                    }
+                }
+            ]
+        }
+    },
+    "Osaka, Japan": {
+        "location": {
+            "name": "Osaka",
+            "region": "Kansai",
+            "country": "Japan",
+            "lat": 34.6937,
+            "lon": 135.5023,
+            "tz_id": "Asia/Tokyo",
+            "localtime_epoch": 1746687974,
+            "localtime": "2025-05-08 14:06"
+        },
+        "current": {
+            "last_updated": "2025-05-08 14:06",
+            "temp_c": 21.9,
+            "temp_f": 71.4,
+            "is_day": 1,
+            "condition": {
+                "text": "Light rain",
+                "code": 1150
+            }
+        },
+        "forecast": {
+            "forecastday": [
+                {
+                    "date": "2025-05-08",
+                    "date_epoch": 1746687974,
+                    "day": {
+                        "maxtemp_c": 21.27,
+                        "maxtemp_f": 70.29,
+                        "mintemp_c": 11.92,
+                        "mintemp_f": 53.46,
+                        "avgtemp_c": 16.59,
+                        "avgtemp_f": 61.86,
+                        "maxwind_mph": 13.98,
+                        "maxwind_kph": 22.5,
+                        "totalprecip_mm": 3.06,
+                        "totalprecip_in": 0.12,
+                        "totalsnow_cm": 1.98,
+                        "avgvis_km": 9.77,
+                        "avgvis_miles": 6.07,
+                        "avghumidity": 71,
+                        "daily_will_it_rain": 1,
+                        "daily_chance_of_rain": 50,
+                        "daily_will_it_snow": 1,
+                        "daily_chance_of_snow": 44,
+                        "condition": {
+                            "text": "Patchy rain nearby",
+                            "code": 1063
+                        },
+                        "uv": 4.06
+                    }
+                },
+                {
+                    "date": "2025-05-09",
+                    "date_epoch": 1746774374,
+                    "day": {
+                        "maxtemp_c": 29.87,
+                        "maxtemp_f": 85.77,
+                        "mintemp_c": 12.7,
+                        "mintemp_f": 54.86,
+                        "avgtemp_c": 21.29,
+                        "avgtemp_f": 70.32,
+                        "maxwind_mph": 11.1,
+                        "maxwind_kph": 17.86,
+                        "totalprecip_mm": 3.75,
+                        "totalprecip_in": 0.15,
+                        "totalsnow_cm": 4.82,
+                        "avgvis_km": 7.37,
+                        "avgvis_miles": 4.58,
+                        "avghumidity": 84,
+                        "daily_will_it_rain": 1,
+                        "daily_chance_of_rain": 46,
+                        "daily_will_it_snow": 1,
+                        "daily_chance_of_snow": 100,
+                        "condition": {
+                            "text": "Patchy rain nearby",
+                            "code": 1063
+                        },
+                        "uv": 5.68
+                    }
+                },
+                {
+                    "date": "2025-05-10",
+                    "date_epoch": 1746860774,
+                    "day": {
+                        "maxtemp_c": 20.12,
+                        "maxtemp_f": 68.22,
+                        "mintemp_c": 13.2,
+                        "mintemp_f": 55.76,
+                        "avgtemp_c": 16.66,
+                        "avgtemp_f": 61.99,
+                        "maxwind_mph": 10.8,
+                        "maxwind_kph": 17.38,
+                        "totalprecip_mm": 9.75,
+                        "totalprecip_in": 0.38,
+                        "totalsnow_cm": 4.76,
+                        "avgvis_km": 6.67,
+                        "avgvis_miles": 4.14,
+                        "avghumidity": 63,
+                        "daily_will_it_rain": 1,
+                        "daily_chance_of_rain": 100,
+                        "daily_will_it_snow": 1,
+                        "daily_chance_of_snow": 98,
+                        "condition": {
+                            "text": "Moderate rain",
+                            "code": 1186
+                        },
+                        "uv": 6.53
+                    }
+                }
+            ]
+        }
+    },
+    "Sapporo, Japan": {
+        "location": {
+            "name": "Sapporo",
+            "region": "Hokkaido",
+            "country": "Japan",
+            "lat": 43.0618,
+            "lon": 141.3545,
+            "tz_id": "Asia/Tokyo",
+            "localtime_epoch": 1746687974,
+            "localtime": "2025-05-08 14:06"
+        },
+        "current": {
+            "last_updated": "2025-05-08 14:06",
+            "temp_c": 15.1,
+            "temp_f": 59.2,
+            "is_day": 1,
+            "condition": {
+                "text": "Patchy rain nearby",
+                "code": 1063
+            }
+        },
+        "forecast": {
+            "forecastday": [
+                {
+                    "date": "2025-05-08",
+                    "date_epoch": 1746687974,
+                    "day": {
+                        "maxtemp_c": 28.73,
+                        "maxtemp_f": 83.71,
+                        "mintemp_c": 11.91,
+                        "mintemp_f": 53.44,
+                        "avgtemp_c": 20.32,
+                        "avgtemp_f": 68.58,
+                        "maxwind_mph": 6.88,
+                        "maxwind_kph": 11.07,
+                        "totalprecip_mm": 5.16,
+                        "totalprecip_in": 0.2,
+                        "totalsnow_cm": 3.48,
+                        "avgvis_km": 8.27,
+                        "avgvis_miles": 5.14,
+                        "avghumidity": 77,
+                        "daily_will_it_rain": 1,
+                        "daily_chance_of_rain": 64,
+                        "daily_will_it_snow": 1,
+                        "daily_chance_of_snow": 70,
+                        "condition": {
+                            "text": "Moderate rain",
+                            "code": 1186
+                        },
+                        "uv": 5.9
+                    }
+                },
+                {
+                    "date": "2025-05-09",
+                    "date_epoch": 1746774374,
+                    "day": {
+                        "maxtemp_c": 34.92,
+                        "maxtemp_f": 94.86,
+                        "mintemp_c": 17.46,
+                        "mintemp_f": 63.43,
+                        "avgtemp_c": 26.19,
+                        "avgtemp_f": 79.14,
+                        "maxwind_mph": 5.39,
+                        "maxwind_kph": 8.67,
+                        "totalprecip_mm": 9.29,
+                        "totalprecip_in": 0.37,
+                        "totalsnow_cm": 3.09,
+                        "avgvis_km": 5.25,
+                        "avgvis_miles": 3.26,
+                        "avghumidity": 77,
+                        "daily_will_it_rain": 1,
+                        "daily_chance_of_rain": 100,
+                        "daily_will_it_snow": 1,
+                        "daily_chance_of_snow": 69,
+                        "condition": {
+                            "text": "Patchy rain nearby",
+                            "code": 1063
+                        },
+                        "uv": 3.92
+                    }
+                },
+                {
+                    "date": "2025-05-10",
+                    "date_epoch": 1746860774,
+                    "day": {
+                        "maxtemp_c": 26.29,
+                        "maxtemp_f": 79.32,
+                        "mintemp_c": 17.89,
+                        "mintemp_f": 64.2,
+                        "avgtemp_c": 22.09,
+                        "avgtemp_f": 71.76,
+                        "maxwind_mph": 6.77,
+                        "maxwind_kph": 10.9,
+                        "totalprecip_mm": 8.75,
+                        "totalprecip_in": 0.34,
+                        "totalsnow_cm": 2.9,
+                        "avgvis_km": 5.82,
+                        "avgvis_miles": 3.62,
+                        "avghumidity": 69,
+                        "daily_will_it_rain": 1,
+                        "daily_chance_of_rain": 93,
+                        "daily_will_it_snow": 1,
+                        "daily_chance_of_snow": 62,
+                        "condition": {
+                            "text": "Moderate rain",
+                            "code": 1186
+                        },
+                        "uv": 5.64
+                    }
+                }
+            ]
+        }
+    },
+    "Fukuoka, Japan": {
+        "location": {
+            "name": "Fukuoka",
+            "region": "Kyushu",
+            "country": "Japan",
+            "lat": 33.5902,
+            "lon": 130.4017,
+            "tz_id": "Asia/Tokyo",
+            "localtime_epoch": 1746687974,
+            "localtime": "2025-05-08 14:06"
+        },
+        "current": {
+            "last_updated": "2025-05-08 14:06",
+            "temp_c": 25.5,
+            "temp_f": 77.9,
+            "is_day": 1,
+            "condition": {
+                "text": "Patchy rain nearby",
+                "code": 1063
+            }
+        },
+        "forecast": {
+            "forecastday": [
+                {
+                    "date": "2025-05-08",
+                    "date_epoch": 1746687974,
+                    "day": {
+                        "maxtemp_c": 26.69,
+                        "maxtemp_f": 80.04,
+                        "mintemp_c": 19.29,
+                        "mintemp_f": 66.72,
+                        "avgtemp_c": 22.99,
+                        "avgtemp_f": 73.38,
+                        "maxwind_mph": 10.51,
+                        "maxwind_kph": 16.91,
+                        "totalprecip_mm": 9.65,
+                        "totalprecip_in": 0.38,
+                        "totalsnow_cm": 0.14,
+                        "avgvis_km": 9.17,
+                        "avgvis_miles": 5.7,
+                        "avghumidity": 72,
+                        "daily_will_it_rain": 1,
+                        "daily_chance_of_rain": 100,
+                        "daily_will_it_snow": 1,
+                        "daily_chance_of_snow": 6,
+                        "condition": {
+                            "text": "Sunny",
+                            "code": 1000
+                        },
+                        "uv": 8.69
+                    }
+                },
+                {
+                    "date": "2025-05-09",
+                    "date_epoch": 1746774374,
+                    "day": {
+                        "maxtemp_c": 32.13,
+                        "maxtemp_f": 89.83,
+                        "mintemp_c": 10.24,
+                        "mintemp_f": 50.43,
+                        "avgtemp_c": 21.19,
+                        "avgtemp_f": 70.14,
+                        "maxwind_mph": 6.4,
+                        "maxwind_kph": 10.3,
+                        "totalprecip_mm": 1.65,
+                        "totalprecip_in": 0.06,
+                        "totalsnow_cm": 4.85,
+                        "avgvis_km": 8.34,
+                        "avgvis_miles": 5.18,
+                        "avghumidity": 89,
+                        "daily_will_it_rain": 1,
+                        "daily_chance_of_rain": 20,
+                        "daily_will_it_snow": 1,
+                        "daily_chance_of_snow": 97,
+                        "condition": {
+                            "text": "Sunny",
+                            "code": 1000
+                        },
+                        "uv": 8.68
+                    }
+                },
+                {
+                    "date": "2025-05-10",
+                    "date_epoch": 1746860774,
+                    "day": {
+                        "maxtemp_c": 26.02,
+                        "maxtemp_f": 78.84,
+                        "mintemp_c": 19.37,
+                        "mintemp_f": 66.87,
+                        "avgtemp_c": 22.7,
+                        "avgtemp_f": 72.86,
+                        "maxwind_mph": 12.01,
+                        "maxwind_kph": 19.33,
+                        "totalprecip_mm": 2.72,
+                        "totalprecip_in": 0.11,
+                        "totalsnow_cm": 0.83,
+                        "avgvis_km": 6.31,
+                        "avgvis_miles": 3.92,
+                        "avghumidity": 81,
+                        "daily_will_it_rain": 1,
+                        "daily_chance_of_rain": 41,
+                        "daily_will_it_snow": 1,
+                        "daily_chance_of_snow": 25,
+                        "condition": {
+                            "text": "Sunny",
+                            "code": 1000
+                        },
+                        "uv": 9.91
+                    }
+                }
+            ]
+        }
+    }
+}
