@@ -57,11 +57,11 @@ class ProcessForecast:
             raise
 
         try:
-            # Write to a CSV file
-            date_csv = self.helper.date_filename(processed_data[0]["date"])
-            file_path = self.helper.write_parquet(processed_data, self.folder_path, self.subfolder_path, self.table_name, date_csv)
+            # Write to a Parquet file
+            date_parquet = self.helper.date_filename(processed_data[0]["date"])
+            file_path    = self.helper.write_parquet(processed_data, self.folder_path, self.subfolder_path, self.table_name, date_parquet)
 
             logger.info(f">> Data successfully written to {file_path}")
         except Exception as e:
-            logger.error(f"!! Error writing data to CSV: {e}")
+            logger.error(f"!! Error writing data to Parquet: {e}")
             raise
