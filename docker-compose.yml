@@ -4,6 +4,8 @@ services:
   airflow:
     image: apache/airflow:3.0.0
     restart: always
+    env_file:
+      - .env
     environment:
       - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres_airflow:5432/airflow
       - AIRFLOW__CORE__EXECUTOR=LocalExecutor
@@ -11,7 +13,6 @@ services:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
       - ./airflow/plugins:/opt/airflow/plugins
-      - ./airflow/config:/opt/airflow/config
     ports:
       - "8080:8080"
     depends_on:
@@ -22,21 +23,25 @@ services:
 
   postgres_airflow:
     image: postgres:latest
+    env_file:
+      - .env
     environment:
-      POSTGRES_DB: airflow
-      POSTGRES_USER: airflow
-      POSTGRES_PASSWORD: airflow
+      - POSTGRES_DB=${AIRFLOW_DB_NAME}
+      - POSTGRES_USER=${AIRFLOW_DB_USER}
+      - POSTGRES_PASSWORD=${AIRFLOW_DB_PASS}
     volumes:
       - postgres-airflow-data:/var/lib/postgresql/data
     ports:
-      - "5433:5432"
+      - "${AIRFLOW_DB_PORT}:5432"
 
   postgres:
     image: postgres:latest
+    env_file:
+      - .env
     environment:
-      POSTGRES_DB: postgresdb
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: admin123
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - postgres-data:/var/lib/postgresql/data
     ports:
@@ -46,12 +51,13 @@ services:
     image: minio/minio
     container_name: minio
     command: server /data --console-address ":9001"
+    env_file:
+      - .env
     ports:
       - "9000:9000"
       - "9001:9001"
     environment:
-      MINIO_ROOT_USER: admin
-      MINIO_ROOT_PASSWORD: admin123
+      - MINIO_KMS_SECRET_KEY=${MINIO_KMS_SECRET_KEY}
     volumes:
       - minio-data:/data
 

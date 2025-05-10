@@ -1,0 +1,34 @@
+{
+    "Tokyo, Japan": {
+        "name": "Tokyo",
+        "region": "Kanto",
+        "country": "Japan",
+        "lat": 35.6762,
+        "lon": 139.6503,
+        "tz_id": "Asia/Tokyo"
+    },
+    "Osaka, Japan": {
+        "name": "Osaka",
+        "region": "Kansai",
+        "country": "Japan",
+        "lat": 34.6937,
+        "lon": 135.5023,
+        "tz_id": "Asia/Tokyo"
+    },
+    "Sapporo, Japan": {
+        "name": "Sapporo",
+        "region": "Hokkaido",
+        "country": "Japan",
+        "lat": 43.0618,
+        "lon": 141.3545,
+        "tz_id": "Asia/Tokyo"
+    },
+    "Fukuoka, Japan": {
+        "name": "Fukuoka",
+        "region": "Kyushu",
+        "country": "Japan",
+        "lat": 33.5902,
+        "lon": 130.4017,
+        "tz_id": "Asia/Tokyo"
+    }
+}
