@@ -5,17 +5,35 @@
 
 # Importing Libraries
 from datetime import datetime
+from minio import Minio
+from dotenv import load_dotenv
+from io import BytesIO
 
 import json
 import uuid
 import os
 import pandas as pd
 
-from utils.logging_utils import get_logger
+from utils.logging_utils import logger
 from utils.validation_utils import ValidationHelper
 
-logger = get_logger("etl_process")
 class ETLHelper:
+
+    def __init__(self):
+
+        # Load environment variables
+        load_dotenv()
+
+        # Creds
+        ## MinIO
+        self.endpoint       = os.getenv("MINIO_ENDPOINT")
+        self.access         = os.getenv("MINIO_ACCESS_KEY")
+        self.secret         = os.getenv("MINIO_SECRET_KEY")
+        self.raw_bucket     = os.getenv("MINIO_BUCKET_RAW")
+        self.staging_bucket = os.getenv("MINIO_BUCKET_STAGING")
+        self.curated_bucket = os.getenv("MINIO_BUCKET_CURATED")
+        self.minio_client   = self.create_minio_conn()
+    
 
     # Functions
     def generate_batch_id(self):
@@ -38,18 +56,43 @@ class ETLHelper:
         return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
-    def read_json(self, file_path):
+    def create_minio_conn(self):
         """
-        Read data from a JSON file and return it as a Python dictionary.
+        Function to create a MinIO client.
+        
+        Returns:
+            MinIO client connection.
+        """
+        return Minio(
+            self.endpoint,
+            access_key=self.access,
+            secret_key=self.secret,
+            secure=False
+        )
+
+
+    def read_json(self, object_name: str):
+        """
+        Read JSON from MinIO, parse, dan return dict.
 
         Args:
-            file_path (str): The path to the JSON file.
+            object_name (str): Object name in MinIO to be read as JSON
 
         Returns:
-            dict: Parsed JSON data.
+            dict: parsed JSON data
         """
-        with open(file_path, 'r') as file:
-            return json.load(file)
+        try:
+            resp = self.minio_client.get_object(self.raw_bucket, object_name)
+            data = json.loads(resp.read().decode("utf-8"))
+            return data
+
+        except Exception as e:
+            logger.error(f"!! Failed to read JSON from MinIO bucket '{self.raw_bucket}', object '{object_name}': {e}")
+            raise
+
+        finally:
+            resp.close()
+            resp.release_conn()
 
 
     def load_config(self, subfolder, config_name):
@@ -62,76 +105,47 @@ class ETLHelper:
         Returns:
             dict: Configuration data loaded from the file.
         """
+
         with open(f'schema_config/{subfolder}/{config_name}.json', 'r') as file:
             return json.load(file)
-    
 
-    def write_csv(self, data, folder_path, subfolder_path, context, date_csv):
+
+    def upload_parquet_to_minio(self, data, context, bucket, date_parquet):
         """
-        Write data into a structured CSV file following a year/month/day hierarchy.
+        Convert list-of-dict to Parquet in-memory, upload to MinIO staging bucket.
 
         Args:
-            data (list of dict): The data to write to the CSV file.
-            folder_path (str): The base output directory.
-            subfolder_path (str): The subfolder output directory.
-            context (str): The table name used for structuring the directory.
-            date_csv (str): The date string for filename in YYYY-MM-DD format.
+            data (list[dict]): hasil transformasi.
+            context (str): nama table (dipakai di object key).
+            date_parquet (str): YYYY-MM-DD untuk nama file.
 
         Returns:
-            str: The file path where the CSV file was saved.
+            str: object_name yang diupload.
         """
-        # Extract year, month, and day from the date string
-        date_obj = datetime.strptime(date_csv, "%Y-%m-%d")
-        year, month, day = date_obj.strftime("%Y"), date_obj.strftime("%m"), date_obj.strftime("%d")
+        try:
+            # Convert to Dataframe, then Dataframe to Parquet bytes
+            df     = pd.DataFrame(data)
+            buffer = BytesIO()
 
-        # Construct the directory path
-        directory_path = os.path.join(folder_path, subfolder_path, context, year, month, day)
+            df.to_parquet(buffer, index=False)
+            buffer.seek(0)
 
-        # Ensure the directory exists
-        os.makedirs(directory_path, exist_ok=True)
+            # Build object path (e.g. staging/forecast/2025/05/10/forecast_2025-05-10.parquet)
+            year, month, day = date_parquet.split("-")
+            object_name      = f"{context}/{year}/{month}/{day}/{context}_{date_parquet}.parquet"
 
-        # Define the file path
-        file_path = os.path.join(directory_path, f"{context}_{date_csv}.csv")
-
-        # Convert data to DataFrame and write to CSV
-        df = pd.DataFrame(data)
-        df.to_csv(file_path, index=False)
-        
-        return file_path
-    
-
-    def write_parquet(self, data, folder_path, subfolder_path, context, date_parquet):
-        """
-        Write data into a structured Parquet file following a year/month/day hierarchy.
-
-        Args:
-            data (list of dict): The data to write to the Parquet file.
-            folder_path (str): The base output directory.
-            subfolder_path (str): The subfolder output directory.
-            context (str): The table name used for structuring the directory.
-            date_parquet (str): The date string for filename in YYYY-MM-DD format.
-
-        Returns:
-            str: The file path where the Parquet file was saved.
-        """
-        # Extract year, month, and day from the date string
-        date_obj = datetime.strptime(date_parquet, "%Y-%m-%d")
-        year, month, day = date_obj.strftime("%Y"), date_obj.strftime("%m"), date_obj.strftime("%d")
-
-        # Construct the directory path
-        directory_path = os.path.join(folder_path, subfolder_path, context, year, month, day)
-
-        # Ensure the directory exists
-        os.makedirs(directory_path, exist_ok=True)
-
-        # Define the file path
-        file_path = os.path.join(directory_path, f"{context}_{date_parquet}.parquet")
-
-        # Convert data to DataFrame and write to Parquet
-        df = pd.DataFrame(data)
-        df.to_parquet(file_path, index=False)
-        
-        return file_path
+            # Upload
+            self.minio_client.put_object(
+                bucket_name=bucket,
+                object_name=object_name,
+                data=buffer,
+                length=buffer.getbuffer().nbytes,
+                content_type="application/octet-stream"
+            )
+            return object_name
+        except Exception as e:
+            logger.error(f"!! Failed to upload Parquet file to MinIO bucket '{self.raw_bucket}', object '{object_name}': {e}")
+            raise
 
 
     def convert_data_type(self, value, data_type):
@@ -185,6 +199,7 @@ class ETLHelper:
             # If the value is already a datetime object
             if isinstance(value, datetime):
                 return value.strftime("%Y-%m-%d")
+                
             # If the value is a string, try multiple formats sequence
             elif isinstance(value, str):
                 for date_format in ["%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M", "%Y-%m-%d"]:
@@ -199,151 +214,6 @@ class ETLHelper:
         except (ValueError, TypeError) as e:
             logger.error(f"!! Error converting value '{value}' to date format: {e}")
             return None
-
-
-    def read_csv(self, folder_path, subfolder_path, table_name, date_csv=None):
-        """
-        Read the latest data from a CSV file based on the most recent file date.
-
-        Parameters:
-        - folder_path (str): Base folder path (e.g., "output").
-        - subfolder_path (str): Subfolder path (e.g., "raw").
-        - table_name (str): Name of the table (e.g., "current").
-        - date_csv (str, optional): The specific date to read data from in format "YYYY-MM-DD". 
-                                    If not provided, it reads the latest available file.
-
-        Returns:
-        - DataFrame: Pandas DataFrame containing the CSV data.
-
-        Raises:
-        - FileNotFoundError: If no matching file is found.
-        - ValueError: If the file is empty or cannot be read properly.
-        """
-        try:
-            base_path = os.path.join(folder_path, subfolder_path, table_name)
-
-            # If a specific date is given, construct the expected file path
-            if date_csv:
-                date_obj = datetime.strptime(date_csv, "%Y-%m-%d")
-                year, month, day = date_obj.strftime("%Y"), date_obj.strftime("%m"), date_obj.strftime("%d")
-                file_path = os.path.join(base_path, year, month, day, f"{table_name}_{date_csv}.csv")
-            else:
-                # Scan for the latest available CSV file
-                year_dirs = sorted([d for d in os.listdir(base_path) if d.isdigit()], reverse=True)
-                if not year_dirs:
-                    raise FileNotFoundError(f"No year directories found for {table_name} in {base_path}")
-
-                for year in year_dirs:
-                    month_dirs = sorted([d for d in os.listdir(os.path.join(base_path, year)) if d.isdigit()], reverse=True)
-                    if not month_dirs:
-                        continue
-                    
-                    for month in month_dirs:
-                        day_dirs = sorted([d for d in os.listdir(os.path.join(base_path, year, month)) if d.isdigit()], reverse=True)
-                        if not day_dirs:
-                            continue
-                        
-                        for day in day_dirs:
-                            file_path = os.path.join(base_path, year, month, day, f"{table_name}_{year}-{month}-{day}.csv")
-                            if os.path.exists(file_path):
-                                break
-                        if os.path.exists(file_path):
-                            break
-                    if os.path.exists(file_path):
-                        break
-
-            if not os.path.exists(file_path):
-                raise FileNotFoundError(f"No CSV file found for {table_name} in {base_path}")
-
-            logger.info(f"Loading data from: {file_path}")
-            data = pd.read_csv(file_path)
-
-            if data.empty:
-                logger.warning(f"The CSV file {file_path} is empty!")
-                raise ValueError("The file is empty.")
-
-            logger.info(f"Data successfully loaded from {file_path} with {data.shape[0]} rows and {data.shape[1]} columns.")
-            return data
-
-        except FileNotFoundError as e:
-            logger.error(f"File not found error: {e}")
-            raise
-        except Exception as e:
-            logger.error(f"Error occurred while reading CSV file: {e}")
-            raise
-
-    
-    def read_parquet(self, folder_path, subfolder_path, table_name, date_parquet=None):
-        """
-        Read the latest data from a Parquet file based on the most recent file date.
-
-        Parameters:
-        - folder_path (str): Base folder path (e.g., "output").
-        - subfolder_path (str): Subfolder path (e.g., "raw").
-        - table_name (str): Name of the table (e.g., "current").
-        - date_parquet (str, optional): The specific date to read data from in format "YYYY-MM-DD". 
-                                        If not provided, it reads the latest available file.
-
-        Returns:
-        - DataFrame: Pandas DataFrame containing the Parquet data.
-
-        Raises:
-        - FileNotFoundError: If no matching file is found.
-        - ValueError: If the file is empty or cannot be read properly.
-        """
-        try:
-            base_path = os.path.join(folder_path, subfolder_path, table_name)
-            
-            # If a specific date is given, construct the expected file path
-            if date_parquet:
-                date_obj = datetime.strptime(date_parquet, "%Y-%m-%d")
-                year, month, day = date_obj.strftime("%Y"), date_obj.strftime("%m"), date_obj.strftime("%d")
-                file_path = os.path.join(base_path, year, month, day, f"{table_name}_{date_parquet}.parquet")
-            else:
-                # Scan for the latest available Parquet file
-                year_dirs = sorted([d for d in os.listdir(base_path) if d.isdigit()], reverse=True)
-                if not year_dirs:
-                    raise FileNotFoundError(f"No year directories found for {table_name} in {base_path}")
-
-                for year in year_dirs:
-                    month_dirs = sorted([d for d in os.listdir(os.path.join(base_path, year)) if d.isdigit()], reverse=True)
-                    if not month_dirs:
-                        continue
-                    
-                    for month in month_dirs:
-                        day_dirs = sorted([d for d in os.listdir(os.path.join(base_path, year, month)) if d.isdigit()], reverse=True)
-                        if not day_dirs:
-                            continue
-                        
-                        for day in day_dirs:
-                            file_path = os.path.join(base_path, year, month, day, f"{table_name}_{year}-{month}-{day}.parquet")
-                            if os.path.exists(file_path):
-                                break
-                        if os.path.exists(file_path):
-                            break
-                    if os.path.exists(file_path):
-                        break
-
-            if not os.path.exists(file_path):
-                raise FileNotFoundError(f"No Parquet file found for {table_name} in {base_path}")
-
-            logger.info(f"Loading data from: {file_path}")
-            data = pd.read_parquet(file_path)
-
-            if data.empty:
-                logger.warning(f"The Parquet file {file_path} is empty!")
-                raise ValueError("The file is empty.")
-
-            logger.info(f"Data successfully loaded from {file_path} with {data.shape[0]} rows and {data.shape[1]} columns.")
-            return data
-
-        except FileNotFoundError as e:
-            logger.error(f"File not found error: {e}")
-            raise
-        except Exception as e:
-            logger.error(f"Error occurred while reading Parquet file: {e}")
-            raise
-
 
 
     def add_remark_columns(self, data, batch_id, load_dt, key):

@@ -4,17 +4,22 @@
 ####
 
 # Importing Libraries
+from datetime import datetime, timedelta
+from pathlib import Path
+from minio import Minio
+from dotenv import load_dotenv
+from io import BytesIO
+
 import json
 import random
 import time
 import sys
 import argparse
+import os
 
-from utils.logging_helpers import get_logger
-from datetime import datetime, timedelta
-from pathlib import Path
+from utils.logging_utils import logger
 
-logger = get_logger("data_generator")
+load_dotenv()
 
 # Mapping Dicts.
 CONDITIONS_MAPPING = {
@@ -249,17 +254,18 @@ def save_weather_data(data, output_path):
 # Inject invalid data for simulation purposes
 def inject_invalid_data(data):
     """
-    Inject "invalid_data" strings into a random subset of numeric metric groups.
-
-    Metric groups: current temp, maxtemp, mintemp, avgtemp, wind, precip, snow, vis.
-    """
-    # Define metric groups as tuples of key paths
-    """
-    Inject "invalid_data" strings into a random subset of numeric metric groups
+    Function to inject "invalid_data" strings into a random subset of numeric metric groups
     across random forecast days (day0, day1, day2, ...).
 
     Metric groups: current temp, maxtemp, mintemp, avgtemp, wind, precip, snow, vis.
+
+    Args:
+        data: weather data in JSON format
+    
+    Returns:
+        data: weather data with invalid data in JSON format
     """
+
     # Define metric groups as tuples of key paths
     metric_groups = [
         ("current", ["temp_c", "temp_f"]),
@@ -297,9 +303,52 @@ def inject_invalid_data(data):
                             for k in keys:
                                 forecast_days[idx]["day"][k] = "invalid_data"
         except Exception:
-            logger.exception(f"Error injecting invalid data for {city}")
+            logger.exception(f"!! Error injecting invalid data for {city}")
             
     return data
+
+
+# Upload Data to Minio
+def upload_to_minio(data: dict, object_name: str):
+    """
+    Upload file to MinIO bucket (raw).
+
+    Args:
+        data: weather data in JSON format
+    
+    Returns:
+        data: weather data with invalid data in JSON format
+    """
+    try:
+        # Minio Credentials
+        MINIO_ENDPOINT     = os.getenv("MINIO_ENDPOINT")
+        MINIO_ACCESS_KEY   = os.getenv("MINIO_ACCESS_KEY")
+        MINIO_SECRET_KEY   = os.getenv("MINIO_SECRET_KEY")
+        MINIO_BUCKET_RAW   = os.getenv("MINIO_BUCKET_RAW")
+
+        json_bytes = json.dumps(data, indent=4).encode("utf-8")
+        stream = BytesIO(json_bytes)
+
+        minio_client = Minio(
+            endpoint=MINIO_ENDPOINT,
+            access_key=MINIO_ACCESS_KEY,
+            secret_key=MINIO_SECRET_KEY,
+            secure=False
+        )
+        if not minio_client.bucket_exists(MINIO_BUCKET_RAW):
+            minio_client.make_bucket(MINIO_BUCKET_RAW)
+
+        minio_client.put_object(
+            bucket_name=MINIO_BUCKET_RAW,
+            object_name=object_name,
+            data=stream,
+            length=len(json_bytes),
+            content_type="application/json"
+        )
+
+        logger.info(f"Uploaded {object_name} to bucket '{MINIO_BUCKET_RAW}'")
+    except Exception as e:
+        logger.error(f"!! Failed to upload to MinIO - {e}")
 
 
 # Main
@@ -352,9 +401,9 @@ def main():
 
     # Saving data
     try:
-        output_file = Path(f"data/weather_data_{base_date.strftime('%Y-%m-%d')}.json")
-        save_weather_data(weather_data, output_file)
-        logger.info(f"Output written to {output_file.resolve()}")
+        object_name = f"data/weather_data_{base_date.strftime('%Y-%m-%d')}.json"
+        upload_to_minio(weather_data, object_name)
+        logger.info(f"Uploaded to MinIO bucket '{os.getenv("MINIO_BUCKET_RAW")}', object '{object_name}'")
     except Exception as e:
         logger.error(f"!! Failed to save data - {e}")
 

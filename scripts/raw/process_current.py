@@ -5,10 +5,8 @@
 
 # Importing Libraries
 from utils.etl_utils import ETLHelper
-from utils.logging_utils import get_logger
+from utils.logging_utils import logger
 from utils.validation_utils import ValidationHelper
-
-logger = get_logger("etl_process")
 
 # Processing data
 class ProcessCurrent:
@@ -20,8 +18,9 @@ class ProcessCurrent:
             self.batch_id          = self.helper.generate_batch_id()
             self.config            = self.helper.load_config("raw", "current_config")
             self.load_dt           = self.helper.get_load_timestamp()
-            self.folder_path       = "output"
-            self.subfolder_path    = "raw"
+            self.date_str          = self.helper.date_filename(self.load_dt)
+            self.bucket            = self.helper.staging_bucket
+            self.object_name       = f"data/weather_data_{self.date_str}.json"
             self.table_name        = "current"
 
             logger.info("Initialized current table class successfully.")
@@ -33,6 +32,12 @@ class ProcessCurrent:
         # Main processing function
         logger.info(">> Starting the data processing for current table...")
         processed_data = []
+
+        try:
+            data = self.helper.read_json(self.object_name)
+        except Exception as e:
+            logger.error(f"!! Unexpected error during reading JSON from bucket: {e}")
+            raise
 
         try:
             for key, record in data.items():
@@ -57,9 +62,9 @@ class ProcessCurrent:
         try:
             # Write to a Parquet file
             date_parquet = self.helper.date_filename(processed_data[0]["last_updated"])
-            file_path    = self.helper.write_parquet(processed_data, self.folder_path, self.subfolder_path, self.table_name, date_parquet)
+            object_name  = self.helper.upload_parquet_to_minio(processed_data, "current", self.bucket, date_parquet)
 
-            logger.info(f">> Data successfully written to {file_path}")
+            logger.info(f">> Uploaded to MinIO bucket '{self.bucket}', object '{object_name}'")
         except Exception as e:
-            logger.error(f"!! Error writing data to Parquet: {e}")
+            logger.error(f"!! Error uploading Parquet to MinIO: {e}")
             raise
