@@ -1,5 +1,5 @@
 ####
-## Helper file for validation purposes
+## Utils file for validation purposes
 ## Mario Caesar // caesarmario87@gmail.com
 ####
 
