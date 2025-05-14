@@ -7,25 +7,20 @@
 import logging
 import sys
 
-logger = logging.getLogger("")
+# Get the root logger
+logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-if not logger.hasHandlers():
-    # Format log: waktu, file, line, level, message
-    log_formatter = logging.Formatter(
-        '%(asctime)s - %(filename)s - Line: %(lineno)d - %(levelname)s - %(message)s'
-    )
-    stream_handler = logging.StreamHandler()
-    stream_handler.setFormatter(log_formatter)
-    logger.addHandler(stream_handler)
+# Remove any existing handlers
+for handler in list(logger.handlers):
+    logger.removeHandler(handler)
 
-for h in list(logger.handlers):
-    logger.removeHandler(h)
-
-# Create a handler that writes INFO to stdout
-log_formatter = logging.Formatter(
+# Single formatter for all messages
+formatter = logging.Formatter(
     '%(asctime)s - %(filename)s - Line: %(lineno)d - %(levelname)s - %(message)s'
 )
-stream_handler = logging.StreamHandler(sys.stdout)
-stream_handler.setFormatter(log_formatter)
-logger.addHandler(stream_handler)
+
+# One handler that writes INFO+ to stdout
+stdout_handler = logging.StreamHandler(sys.stdout)
+stdout_handler.setFormatter(formatter)
+logger.addHandler(stdout_handler)

@@ -5,7 +5,7 @@
 
 # Importing Libraries
 from airflow import DAG
-from airflow.models import Variable
+from airflow.sdk import Variable
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
 
@@ -23,7 +23,7 @@ minio_creds     = Variable.get("minio_creds")
 default_args = {
     "owner"             : "caesarmario87@gmail.com",
     "depends_on_past"   : False,
-    "start_date"        : datetime(2025, 5, 13),
+    "start_date"        : datetime(2025, 5, 1),
     "retries"           : 1,
     "max_active_runs"   : 1,
     "retry_delay"       : timedelta(minutes=2),
@@ -48,21 +48,18 @@ def set_env_vars(**kwargs):
     empty_rate = int(random.triangular(0, 100, 25))
     error_rate = int(random.triangular(0, 100, 25))
 
-    # Prepare credentials JSON string
-    creds_str = minio_creds
-
     # Assemble environment dict
     env = {
         "EMPTY_RATE"      : str(empty_rate),
-        "ERROR_RATE"      : str(error_rate),
-        "CREDENTIALS_JSON": creds_str
+        "ERROR_RATE"      : str(error_rate)
     }
 
     # Push to XCom for downstream tasks
-    ti = kwargs['ti']
-    ti.xcom_push(key="env", value=env)
-    logging.info(f"Generated env vars: {env}")
+    kwargs['ti'].xcom_push(key="env", value=env)
+
+    logging.info(f"Generated env vars with EMPTY_RATE={empty_rate} and ERROR_RATE={error_rate}.")
     return env
+
 
 # Python functions
 def run_generator(**kwargs):
@@ -72,17 +69,20 @@ def run_generator(**kwargs):
     ti  = kwargs['ti']
     env = ti.xcom_pull(task_ids=set_env_task.task_id, key="env")
 
-    # Extract values
+    # Extract values & get creds.
     empty_rate = env["EMPTY_RATE"]
     error_rate = env["ERROR_RATE"]
-    creds_str  = env["CREDENTIALS_JSON"]
+    exec_date  = kwargs['ds']
+
+    logging.info(f"Execution date being passed to script: {exec_date}")
 
     # Build command
     cmd = [
         "python", "sample_data_generator.py",
         "--empty_rate", empty_rate,
         "--error_rate", error_rate,
-        "--credentials", creds_str
+        "--credentials", minio_creds,
+        "--exec_date", exec_date
     ]
 
     # Execute script

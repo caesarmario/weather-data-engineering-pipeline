@@ -21,7 +21,7 @@ from utils.etl_utils import ETLHelper
 
 class DataGenerator:
 
-    def __init__(self, empty_rate: float, error_rate: float, credentials: dict):
+    def __init__(self, empty_rate: float, error_rate: float, credentials: dict, base_date: datetime):
 
         # Load helper
         self.helper = ETLHelper()
@@ -31,7 +31,8 @@ class DataGenerator:
         access_key       = credentials["MINIO_ROOT_USER"]
         secret_key       = credentials["MINIO_ROOT_PASSWORD"]
         self.raw_bucket  = credentials["MINIO_BUCKET_RAW"]
-        self.client     = self.helper.create_minio_conn()
+        self.client      = self.helper.create_minio_conn()
+        self.base_date   = base_date
 
         # Rates
         self.empty_rate = max(0.0, min(empty_rate, 100.0))
@@ -209,7 +210,7 @@ class DataGenerator:
 
         for city, meta in LOCATIONS_MAPPING.items():
             try:
-                city_data = self.generate_location_weather(city, meta, base_date, forecast_days)
+                city_data = self.generate_location_weather(city, meta, self.base_date, forecast_days)
                 all_data.update(city_data)
             except Exception as e:
                 logger.error(f"!! Error processing city: {city} - {e}")
@@ -312,7 +313,6 @@ class DataGenerator:
                 logger.warning("empty_rate+error_rate >100%%; adjusting error_rate")
                 error_rate = max(0.0, 100.0 - empty_rate)
 
-            base_date = datetime.now()
             logger.info(f"Rates: empty_rate={empty_rate}%%, error_rate={error_rate}%%")
         except Exception as e:
             logger.error(f"!! Failed to generate bound rates! - {e}")
@@ -328,27 +328,29 @@ class DataGenerator:
                 error_branch_val = rand_val - empty_rate
                 if error_branch_val < error_rate / 2:
                     logger.warning(f"Simulating invalid fields injection (rand={rand_val:.2f}<empty+error/2)")
-                    weather_data = self.generate_all_weather_data(self.locations_mapping, base_date, forecast_days=3)
+                    weather_data = self.generate_all_weather_data(self.locations_mapping, self.base_date, forecast_days=3)
                     weather_data = self.inject_invalid_data(weather_data)
                 else:
                     logger.warning(f"Simulating system/API error JSON (rand={rand_val:.2f}>=empty+error/2)")
                     weather_data = {"api_error": 404}
             else:
-                weather_data = self.generate_all_weather_data(self.locations_mapping, base_date, forecast_days=3)
+                weather_data = self.generate_all_weather_data(self.locations_mapping, self.base_date, forecast_days=3)
         except Exception as e:
             logger.error(f"!! Failed to generate weather data - {e}")
 
         # Saving data
         try:
-            object_name = f"data/weather_data_{base_date.strftime('%Y-%m-%d')}.json"
+            object_name = f"data/weather_data_{self.base_date.strftime('%Y-%m-%d')}.json"
             self.upload_to_minio(weather_data, object_name)
             logger.info(f"Uploaded to MinIO bucket '{self.raw_bucket}', object '{object_name}'")
         except Exception as e:
             logger.error(f"!! Failed to save data - {e}")
 
         # If invalid or empty, exit with non-zero to signal anomaly if desired
-        if not weather_data or weather_data.get("invalid_data"):
-            sys.exit(1)
+        if not weather_data:
+            logger.warning("! Generated empty or invalid weather data — no data uploaded.")
+        elif "api_error" in weather_data:
+            logger.warning("! Generated simulated API error data.")
 
 
 def main():
@@ -358,18 +360,21 @@ def main():
         parser.add_argument("--empty_rate", type=float, default=0.0, help="Pct chance to output empty JSON")
         parser.add_argument("--error_rate", type=float, default=0.0, help="Pct chance to inject errors or system err JSON")
         parser.add_argument("--credentials", type=str, required=True, help="MinIO credentials")
+        parser.add_argument("--exec_date", type=str, required=True, help="Execution date in YYYY-MM-DD format")
         args = parser.parse_args()
     except Exception as e:
         logger.error(f"!! One of the arguments is empty! - {e}")
 
     try:
-        creds = json.loads(args.credentials)
+        creds         = json.loads(args.credentials)
+        exec_date_str = args.exec_date
+        exec_date     = datetime.strptime(exec_date_str, "%Y-%m-%d")
     except Exception as e:
         logger.error(f"!! Failed to parse JSON credentials: {e}")
-        sys.exit(1)
+        raise ValueError("!! Invalid credentials JSON format")
 
     try:
-        gen = DataGenerator(args.empty_rate, args.error_rate, creds)
+        gen = DataGenerator(args.empty_rate, args.error_rate, creds, exec_date)
         gen.run()
     except Exception as e:
         logger.error(f"!! Error running data generator - {e}")

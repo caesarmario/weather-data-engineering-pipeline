@@ -1,5 +1,7 @@
-__pycache__/
-*.py[cod]
+**/__pycache__/
+**/*.py[cod]
+*.log
+*.py.log
 *$py.class
 airflow/logs/dag_processor/
 .env
