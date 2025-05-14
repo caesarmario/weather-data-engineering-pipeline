@@ -2,24 +2,28 @@ version: '3'
 
 services:
   airflow:
-    image: apache/airflow:3.0.0
+    build: .
     restart: always
     env_file:
       - .env
     environment:
+      - AIRFLOW__CORE__AIRFLOW_HOME=/opt/airflow
       - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres_airflow:5432/airflow
       - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - PYTHONPATH=/opt/project
     volumes:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
       - ./airflow/plugins:/opt/airflow/plugins
+      - ./:/opt/project:delegated
+    working_dir: /opt/project
     ports:
       - "8080:8080"
     depends_on:
       - postgres_airflow
       - postgres
       - minio
-    command: airflow standalone
+    command: ["bash","-c","exec airflow standalone"]
 
   postgres_airflow:
     image: postgres:latest

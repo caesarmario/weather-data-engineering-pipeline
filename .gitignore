@@ -1,2 +1,6 @@
+__pycache__/
+*.py[cod]
+*$py.class
 .env
-weather-data-engineering-pipeline.code-workspace
+.gitignore
+dev_notes.txt

@@ -7,7 +7,6 @@
 from datetime import datetime, timedelta
 from pathlib import Path
 from minio import Minio
-from dotenv import load_dotenv
 from io import BytesIO
 
 import json
@@ -22,18 +21,17 @@ from utils.etl_utils import ETLHelper
 
 class DataGenerator:
 
-    def __init__(self, empty_rate: float, error_rate: float):
+    def __init__(self, empty_rate: float, error_rate: float, credentials: dict):
 
-        # Load environment variables & helper
-        load_dotenv()
+        # Load helper
         self.helper = ETLHelper()
 
         # MinIO client setup
-        endpoint = os.getenv("MINIO_ENDPOINT")
-        access  = os.getenv("MINIO_ACCESS_KEY")
-        secret  = os.getenv("MINIO_SECRET_KEY")
-        self.raw_bucket = os.getenv("MINIO_BUCKET_RAW")
-        self.client = self.helper.create_minio_conn()
+        endpoint         = credentials["MINIO_ENDPOINT"]
+        access_key       = credentials["MINIO_ROOT_USER"]
+        secret_key       = credentials["MINIO_ROOT_PASSWORD"]
+        self.raw_bucket  = credentials["MINIO_BUCKET_RAW"]
+        self.client     = self.helper.create_minio_conn()
 
         # Rates
         self.empty_rate = max(0.0, min(empty_rate, 100.0))
@@ -359,12 +357,19 @@ def main():
         parser = argparse.ArgumentParser(description="Generate sample weather data")
         parser.add_argument("--empty_rate", type=float, default=0.0, help="Pct chance to output empty JSON")
         parser.add_argument("--error_rate", type=float, default=0.0, help="Pct chance to inject errors or system err JSON")
+        parser.add_argument("--credentials", type=str, required=True, help="MinIO credentials")
         args = parser.parse_args()
     except Exception as e:
         logger.error(f"!! One of the arguments is empty! - {e}")
 
     try:
-        gen = DataGenerator(args.empty_rate, args.error_rate)
+        creds = json.loads(args.credentials)
+    except Exception as e:
+        logger.error(f"!! Failed to parse JSON credentials: {e}")
+        sys.exit(1)
+
+    try:
+        gen = DataGenerator(args.empty_rate, args.error_rate, creds)
         gen.run()
     except Exception as e:
         logger.error(f"!! Error running data generator - {e}")

@@ -1,0 +1,10 @@
+{"timestamp":"2025-05-14T03:59:16.825511","level":"info","event":"DAG bundles loaded: dags-folder","logger":"airflow.dag_processing.bundles.manager.DagBundlesManager"}
+{"timestamp":"2025-05-14T03:59:16.826010","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T03:59:16.843180","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T03:59:18.497449Z","level":"info","event":"2025-05-14 03:59:18,497 - sample_data_generator.py - Line: 40 - WARNING - empty_rate + error_rate > 100; reducing error_rate","chan":"stdout","logger":"task"}
+{"timestamp":"2025-05-14T03:59:18.504379Z","level":"info","event":"2025-05-14 03:59:18,504 - sample_data_generator.py - Line: 51 - INFO - Initialized DataGenerator with empty_rate=71.0%, error_rate=29.0%","chan":"stdout","logger":"task"}
+{"timestamp":"2025-05-14T03:59:18.504765Z","level":"info","event":"2025-05-14 03:59:18,504 - sample_data_generator.py - Line: 316 - INFO - Rates: empty_rate=71.0%%, error_rate=29.0%%","chan":"stdout","logger":"task"}
+{"timestamp":"2025-05-14T03:59:18.505095Z","level":"info","event":"2025-05-14 03:59:18,504 - sample_data_generator.py - Line: 334 - WARNING - Simulating system/API error JSON (rand=92.28>=empty+error/2)","chan":"stdout","logger":"task"}
+{"timestamp":"2025-05-14T03:59:18.521029Z","level":"info","event":"2025-05-14 03:59:18,520 - sample_data_generator.py - Line: 298 - INFO - Uploaded data/weather_data_2025-05-14.json to bucket 'raw'","chan":"stdout","logger":"task"}
+{"timestamp":"2025-05-14T03:59:18.521328Z","level":"info","event":"2025-05-14 03:59:18,520 - sample_data_generator.py - Line: 345 - INFO - Uploaded to MinIO bucket 'raw', object 'data/weather_data_2025-05-14.json'","chan":"stdout","logger":"task"}
+{"timestamp":"2025-05-14T03:59:18.598014","level":"info","event":"Done. Returned value was: None","logger":"airflow.task.operators.airflow.providers.standard.operators.python.PythonOperator"}
