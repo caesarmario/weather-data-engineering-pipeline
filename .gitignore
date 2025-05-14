@@ -1,0 +1,6 @@
+__pycache__/
+*.py[cod]
+*$py.class
+airflow/logs/dag_processor/
+.env
+dev_notes.txt
