@@ -1,0 +1,9 @@
+{"timestamp":"2025-05-14T03:57:52.418378","level":"info","event":"DAG bundles loaded: dags-folder","logger":"airflow.dag_processing.bundles.manager.DagBundlesManager"}
+{"timestamp":"2025-05-14T03:57:52.418903","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T03:57:52.432829","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T03:57:53.643421Z","level":"info","event":"2025-05-14 03:57:53,643 - sample_data_generator.py - Line: 51 - INFO - Initialized DataGenerator with empty_rate=22.0%, error_rate=25.0%","chan":"stdout","logger":"task"}
+{"timestamp":"2025-05-14T03:57:53.643752Z","level":"info","event":"2025-05-14 03:57:53,643 - sample_data_generator.py - Line: 316 - INFO - Rates: empty_rate=22.0%%, error_rate=25.0%%","chan":"stdout","logger":"task"}
+{"timestamp":"2025-05-14T03:57:53.643968Z","level":"info","event":"2025-05-14 03:57:53,643 - sample_data_generator.py - Line: 330 - WARNING - Simulating invalid fields injection (rand=23.98<empty+error/2)","chan":"stdout","logger":"task"}
+{"timestamp":"2025-05-14T03:57:53.662161Z","level":"info","event":"2025-05-14 03:57:53,661 - sample_data_generator.py - Line: 298 - INFO - Uploaded data/weather_data_2025-05-14.json to bucket 'raw'","chan":"stdout","logger":"task"}
+{"timestamp":"2025-05-14T03:57:53.662498Z","level":"info","event":"2025-05-14 03:57:53,662 - sample_data_generator.py - Line: 345 - INFO - Uploaded to MinIO bucket 'raw', object 'data/weather_data_2025-05-14.json'","chan":"stdout","logger":"task"}
+{"timestamp":"2025-05-14T03:57:53.720537","level":"info","event":"Done. Returned value was: None","logger":"airflow.task.operators.airflow.providers.standard.operators.python.PythonOperator"}
