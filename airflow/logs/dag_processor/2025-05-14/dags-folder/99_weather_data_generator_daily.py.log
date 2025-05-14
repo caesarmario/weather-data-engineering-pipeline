@@ -390,3 +390,239 @@
 {"timestamp":"2025-05-14T04:01:51.515810","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
 {"timestamp":"2025-05-14T04:02:22.061192","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
 {"timestamp":"2025-05-14T04:02:22.076865","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T06:59:52.831493","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T06:59:52.864710","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:00:23.448101","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:00:23.461381","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:00:54.218115","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:00:54.231868","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:01:24.928103","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:01:24.944140","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:01:55.549101","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:01:55.574629","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:02:26.198177","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:02:26.210762","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:02:57.019329","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:02:57.035910","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:03:27.678121","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:03:27.709409","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:03:58.284041","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:03:58.295630","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:04:28.893141","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:04:28.923575","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:04:59.813154","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:04:59.830436","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:05:30.530115","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:05:30.547330","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:06:01.252647","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:06:01.263621","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:06:31.857232","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:06:31.865996","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:07:02.683178","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:07:02.694350","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:07:33.274690","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:07:33.287111","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:07:45.696075","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:07:45.727950","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:07:48.044528","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:07:48.082778","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:08:19.182780","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:08:19.194691","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:08:27.596059","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:08:27.624770","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:08:41.062908","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:08:41.104435","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:08:50.676063","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:08:50.707348","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:08:55.057721","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:08:55.093706","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:09:05.486895","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:09:05.524856","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:09:07.831424","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:09:07.858335","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:09:22.569988","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:09:22.647087","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:09:27.041403","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:09:27.063014","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:09:39.462063","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:09:39.496358","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:09:51.906420","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:09:51.934285","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:09:58.469245","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:09:58.497960","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:10:04.864598","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:10:04.882856","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:10:35.454758","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:10:35.464997","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:10:59.101105","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:10:59.127136","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:11:29.820904","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:11:29.831422","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:11:35.187403","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:11:35.235713","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:12:05.812154","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:12:05.837981","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:12:36.562508","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:12:36.570852","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:13:07.153329","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:13:07.165726","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:13:37.714153","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:13:37.732526","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:14:08.279208","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:14:08.289523","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:14:39.052096","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:14:39.062997","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:15:09.642474","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:15:09.663174","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:15:40.237046","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:15:40.269885","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:16:10.846656","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:16:10.860093","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:16:41.735280","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:16:41.760401","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:17:12.393322","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:17:12.401852","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:17:42.959633","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:17:42.970581","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:18:13.745259","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:18:13.752514","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:18:44.454003","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:18:44.462689","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:19:15.010427","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:19:15.021233","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:19:45.539322","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:19:45.548255","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:20:16.359136","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:20:16.383265","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:20:46.992275","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:20:47.004151","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:21:17.566841","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:21:17.576063","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:21:48.134790","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:21:48.144606","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:22:18.903103","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:22:18.911991","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:22:49.468059","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:22:49.477887","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:22:51.795333","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:22:51.836912","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:23:00.257648","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:23:00.331911","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:23:07.962867","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:23:08.005090","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:23:38.610045","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:23:38.620589","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:24:09.215624","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:24:09.229480","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:24:39.987907","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:24:40.003877","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:25:10.601557","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:25:10.614219","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:25:41.186475","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:25:41.196817","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:26:11.839257","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:26:11.857074","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:26:42.704960","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:26:42.731509","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:27:13.339724","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:27:13.357316","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:27:43.943633","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:27:43.962675","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:28:14.535239","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:28:14.547093","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:28:45.370406","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:28:45.380582","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:29:15.942032","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:29:15.958690","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:29:46.560803","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:29:46.573044","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:30:17.152236","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:30:17.163555","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:30:47.984132","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:30:47.997774","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:31:18.562882","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:31:18.575138","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:31:49.138119","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:31:49.155682","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:32:19.717180","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:32:19.727616","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:32:50.529372","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:32:50.541687","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:33:21.115688","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:33:21.135715","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:33:51.705158","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:33:51.722336","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:34:22.508430","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:34:22.523411","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:34:53.152642","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:34:53.166365","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:35:23.741661","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:35:23.764816","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:35:54.385603","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:35:54.400379","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:36:25.299461","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:36:25.312271","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:36:55.954266","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:36:55.963680","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:37:26.542172","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:37:26.551291","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:37:57.113327","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:37:57.126159","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:38:28.319275","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:38:28.349095","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:38:58.949844","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:38:58.961584","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:39:29.528868","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:39:29.542082","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:40:00.143423","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:40:00.161557","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:40:30.917546","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:40:30.929596","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:41:01.503052","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:41:01.519228","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:41:32.145525","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:41:32.155642","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:42:02.735108","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:42:02.745849","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:42:33.601944","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:42:33.615827","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:43:04.214441","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:43:04.223756","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:43:30.064709","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:43:30.138123","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:43:31.432883","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:43:31.451879","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:44:02.213117","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:44:02.223837","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:44:32.838440","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:44:32.850914","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:45:03.420049","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:45:03.431456","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:45:13.065377","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:45:13.089747","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:45:43.806503","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:45:43.813434","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:46:14.409101","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:46:14.420883","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:46:45.044577","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:46:45.057939","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:47:15.880495","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:47:15.903800","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:47:46.463067","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:47:46.477430","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:48:17.040329","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:48:17.050766","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:48:47.649921","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:48:47.659214","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:49:18.398687","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:49:18.407515","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:49:49.056619","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:49:49.068032","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:50:19.646670","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:50:19.661384","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:50:50.259932","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:50:50.276221","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:51:21.035057","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:51:21.049432","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
+{"timestamp":"2025-05-14T07:51:51.622371","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/99_weather_data_generator_daily.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-05-14T07:51:51.632713","level":"info","event":"Secrets backends loaded for worker","count":1,"backend_classes":["EnvironmentVariablesBackend"],"logger":"supervisor"}
