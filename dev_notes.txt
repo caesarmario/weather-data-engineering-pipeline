@@ -14,7 +14,7 @@ postgresql_creds
     "POSTGRES_USER": "postgres",
     "POSTGRES_PASSWORD": "admin123",
     "POSTGRES_DB": "postgresdb",
-    "POSTGRES_PORT": "5434"
+    "POSTGRES_PORT": "5433"
 }
 
 airflowdb_creds
@@ -22,7 +22,7 @@ airflowdb_creds
     "AIRFLOW_DB_USER": "airflow",
     "AIRFLOW_DB_PASS": "airflow",
     "AIRFLOW_DB_NAME": "airflow",
-    "AIRFLOW_DB_PORT": "5433"
+    "AIRFLOW_DB_PORT": "5434"
 }
 
 python main_etl_runner.py --processes all --data_path data/weather_data_sample.json
@@ -34,7 +34,7 @@ docker-compose up --build
 
 docker-compose down
 
-ZeH5btAsRSFchpNp
+tHEKbaz9xeQmur8P
 
 D:
 cd workspace\airflow

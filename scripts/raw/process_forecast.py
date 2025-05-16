@@ -10,7 +10,7 @@ from utils.validation_utils import ValidationHelper
 
 # Processing data
 class ProcessForecast:
-    def __init__(self):
+    def __init__(self, exec_date=None):
         try:
             # Setting up variables and config
             self.helper            = ETLHelper()
@@ -18,9 +18,8 @@ class ProcessForecast:
             self.batch_id          = self.helper.generate_batch_id()
             self.config            = self.helper.load_config("raw", "forecast_config")
             self.load_dt           = self.helper.get_load_timestamp()
-            self.date_str          = self.helper.date_filename(self.load_dt)
             self.bucket            = self.helper.staging_bucket
-            self.object_name       = f"data/weather_data_{self.date_str}.json"
+            self.object_name       = f"data/weather_data_{exec_date}.json"
             self.table_name        = "forecast"
 
             logger.info("Initialized forecast table class successfully.")
@@ -28,7 +27,7 @@ class ProcessForecast:
             logger.error(f"!! Failed to load configuration: {e}")
             raise
 
-    def process(self, data):
+    def process(self):
         # Main processing function
         logger.info(">> Starting the data processing for forecast table...")
         processed_data = []
@@ -70,3 +69,17 @@ class ProcessForecast:
         except Exception as e:
             logger.error(f"!! Error uploading Parquet to MinIO: {e}")
             raise
+
+def run(**kwargs):
+    """
+    Airflow entry-point for PythonOperator.
+    """
+    try:
+        processor = ProcessForecast()
+        processor.process()
+    except Exception as e:
+        logger.error(f"!! forecast processing failed: {e}")
+        raise
+
+if __name__ == "__main__":
+    run()
