@@ -8,6 +8,7 @@ from airflow import DAG
 from airflow.sdk import Variable
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
+from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 
 from datetime import datetime, timedelta
 import logging
@@ -16,7 +17,8 @@ import random
 import subprocess
 
 # Variables
-job_name        = "weather_data_generator"
+job_name        = "weather_generate_json"
+duration        = "daily"
 minio_creds     = Variable.get("minio_creds")
 
 # Default arguments for this DAG
@@ -31,12 +33,12 @@ default_args = {
 
 # Define DAGs
 dag = DAG(
-    dag_id            = f"99_dag_{job_name}_daily",
+    dag_id            = f"01_dag_{job_name}_{duration}",
     default_args      = default_args,
     schedule          = "0 10 * * *",
     catchup           = False,
     max_active_runs   = 1,
-    tags              = ["data_generator", "weather_data_engineering", "daily_ingestion"]
+    tags              = ["data_generator", "weather_data_engineering", f"{duration}"]
 )
 
 # Env. Variables
@@ -44,9 +46,9 @@ def set_env_vars(**kwargs):
     """
     Generate random empty_rate, error_rate, and prepare JSON credentials string.
     """
-    # Draw rates from a triangular distribution with mode=25
-    empty_rate = int(random.triangular(0, 100, 25))
-    error_rate = int(random.triangular(0, 100, 25))
+    # Draw rates from a triangular distribution with mode=10
+    empty_rate = int(random.triangular(0, 100, 10))
+    error_rate = int(random.triangular(0, 100, 10))
 
     # Assemble environment dict
     env = {
@@ -73,6 +75,7 @@ def run_generator(**kwargs):
     empty_rate = env["EMPTY_RATE"]
     error_rate = env["ERROR_RATE"]
     exec_date  = kwargs['ds']
+    exec_date  = (datetime.strptime(exec_date, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
 
     logging.info(f"Execution date being passed to script: {exec_date}")
 
@@ -88,31 +91,39 @@ def run_generator(**kwargs):
     # Execute script
     subprocess.run(cmd, check=True)
 
-# Dummy End
+
+# Dummy Start
 task_start = EmptyOperator(
-    task_id='task_start',
-    dag=dag
+    task_id         = "task_start",
+    dag             = dag
 )
 
 # Task to set environment variables
 set_env_task = PythonOperator(
-    task_id         = f"set_env_vars_{job_name}",
+    task_id         = "set_env_vars",
     python_callable = set_env_vars,
     dag             = dag,
 )
 
 # Task to run data generator
 run_generator_task = PythonOperator(
-    task_id         = "run_sample_data_generator",
+    task_id         = f"run_{job_name}",
     python_callable = run_generator,
+    dag             = dag
+)
+
+# Trigger next DAG
+trigger_process = TriggerDagRunOperator(
+    task_id         = "trigger_parquet_staging_dag",
+    trigger_dag_id  = "02_dag_weather_parquet_staging_daily",
     dag             = dag
 )
 
 # Dummy End
 task_end = EmptyOperator(
-    task_id='task_end',
-    dag=dag
+    task_id         = "task_end",
+    dag             = dag
 )
 
 # Define task dependencies
-task_start >> set_env_task >> run_generator_task >> task_end
+task_start >> set_env_task >> run_generator_task >> trigger_process >> task_end
