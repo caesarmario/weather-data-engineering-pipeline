@@ -3,6 +3,6 @@
 *.log
 *.py.log
 *$py.class
-airflow/logs/dag_processor/
+airflow/logs/
 .env
 dev_notes.txt

@@ -29,7 +29,7 @@ class ProcessCurrent:
 
     def process(self):
         # Main processing function
-        logger.info(">> Starting the data processing for current table...")
+        logger.info(f">> Starting the data processing for current table - {self.object_name}...")
         processed_data = []
 
         try:
@@ -68,12 +68,12 @@ class ProcessCurrent:
             logger.error(f"!! Error uploading Parquet to MinIO: {e}")
             raise
 
-def run(**kwargs):
+def run(exec_date, **kwargs):
     """
     Airflow entry-point for PythonOperator.
     """
     try:
-        processor = ProcessCurrent()
+        processor = ProcessCurrent(exec_date)
         processor.process()
     except Exception as e:
         logger.error(f"!! current processing failed: {e}")

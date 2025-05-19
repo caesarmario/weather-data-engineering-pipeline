@@ -29,7 +29,7 @@ class Process{{ table_name | capitalize }}:
 
     def process(self):
         # Main processing function
-        logger.info(">> Starting the data processing for {{ table_name }} table...")
+        logger.info(f">> Starting the data processing for {{ table_name }} table - {self.object_name}...")
         processed_data = []
 
         try:
@@ -76,12 +76,12 @@ class Process{{ table_name | capitalize }}:
             logger.error(f"!! Error uploading Parquet to MinIO: {e}")
             raise
 
-def run(**kwargs):
+def run(exec_date, **kwargs):
     """
     Airflow entry-point for PythonOperator.
     """
     try:
-        processor = Process{{ table_name | capitalize }}()
+        processor = Process{{ table_name | capitalize }}(exec_date)
         processor.process()
     except Exception as e:
         logger.error(f"!! {{ table_name }} processing failed: {e}")

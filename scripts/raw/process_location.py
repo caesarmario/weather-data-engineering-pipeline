@@ -29,7 +29,7 @@ class ProcessLocation:
 
     def process(self):
         # Main processing function
-        logger.info(">> Starting the data processing for location table...")
+        logger.info(f">> Starting the data processing for location table - {self.object_name}...")
         processed_data = []
 
         try:
@@ -68,12 +68,12 @@ class ProcessLocation:
             logger.error(f"!! Error uploading Parquet to MinIO: {e}")
             raise
 
-def run(**kwargs):
+def run(exec_date, **kwargs):
     """
     Airflow entry-point for PythonOperator.
     """
     try:
-        processor = ProcessLocation()
+        processor = ProcessLocation(exec_date)
         processor.process()
     except Exception as e:
         logger.error(f"!! location processing failed: {e}")
