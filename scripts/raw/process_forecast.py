@@ -29,7 +29,7 @@ class ProcessForecast:
 
     def process(self):
         # Main processing function
-        logger.info(">> Starting the data processing for forecast table...")
+        logger.info(f">> Starting the data processing for forecast table - {self.object_name}...")
         processed_data = []
 
         try:
@@ -70,12 +70,12 @@ class ProcessForecast:
             logger.error(f"!! Error uploading Parquet to MinIO: {e}")
             raise
 
-def run(**kwargs):
+def run(exec_date, **kwargs):
     """
     Airflow entry-point for PythonOperator.
     """
     try:
-        processor = ProcessForecast()
+        processor = ProcessForecast(exec_date)
         processor.process()
     except Exception as e:
         logger.error(f"!! forecast processing failed: {e}")

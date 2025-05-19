@@ -11,6 +11,7 @@ from airflow.operators.python import PythonOperator
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 
 from datetime import datetime, timedelta
+
 import logging
 import json
 import random
@@ -77,7 +78,7 @@ def run_generator(**kwargs):
     exec_date  = kwargs['ds']
     exec_date  = (datetime.strptime(exec_date, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
 
-    logging.info(f"Execution date being passed to script: {exec_date}")
+    print(f"Execution date being passed to script: {exec_date}")
 
     # Build command
     cmd = [
@@ -116,6 +117,9 @@ run_generator_task = PythonOperator(
 trigger_process = TriggerDagRunOperator(
     task_id         = "trigger_parquet_staging_dag",
     trigger_dag_id  = "02_dag_weather_parquet_staging_daily",
+    conf            = {
+                        "exec_date": "{{ macros.ds_add(ds, 1) }}"
+                    },
     dag             = dag
 )
 

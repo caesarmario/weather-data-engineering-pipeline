@@ -52,25 +52,31 @@ with TaskGroup("extract_transform", tooltip="JSON→Parquet", dag=dag) as extrac
     process_current = PythonOperator(
         task_id="process_current",
         python_callable=run_current,
-        op_kwargs={'exec_date': '{{ macros.ds_add(ds, 1) }}'},
+        op_kwargs={
+            "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
+        },
         dag=dag,
     )
 
     process_location = PythonOperator(
         task_id="process_location",
         python_callable=run_location,
-        op_kwargs={'exec_date': '{{ macros.ds_add(ds, 1) }}'},
+        op_kwargs={
+            "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
+        },
         dag=dag,
     )
 
     process_forecast = PythonOperator(
         task_id="process_forecast",
         python_callable=run_forecast,
-        op_kwargs={'exec_date': '{{ macros.ds_add(ds, 1) }}'},
+        op_kwargs={
+            "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
+        },
         dag=dag,
     )
 
-# # Load into staging tables
+# # Load into staging tables [WIP]
 # with TaskGroup("load_staging", tooltip="Parquet→Postgres via dbt", dag=dag) as load_group:
 #     dbt_run = PythonOperator(
 #         task_id="dbt_run_staging",
