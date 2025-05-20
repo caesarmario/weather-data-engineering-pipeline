@@ -1,8 +1,13 @@
+# Byte-compiled / optimized / DLL files
 **/__pycache__/
 **/*.py[cod]
+*$py.class
+
+# Logs
 *.log
 *.py.log
-*$py.class
 airflow/logs/
+
+# Sensitive files
 .env
 dev_notes.txt

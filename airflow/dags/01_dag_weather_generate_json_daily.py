@@ -4,10 +4,10 @@
 ####
 
 # Importing Libraries
-from airflow import DAG
+from airflow import DAG, macros
 from airflow.sdk import Variable
 from airflow.operators.empty import EmptyOperator
-from airflow.operators.python import PythonOperator
+from airflow.operators.python import PythonOperator, BranchPythonOperator
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 
 from datetime import datetime, timedelta
@@ -87,7 +87,7 @@ def run_generator(**kwargs):
 
     # Build command
     cmd = [
-        "python", "sample_data_generator.py",
+        "python", "scripts/sample_data_generator.py",
         "--empty_rate", empty_rate,
         "--error_rate", error_rate,
         "--credentials", minio_creds,

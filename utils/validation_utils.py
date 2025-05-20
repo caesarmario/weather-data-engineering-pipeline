@@ -7,7 +7,38 @@
 from datetime import datetime, timedelta
 from utils.logging_utils import logger
 
+# WIP - 20250520 START
+import json
+import logging
+
+from minio import Minio
+from io import BytesIO
+# WIP - 20250520 END
+
 class ValidationHelper:
+
+    # WIP - 20250520
+    def validate_raw_json(data: dict) -> bool:
+        """
+        Validate raw JSON:
+            - Must be dict non-empty
+            - Must have no "api_error" key
+            - Every city contain "location", "current", "forecast"
+        """
+        if not isinstance(data, dict):
+            logger.error("Raw JSON not dict: %r", data)
+            return False
+        if not data:
+            logger.error("Raw JSON is empty")
+            return False
+        if "api_error" in data:
+            logger.error("Raw JSON contains api_error: %s", data["api_error"])
+            return False
+        for city, city_data in data.items():
+            if not all(k in city_data for k in ("location", "current", "forecast")):
+                logger.error("City %s missing required section", city)
+                return False
+        return True
 
     # Validation functions
     def validate_latitude(self, lat):
