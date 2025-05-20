@@ -8,7 +8,7 @@ services:
       - .env
     environment:
       - AIRFLOW__CORE__AIRFLOW_HOME=/opt/airflow
-      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres_airflow:5432/airflow
       - AIRFLOW__CORE__EXECUTOR=LocalExecutor
       - PYTHONPATH=/opt/project
     volumes:
@@ -20,23 +20,23 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      # - postgres_airflow
+      - postgres_airflow
       - postgres
       - minio
     command: ["bash","-c","exec airflow standalone"]
 
-  # postgres_airflow:
-  #   image: postgres:latest
-  #   env_file:
-  #     - .env
-  #   environment:
-  #     - POSTGRES_DB=${AIRFLOW_DB_NAME}
-  #     - POSTGRES_USER=${AIRFLOW_DB_USER}
-  #     - POSTGRES_PASSWORD=${AIRFLOW_DB_PASS}
-  #   volumes:
-  #     - postgres-airflow-data:/var/lib/postgresql/data
-  #   ports:
-  #     - "${AIRFLOW_DB_PORT}:5432"
+  postgres_airflow:
+    image: postgres:latest
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_DB=${AIRFLOW_DB_NAME}
+      - POSTGRES_USER=${AIRFLOW_DB_USER}
+      - POSTGRES_PASSWORD=${AIRFLOW_DB_PASS}
+    volumes:
+      - postgres-airflow-data:/var/lib/postgresql/data
+    ports:
+      - "${AIRFLOW_DB_PORT}:5432"
 
   postgres:
     image: postgres:latest
@@ -83,6 +83,6 @@ services:
       - postgres
 
 volumes:
-  # postgres-airflow-data:
+  postgres-airflow-data:
   postgres-data:
   minio-data:

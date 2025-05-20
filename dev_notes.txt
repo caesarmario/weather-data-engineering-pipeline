@@ -41,7 +41,7 @@ docker-compose up --build
 
 docker-compose down
 
-tHEKbaz9xeQmur8P
+HQSbF4RzxuRHSncV
 
 D:
 cd workspace\airflow

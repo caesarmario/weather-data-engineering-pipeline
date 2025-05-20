@@ -75,8 +75,13 @@ def run_generator(**kwargs):
     # Extract values & get creds.
     empty_rate = env["EMPTY_RATE"]
     error_rate = env["ERROR_RATE"]
-    exec_date  = kwargs['ds']
-    exec_date  = (datetime.strptime(exec_date, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
+    dag_run = kwargs.get("dag_run")
+    
+    if dag_run and dag_run.conf and "exec_date" in dag_run.conf:
+        exec_date = dag_run.conf["exec_date"]
+    else:
+        exec_date = kwargs["ds"]
+        exec_date  = (datetime.strptime(exec_date, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
 
     print(f"Execution date being passed to script: {exec_date}")
 
