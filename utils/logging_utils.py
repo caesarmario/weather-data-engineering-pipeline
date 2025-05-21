@@ -1,5 +1,5 @@
 ####
-## Logging Config File for Logging Purposes
+## Logging config file for logging purposes
 ## Mario Caesar // caesarmario87@gmail.com
 ####
 

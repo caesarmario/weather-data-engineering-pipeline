@@ -13,9 +13,9 @@ from airflow.utils.task_group import TaskGroup
 from datetime import datetime, timedelta
 
 # Import process scripts
-from scripts.raw.process_current import run as run_current
-from scripts.raw.process_location import run as run_location
-from scripts.raw.process_forecast import run as run_forecast
+{% for name in processes %}
+from scripts.raw.process_{{ name }} import run as run_{{ name }}
+{% endfor %}
 
 # -- DAG-level settings: job name, schedule, and credentials
 job_name        = "weather_parquet_staging"
@@ -48,36 +48,19 @@ task_start = EmptyOperator(
 
 # Extract & transform JSON to Parquet files
 with TaskGroup("extract_transform", tooltip="JSON→Parquet", dag=dag) as extract_group:
-    process_current = PythonOperator(
-        task_id="process_current",
-        python_callable=run_current,
-
+    {% for name in processes %}
+    process_{{ name }} = PythonOperator(
+        task_id="process_{{ name }}",
+        python_callable=run_{{ name }},
+        {% raw %}
         op_kwargs={
             "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
         },
+        {% endraw %}
         dag=dag,
     )
 
-    process_location = PythonOperator(
-        task_id="process_location",
-        python_callable=run_location,
-
-        op_kwargs={
-            "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
-        },
-        dag=dag,
-    )
-
-    process_forecast = PythonOperator(
-        task_id="process_forecast",
-        python_callable=run_forecast,
-
-        op_kwargs={
-            "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
-        },
-        dag=dag,
-    )
-
+    {% endfor %}
 
 # # Load into staging tables [WIP]
 # with TaskGroup("load_staging", tooltip="Parquet→Postgres via dbt", dag=dag) as load_group:
