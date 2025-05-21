@@ -1,5 +1,5 @@
 ####
-## Utils file for processing data 
+## Utilities for ETL operations
 ## Mario Caesar // caesarmario87@gmail.com
 ####
 
@@ -15,17 +15,22 @@ import os
 import pandas as pd
 
 from utils.logging_utils import logger
-from utils.validation_utils import ValidationHelper
 
 class ETLHelper:
-
+    """
+    Helper for common ETL tasks
+    """
     def __init__(self):
+        """
+        Initialize environment variables.
 
-        # Load environment variables
+        Args:
+            None
+
+        Returns:
+            None
+        """
         load_dotenv()
-
-        # Creds
-        ## MinIO
         self.endpoint       = os.getenv("MINIO_ENDPOINT")
         self.access         = os.getenv("MINIO_ACCESS_KEY")
         self.secret         = os.getenv("MINIO_SECRET_KEY")
@@ -73,10 +78,10 @@ class ETLHelper:
 
     def read_json(self, object_name: str):
         """
-        Read JSON from MinIO, parse, dan return dict.
+        Read JSON from MinIO raw bucket, parse, dan return dict.
 
         Args:
-            object_name (str): Object name in MinIO to be read as JSON
+            object_name (str): Object name in MinIO raw bucket to be read as JSON
 
         Returns:
             dict: parsed JSON data
@@ -100,6 +105,7 @@ class ETLHelper:
         Load configuration from a JSON file.
 
         Args:
+            subfolder (str): Subdirectory under schema_config.
             config_name (str): The name of configuration file.
 
         Returns:
@@ -112,15 +118,16 @@ class ETLHelper:
 
     def upload_parquet_to_minio(self, data, context, bucket, date_parquet):
         """
-        Convert list-of-dict to Parquet in-memory, upload to MinIO staging bucket.
+        Convert records to Parquet and upload to MinIO staging bucket.
 
         Args:
-            data (list[dict]): hasil transformasi.
-            context (str): nama table (dipakai di object key).
-            date_parquet (str): YYYY-MM-DD untuk nama file.
+            data (list[dict]): Transformed records.
+            context (str): Table/context name for path.
+            bucket (str): Target bucket name.
+            date_parquet (str): Date string 'YYYY-MM-DD' for file naming.
 
         Returns:
-            str: object_name yang diupload.
+            str: Uploaded object path in bucket.
         """
         try:
             # Convert to Dataframe, then Dataframe to Parquet bytes
@@ -186,14 +193,11 @@ class ETLHelper:
         """
         Return timestamp value as a date string (for filename purposes).
 
-        Parameters:
-        - value (str or datetime): Timestamp value in either string or datetime format.
+        Args:
+            value (str or datetime): Timestamp value in either string or datetime format.
 
         Returns:
-        - str: Formatted date value as a string.
-
-        Raises:
-        - ValueError: If the date cannot be parsed or formatted properly.
+            str: Formatted date value as a string.
         """
         try:
             # If the value is already a datetime object
@@ -221,17 +225,13 @@ class ETLHelper:
         Adds remark columns to the data for tracking and identification.
 
         Parameters:
-        - data (dict): The input dictionary containing the raw data to which the remark columns will be added.
-        - batch_id (str): A unique identifier for the ETL process batch.
-        - load_dt (str): The timestamp indicating when the data was processed (format: "%Y-%m-%d %H:%M:%S").
-        - key (str): A unique identifier for the city or data group.
+            data (dict): The input dictionary containing the raw data to which the remark columns will be added.
+            batch_id (str): A unique identifier for the ETL process batch.
+            load_dt (str): The timestamp indicating when the data was processed (format: "%Y-%m-%d %H:%M:%S").
+            key (str): A unique identifier for the city or data group.
 
         Returns:
-        - dict: The updated dictionary with the added metadata columns.
-
-        Raises:
-        - TypeError: If the `data` parameter is not a dictionary.
-        - ValueError: If `batch_id`, `load_dt`, or `key` are not provided or invalid.
+            dict: The updated dictionary with the added metadata columns.
         """
         if not isinstance(data, dict):
             raise TypeError("The data parameter must be a dictionary.")
@@ -250,22 +250,17 @@ class ETLHelper:
         Transforms and processes raw data based on the given configuration.
 
         Parameters:
-        - config (dict): Configuration dictionary specifying the mappings, transformations, 
-                        data types, and validation rules for each column.
-        - data (dict): Input data dictionary containing raw data to be processed.
-        - table_name (str): table name to specify data processing technique.
-        - day (dict): Input forecast daily data in dictionary format to be processed (callable to process forecast data only)
+            config (dict): Configuration dictionary specifying the mappings, transformations, 
+                            data types, and validation rules for each column.
+            data (dict): Input data dictionary containing raw data to be processed.
+            table_name (str): table name to specify data processing technique.
+            day (dict): Input forecast daily data in dictionary format to be processed (callable to process forecast data only)
 
         Returns:
-        - dict: A dictionary representing a processed record with transformed and validated fields.
-
-        Raises:
-        - KeyError: If the specified mapping key in the configuration does not exist in the data.
-        - ValueError: If a data type conversion fails or validation fails for a field.
-        - Exception: If an unexpected error occurs during transformation or validation.
+            dict: A dictionary representing a processed record with transformed and validated fields.
         """
         processed_record = {}
-        timestamps_to_validate = []
+        # timestamps_to_validate = []
 
         for column, column_config in config.items():
             # Checking table name
@@ -304,23 +299,23 @@ class ETLHelper:
             except Exception as e:
                 logger.error(f"!! Data type conversion error: {e}")
 
-            # Perform validation if specified in config
-            try:
-                if column_config.get('validation'):
-                    validation_function = getattr(ValidationHelper(), column_config['validation'], None)
-                    if validation_function:
-                        field_value = validation_function(field_value)
-            except Exception as e:
-                logger.error(f"!! Validation error for {column}: {e}")
+        #     # [WIP] Perform validation if specified in config 
+        #     try:
+        #         if column_config.get('validation'):
+        #             validation_function = getattr(ValidationHelper(), column_config['validation'], None)
+        #             if validation_function:
+        #                 field_value = validation_function(field_value)
+        #     except Exception as e:
+        #         logger.error(f"!! Validation error for {column}: {e}")
 
-            # Collect timestamps for validation if applicable
-            if column_config.get('data_type') in ['DATETIME', 'TIMESTAMP'] and column != "load_dt":
-                timestamps_to_validate.append(field_value)
+        #     # Collect timestamps for validation if applicable
+        #     if column_config.get('data_type') in ['DATETIME', 'TIMESTAMP'] and column != "load_dt":
+        #         timestamps_to_validate.append(field_value)
                         
-            processed_record[column] = field_value
+        #     processed_record[column] = field_value
         
-        # Perform timestamp consistency validation
-        if not ValidationHelper().validate_timestamp_consistency(timestamps_to_validate):
-            logger.warning(f"Timestamp inconsistency detected!! Please review the data source.")
+        # # Perform timestamp consistency validation
+        # if not ValidationHelper().validate_timestamp_consistency(timestamps_to_validate):
+        #     logger.warning(f"Timestamp inconsistency detected!! Please review the data source.")
 
         return processed_record

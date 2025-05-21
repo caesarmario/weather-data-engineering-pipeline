@@ -122,10 +122,11 @@ run_generator_task = PythonOperator(
 trigger_process = TriggerDagRunOperator(
     task_id         = "trigger_parquet_staging_dag",
     trigger_dag_id  = "02_dag_weather_parquet_staging_daily",
-
+    {% raw %}
     conf            = {
                         "exec_date": "{{ macros.ds_add(ds, 1) }}"
                     },
+    {% endraw %}
     dag             = dag
 )
 
