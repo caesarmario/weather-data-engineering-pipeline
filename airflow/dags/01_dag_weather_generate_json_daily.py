@@ -120,8 +120,8 @@ run_generator_task = PythonOperator(
 
 # Trigger next DAG
 trigger_process = TriggerDagRunOperator(
-    task_id         = "trigger_parquet_staging_dag",
-    trigger_dag_id  = "02_dag_weather_parquet_staging_daily",
+    task_id         = "trigger_json_to_parquet",
+    trigger_dag_id  = "02_dag_weather_json_to_parquet_daily",
 
     conf            = {
                         "exec_date": "{{ macros.ds_add(ds, 1) }}"

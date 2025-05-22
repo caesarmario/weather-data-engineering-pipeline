@@ -1,0 +1,123 @@
+####
+## Airflow v3 DAG to load parquet into staging db
+## Mario Caesar // caesarmario87@gmail.com
+####
+
+# -- Imports: Airflow core, operators, and Python stdlib
+from airflow import DAG
+from airflow.models import Variable
+from airflow.operators.empty import EmptyOperator
+from airflow.operators.python import PythonOperator
+from airflow.utils.task_group import TaskGroup
+from airflow.operators.trigger_dagrun import TriggerDagRunOperator
+
+from datetime import datetime, timedelta
+
+import subprocess
+import os
+
+# -- DAG-level settings: job name, schedule, and credentials
+job_name        = "weather_load_parquet"
+duration        = "daily"
+minio_creds     = Variable.get("minio_creds")
+postgres_creds  = Variable.get("postgresql_creds")
+
+default_args = {
+    "owner"             : "caesarmario87@gmail.com",
+    "depends_on_past"   : False,
+    "start_date"        : datetime(2025, 5, 1),
+    "retries"           : 1,
+    "max_active_runs"   : 1,
+    "retry_delay"       : timedelta(minutes=2),
+}
+
+dag = DAG(
+    dag_id            = f"03_dag_{job_name}_{duration}",
+    default_args      = default_args,
+    catchup           = False,
+    max_active_runs   = 1,
+    tags              = ["etl", "weather_data_engineering", f"{duration}"]
+)
+
+# -- Function: run the load parquet script
+def run_loader(**kwargs):
+    """
+    Execute sample_data_generator.py with XCom rates and pass exec_date.
+    """
+    ti  = kwargs['ti']
+    env = ti.xcom_pull(task_ids=set_env_task.task_id, key="env")
+
+    # Extract values & get creds.
+    dag_run = kwargs.get("dag_run")
+    
+    # Determine exec_date: prefer dag_run.conf, else use next day's ds
+    if dag_run and dag_run.conf and "exec_date" in dag_run.conf:
+        exec_date = dag_run.conf["exec_date"]
+    else:
+        exec_date = kwargs["ds"]
+        exec_date  = (datetime.strptime(exec_date, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
+
+    print(f"Execution date being passed to script: {exec_date}")
+
+    # Build command
+    cmd = [
+        "python", "scripts/loader_parquet_to_db.py",
+        "--table", table,
+        "--minio_creds", minio_creds,
+        "--postgre_creds", postgre_creds,
+        "--exec_date", exec_date
+    ]
+
+    # Execute script
+    subprocess.run(cmd, check=True)
+
+# -- Tasks: start, run loader, end
+# Dummy Start
+task_start = EmptyOperator(
+    task_id         = "task_start",
+    dag             = dag
+)
+
+# Task to run data generator
+with TaskGroup("load_data", tooltip="Parquet→Staging db", dag=dag) as load_group:
+    load_current = PythonOperator(
+        task_id="load_current",
+        python_callable=run_loader,
+
+        op_kwargs={
+            "table": "current",
+            "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
+        },
+        dag=dag,
+    )
+
+    load_location = PythonOperator(
+        task_id="load_location",
+        python_callable=run_loader,
+
+        op_kwargs={
+            "table": "location",
+            "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
+        },
+        dag=dag,
+    )
+
+    load_forecast = PythonOperator(
+        task_id="load_forecast",
+        python_callable=run_loader,
+
+        op_kwargs={
+            "table": "forecast",
+            "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
+        },
+        dag=dag,
+    )
+
+# Dummy End
+task_end = EmptyOperator(
+    task_id         = "task_end",
+    dag             = dag
+)
+
+# -- Define execution order
+task_start >> load_group >> task_end

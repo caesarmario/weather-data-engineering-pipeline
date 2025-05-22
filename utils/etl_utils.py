@@ -15,6 +15,7 @@ import os
 import pandas as pd
 
 from utils.logging_utils import logger
+from utils.validation_utils import ValidationHelper
 
 class ETLHelper:
     """
@@ -260,7 +261,7 @@ class ETLHelper:
             dict: A dictionary representing a processed record with transformed and validated fields.
         """
         processed_record = {}
-        # timestamps_to_validate = []
+        timestamps_to_validate = []
 
         for column, column_config in config.items():
             # Checking table name
@@ -299,23 +300,23 @@ class ETLHelper:
             except Exception as e:
                 logger.error(f"!! Data type conversion error: {e}")
 
-        #     # [WIP] Perform validation if specified in config 
-        #     try:
-        #         if column_config.get('validation'):
-        #             validation_function = getattr(ValidationHelper(), column_config['validation'], None)
-        #             if validation_function:
-        #                 field_value = validation_function(field_value)
-        #     except Exception as e:
-        #         logger.error(f"!! Validation error for {column}: {e}")
+            # Perform validation if specified in config 
+            try:
+                if column_config.get('validation'):
+                    validation_function = getattr(ValidationHelper(), column_config['validation'], None)
+                    if validation_function:
+                        field_value = validation_function(field_value)
+            except Exception as e:
+                logger.error(f"!! Validation error for {column}: {e}")
 
-        #     # Collect timestamps for validation if applicable
-        #     if column_config.get('data_type') in ['DATETIME', 'TIMESTAMP'] and column != "load_dt":
-        #         timestamps_to_validate.append(field_value)
+            # Collect timestamps for validation if applicable
+            if column_config.get('data_type') in ['DATETIME', 'TIMESTAMP'] and column != "load_dt":
+                timestamps_to_validate.append(field_value)
                         
-        #     processed_record[column] = field_value
+            processed_record[column] = field_value
         
-        # # Perform timestamp consistency validation
-        # if not ValidationHelper().validate_timestamp_consistency(timestamps_to_validate):
-        #     logger.warning(f"Timestamp inconsistency detected!! Please review the data source.")
+        # Perform timestamp consistency validation
+        if not ValidationHelper().validate_timestamp_consistency(timestamps_to_validate):
+            logger.warning(f"Timestamp inconsistency detected!! Please review the data source.")
 
         return processed_record

@@ -14,7 +14,7 @@ class Process{{ table_name | capitalize }}:
             # Initialize helpers and load configuration
             self.helper            = ETLHelper()
             self.batch_id          = self.helper.generate_batch_id()
-            self.config            = self.helper.load_config("raw", "{{ config_file }}")
+            self.config            = self.helper.load_config("process", "{{ config_file }}")
             self.load_dt           = self.helper.get_load_timestamp()
 
             # Define source JSON path and target table
