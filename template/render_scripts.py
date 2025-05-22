@@ -40,9 +40,9 @@ def get_template(search_path, name):
         jinja2.Template: Compiled template object.
     """
     env = Environment(
-        loader=FileSystemLoader(os.path.abspath(search_path)),
-        trim_blocks=True,
-        lstrip_blocks=True,
+        loader = FileSystemLoader(os.path.abspath(search_path)),
+        trim_blocks = True,
+        lstrip_blocks = True,
     )
     return env.get_template(name)
 
@@ -62,18 +62,20 @@ def gendag01():
     """
     Render the JSON-generation Airflow DAG.
 
-    Writes the generated DAG to airflow/dags/01_dag_weather_generate_json_daily.py.
+    Writes the generated DAG to airflow/dags/01_dag...py.
 
     Returns:
         None
     """
+    filename = "01_dag_weather_generate_json_daily"
+
     # Load DAG template
     tpl_dir  = "template/dag"
-    tpl_name = "01_dag_weather_generate_json_daily.py.j2"
+    tpl_name = f"{filename}.py.j2"
     template = get_template(tpl_dir, tpl_name)
 
     # Render and write out
-    out_path = "airflow/dags/01_dag_weather_generate_json_daily.py"
+    out_path = f"airflow/dags/{filename}.py"
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     template.stream().dump(out_path)
     click.echo(f"Rendered DAG → {out_path}")
@@ -84,24 +86,58 @@ def gendag02():
     """
     Render the Parquet-staging Airflow DAG.
 
-    Reads processes map from template/dag/config/02_dag_config.yaml.
-    Outputs to airflow/dags/02_dag_weather_parquet_staging_daily.py.
+    Reads processes map from template/dag/config/process_config.yaml.
+    Outputs to airflow/dags/02_dag....py.
 
     Returns:
         None
     """
+    filename = "02_dag_weather_json_to_parquet_daily"
+    config   = "process_config"
+
     # Load DAG config
-    cfg_path = "template/dag/config/02_dag_config.yaml"
-    cfg = get_config(cfg_path)
+    cfg_path  = f"template/dag/config/{config}.yaml"
+    cfg       = get_config(cfg_path)
     processes = cfg.get("processes", {})
 
     # Load DAG template
     tpl_dir  = "template/dag"
-    tpl_name = "02_dag_weather_parquet_staging_daily.py.j2"
+    tpl_name = f"{filename}.py.j2"
     template = get_template(tpl_dir, tpl_name)
 
     # Render and write out
-    out_path = "airflow/dags/02_dag_weather_parquet_staging_daily.py"
+    out_path = f"airflow/dags/{filename}.py"
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    template.stream(processes=processes).dump(out_path)
+    click.echo(f"Rendered DAG → {out_path}")
+
+
+@cli.command()
+def gendag03():
+    """
+    Render the Parquet-staging Airflow DAG.
+
+    Reads processes map from template/dag/config/process_config.yaml.
+    Outputs to airflow/dags/03_dag....py.
+
+    Returns:
+        None
+    """
+    filename = "03_dag_weather_load_parquet"
+    config   = "process_config"
+
+    # Load DAG config
+    cfg_path  = f"template/dag/config/{config}.yaml"
+    cfg       = get_config(cfg_path)
+    processes = cfg.get("processes", {})
+
+    # Load DAG template
+    tpl_dir  = "template/dag"
+    tpl_name = f"{filename}.py.j2"
+    template = get_template(tpl_dir, tpl_name)
+
+    # Render and write out
+    out_path = f"airflow/dags/{filename}.py"
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     template.stream(processes=processes).dump(out_path)
     click.echo(f"Rendered DAG → {out_path}")
@@ -120,19 +156,22 @@ def genscriptprocess():
     Returns:
         None
     """
+    filename  = "process_template"
+    config    = "process_config"
+    
     # Load script config
-    cfg_path = "template/script/config/process_config.yaml"
-    cfg = get_config(cfg_path)
+    cfg_path  = f"template/script/config/{config}.yaml"
+    cfg       = get_config(cfg_path)
     processes = cfg.get("processes", {})
 
     # Load script template
     tpl_dir  = "template/script"
-    tpl_name = "process_template.py.j2"
+    tpl_name = f"{filename}.py.j2"
     template = get_template(tpl_dir, tpl_name)
 
     # Loop & render one file per process
     for table_name, props in processes.items():
-        out_dir  = f"scripts/raw"
+        out_dir  = f"scripts/process"
         out_file = f"process_{table_name}.py"
         os.makedirs(out_dir, exist_ok=True)
 

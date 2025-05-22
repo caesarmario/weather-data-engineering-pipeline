@@ -1,5 +1,5 @@
 ####
-## ETL file for processing forecast data into Parquet
+## ETL file for processing current data into Parquet
 ## Mario Caesar // caesarmario87@gmail.com
 ####
 
@@ -8,28 +8,28 @@ from utils.etl_utils import ETLHelper
 from utils.logging_utils import logger
 
 # --- Processor class: encapsulates setup and execution
-class ProcessForecast:
+class ProcessCurrent:
     def __init__(self, exec_date=None):
         try:
             # Initialize helpers and load configuration
             self.helper            = ETLHelper()
             self.batch_id          = self.helper.generate_batch_id()
-            self.config            = self.helper.load_config("raw", "forecast_config")
+            self.config            = self.helper.load_config("process", "current_config")
             self.load_dt           = self.helper.get_load_timestamp()
 
             # Define source JSON path and target table
             self.bucket            = self.helper.staging_bucket
             self.object_name       = f"data/weather_data_{exec_date}.json"
-            self.table_name        = "forecast"
+            self.table_name        = "current"
 
-            logger.info("Initialized forecast table class successfully.")
+            logger.info("Initialized current table class successfully.")
         except Exception as e:
             logger.error(f"!! Failed to load configuration: {e}")
             raise
 
     def process(self):
         # Main ETL routine: read, transform, and collect records
-        logger.info(f">> Starting the data processing for forecast table - {self.object_name}...")
+        logger.info(f">> Starting the data processing for current table - {self.object_name}...")
         processed_data = []
 
         # Read JSON input
@@ -46,13 +46,11 @@ class ProcessForecast:
                     # Add batch ID, load timestamp, and city key
                     record = self.helper.add_remark_columns(record, self.batch_id, self.load_dt, key)
 
-                    # Extract forecast data correctly
-                    forecast_days = record.get('forecast', {}).get('forecastday', [])
-                    for day in forecast_days:
-                        processed_record = self.helper.transform_helper(self.config, record, self.table_name, day)
-                        processed_data.append(processed_record)
+                    # Extract columns based on the configuration
+                    processed_record = self.helper.transform_helper(self.config, record, self.table_name, None)
+                    processed_data.append(processed_record)
 
-                        logger.info(f">> Successfully processed forecast data for city: {key} on {day.get('date')}")
+                    logger.info(f">> Successfully processed data for city: {key}")
 
                 except Exception as e:
                     logger.error(f"!! Error processing data for city: {key}, Error: {e}")
@@ -62,8 +60,8 @@ class ProcessForecast:
 
         try:
             # Write to a Parquet file
-            date_parquet = self.helper.date_filename(processed_data[0]["date"])
-            object_name  = self.helper.upload_parquet_to_minio(processed_data, "forecast", self.bucket, date_parquet)
+            date_parquet = self.helper.date_filename(processed_data[0]["last_updated"])
+            object_name  = self.helper.upload_parquet_to_minio(processed_data, "current", self.bucket, date_parquet)
 
             logger.info(f">> Uploaded to MinIO bucket '{self.bucket}', object '{object_name}'")
         except Exception as e:
@@ -75,10 +73,10 @@ def run(exec_date, **kwargs):
     Airflow entry-point for PythonOperator.
     """
     try:
-        processor = ProcessForecast(exec_date)
+        processor = ProcessCurrent(exec_date)
         processor.process()
     except Exception as e:
-        logger.error(f"!! forecast processing failed: {e}")
+        logger.error(f"!! current processing failed: {e}")
         raise
 
 if __name__ == "__main__":

@@ -1,5 +1,5 @@
 ####
-## Airflow v3 DAG: process raw parquet → staging database
+## Airflow v3 DAG: process raw json -> parquet
 ## Mario Caesar // caesarmario87@gmail.com
 ####
 
@@ -9,16 +9,17 @@ from airflow.models import Variable
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
 from airflow.utils.task_group import TaskGroup
+from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 
 from datetime import datetime, timedelta
 
 # Import process scripts
-{% for name in processes %}
-from scripts.raw.process_{{ name }} import run as run_{{ name }}
-{% endfor %}
+from scripts.process.process_current import run as run_current
+from scripts.process.process_location import run as run_location
+from scripts.process.process_forecast import run as run_forecast
 
 # -- DAG-level settings: job name, schedule, and credentials
-job_name        = "weather_parquet_staging"
+job_name        = "weather_json_to_parquet"
 duration        = "daily"
 minio_creds     = Variable.get("minio_creds")
 
@@ -39,7 +40,7 @@ dag = DAG(
     tags              = ["etl", "weather_data_engineering", f"{duration}"]
 )
 
-# -- Tasks: start, extract transform, dbt, end
+# -- Tasks: start, extract transform, parquet staging, end
 # Dummy Start
 task_start = EmptyOperator(
     task_id="task_start",
@@ -48,30 +49,47 @@ task_start = EmptyOperator(
 
 # Extract & transform JSON to Parquet files
 with TaskGroup("extract_transform", tooltip="JSON→Parquet", dag=dag) as extract_group:
-    {% for name in processes %}
-    process_{{ name }} = PythonOperator(
-        task_id="process_{{ name }}",
-        python_callable=run_{{ name }},
-        {% raw %}
+    process_current = PythonOperator(
+        task_id="process_current",
+        python_callable=run_current,
+
         op_kwargs={
             "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
         },
-        {% endraw %}
         dag=dag,
     )
 
-    {% endfor %}
+    process_location = PythonOperator(
+        task_id="process_location",
+        python_callable=run_location,
 
-# # Load into staging tables [WIP]
-# with TaskGroup("load_staging", tooltip="Parquet→Postgres via dbt", dag=dag) as load_group:
-#     dbt_run = PythonOperator(
-#         task_id="dbt_run_staging",
-#         python_callable=lambda: subprocess.run([
-#             "dbt", "run", "--models", "staging",
-#             "--profiles-dir", ".", "--target", "prod"
-#         ], cwd="/opt/project/dbt", check=True),
-#         dag=dag,
-#     )
+        op_kwargs={
+            "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
+        },
+        dag=dag,
+    )
+
+    process_forecast = PythonOperator(
+        task_id="process_forecast",
+        python_callable=run_forecast,
+
+        op_kwargs={
+            "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
+        },
+        dag=dag,
+    )
+
+
+# Trigger next DAG
+trigger_process = TriggerDagRunOperator(
+    task_id         = "trigger_parquet_staging_dag",
+    trigger_dag_id  = "03_dag_weather_load_parquet",
+
+    conf            = {
+                        "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
+                    },
+    dag             = dag
+)
 
 # Dummy End
 task_end = EmptyOperator(
@@ -80,5 +98,4 @@ task_end = EmptyOperator(
 )
 
 # -- Define execution order
-# task_start >> extract_group >> load_group >> task_end
-task_start >> extract_group >> task_end
+task_start >> extract_group >> trigger_process >> task_end
