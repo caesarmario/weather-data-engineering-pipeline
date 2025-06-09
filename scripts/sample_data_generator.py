@@ -27,11 +27,8 @@ class DataGenerator:
         self.helper = ETLHelper()
 
         # MinIO client setup
-        endpoint         = credentials["MINIO_ENDPOINT"]
-        access_key       = credentials["MINIO_ROOT_USER"]
-        secret_key       = credentials["MINIO_ROOT_PASSWORD"]
         self.raw_bucket  = credentials["MINIO_BUCKET_RAW"]
-        self.client      = self.helper.create_minio_conn()
+        self.client      = self.helper.create_minio_conn(credentials)
         self.base_date   = base_date
 
         # Rates

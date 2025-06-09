@@ -123,7 +123,7 @@ def gendag03():
     Returns:
         None
     """
-    filename = "03_dag_weather_load_parquet"
+    filename = "03_dag_weather_load_parquet_daily"
     config   = "process_config"
 
     # Load DAG config

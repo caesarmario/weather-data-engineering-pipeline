@@ -6,13 +6,14 @@
 # Importing Libraries
 from datetime import datetime
 from minio import Minio
-from dotenv import load_dotenv
 from io import BytesIO
+from sqlalchemy import create_engine, text
 
 import json
 import uuid
 import os
 import pandas as pd
+import s3fs
 
 from utils.logging_utils import logger
 from utils.validation_utils import ValidationHelper
@@ -21,27 +22,7 @@ class ETLHelper:
     """
     Helper for common ETL tasks
     """
-    def __init__(self):
-        """
-        Initialize environment variables.
-
-        Args:
-            None
-
-        Returns:
-            None
-        """
-        load_dotenv()
-        self.endpoint       = os.getenv("MINIO_ENDPOINT")
-        self.access         = os.getenv("MINIO_ACCESS_KEY")
-        self.secret         = os.getenv("MINIO_SECRET_KEY")
-        self.raw_bucket     = os.getenv("MINIO_BUCKET_RAW")
-        self.staging_bucket = os.getenv("MINIO_BUCKET_STAGING")
-        self.curated_bucket = os.getenv("MINIO_BUCKET_CURATED")
-        self.minio_client   = self.create_minio_conn()
     
-
-    # Functions
     def generate_batch_id(self):
         """
         Generate a unique batch identifier using UUID.
@@ -62,17 +43,21 @@ class ETLHelper:
         return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
-    def create_minio_conn(self):
+    def create_minio_conn(self, credentials):
         """
         Function to create a MinIO client.
         
         Returns:
             MinIO client connection.
         """
+        endpoint         = credentials["MINIO_ENDPOINT"]
+        access_key       = credentials["MINIO_ROOT_USER"]
+        secret_key       = credentials["MINIO_ROOT_PASSWORD"]
+
         return Minio(
-            self.endpoint,
-            access_key=self.access,
-            secret_key=self.secret,
+            endpoint,
+            access_key=access_key,
+            secret_key=secret_key,
             secure=False
         )
 
@@ -320,3 +305,56 @@ class ETLHelper:
             logger.warning(f"Timestamp inconsistency detected!! Please review the data source.")
 
         return processed_record
+
+
+    def get_minio_s3fs(self, minio_creds):
+        """
+        Create and return an s3fs filesystem client for MinIO access.
+
+        Args:
+            minio_creds (dict): Dictionary containing MinIO credentials:
+
+        Returns:
+            s3fs.S3FileSystem: Initialized filesystem client pointed at the MinIO endpoint.
+        """
+
+        try:
+            endpoint       = minio_creds["MINIO_ENDPOINT"]
+            access_key     = minio_creds["MINIO_ROOT_USER"]
+            secret_key     = minio_creds["MINIO_ROOT_PASSWORD"]
+
+            fs = s3fs.S3FileSystem(
+                key             = access_key,
+                secret          = secret_key,
+                client_kwargs   = {
+                    'endpoint_url': endpoint
+                }
+            )
+            return fs
+        except Exception as e:
+            logger.error(f"!! S3 File System creation failed: {e}")
+            raise
+
+
+    def create_postgre_conn(self, postgres_creds):
+        """
+        Initialize and return a SQLAlchemy engine for Postgres connections.
+
+        Args:
+            postgres_creds (dict): Dictionary containing connection parameters:
+
+        Returns:
+            sqlalchemy.Engine: A SQLAlchemy engine instance connected to the specified Postgres database.
+    """
+        try:
+            user           = postgre_creds["POSTGRES_USER"]
+            password       = postgre_creds["POSTGRES_PASSWORD"]
+            host           = postgre_creds["POSTGRES_HOST"]
+            port           = postgre_creds["POSTGRES_PORT"]
+            dbname         = postgre_creds["POSTGRES_DB"]
+
+            dsn = f"postgresql://{user}:{password}@{host}:{port}/{dbname}"
+            return create_engine(dsn)
+        except Exception as e:
+            logger.error(f"!! Creating postgres connection failed: {e}")
+            raise

@@ -4,48 +4,42 @@
 ####
 
 # Importing Libraries
-from sqlalchemy import create_engine, text
 from utils.logging_utils import logger
 
 import os
 import pandas as pd
-import s3fs
 import argparse
 
 class ParquetLoader:
-    def __init__(self, table: str, exec_date: str):
+    def __init__(self, table: str, minio_creds: dict, postgre_creds: dict, exec_date: str):
         """
         Initialize loader with table name and execution date.
 
         Args:
             table (str): Target table in schema 'raw'.
+            minio_creds: MinIO credentials.
+            postgre_creds: Postgres credentials.
             exec_date (str): Date string in 'YYYY-MM-DD'.
 
         Returns:
             None
         """
+        # Load helper
+        self.helper    = ETLHelper()
+
+        # MinIO filesystem
+        self.fs        = self.helper.get_minio_s3fs(minio_creds)
+
+        # Postgres connection
+        self.engine    = self.helper.create_postgre_conn()
+
         self.table     = table
         self.exec_date = exec_date
+
         # Parse date for partition path and deletion filter
         self.year, self.month, self.day = exec_date.split('-')
 
-        # Setup MinIO filesystem
-        self.fs = s3fs.S3FileSystem(
-            key             = os.getenv('MINIO_ROOT_USER'),
-            secret          = os.getenv('MINIO_ROOT_PASSWORD'),
-            client_kwargs   = {
-                'endpoint_url': f"http://{os.getenv('MINIO_ENDPOINT')}"
-            }
-        )
-
         # Postgres connection
-        user        = os.getenv('POSTGRES_USER')
-        password    = os.getenv('POSTGRES_PASSWORD')
-        host        = os.getenv('POSTGRES_HOST')
-        port        = os.getenv('POSTGRES_PORT')
-        dbname      = os.getenv('POSTGRES_DB')
-        dsn         = f"postgresql://{user}:{password}@{host}:{port}/{dbname}"
-        self.engine = create_engine(dsn)
         logger.info(f"Initialized ParquetLoader for {self.table} @ {self.exec_date}")
 
     def load(self):

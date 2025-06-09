@@ -13,10 +13,9 @@ from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 
 from datetime import datetime, timedelta
 
-# Import process scripts
-{% for name in processes %}
-from scripts.process.process_{{ name }} import run as run_{{ name }}
-{% endfor %}
+import logging
+import json
+import subprocess
 
 # -- DAG-level settings: job name, schedule, and credentials
 job_name        = "weather_json_to_parquet"
@@ -40,6 +39,23 @@ dag = DAG(
     tags              = ["etl", "weather_data_engineering", f"{duration}"]
 )
 
+# -- Function: run the external data generator script
+def run_processor(process: str, exec_date: str, **kwargs):
+    """
+    Execute process scripts by pass exec_date and MinIO creds.
+    """
+    
+    # Build command
+    cmd = [
+        "python", f"scripts/process/process_{process}.py",
+        "--exec_date", exec_date,
+        "--credentials", minio_creds
+    ]
+
+    # Execute script
+    subprocess.run(cmd, check=True)
+
+
 # -- Tasks: start, extract transform, parquet staging, end
 # Dummy Start
 task_start = EmptyOperator(
@@ -52,10 +68,12 @@ with TaskGroup("extract_transform", tooltip="JSON→Parquet", dag=dag) as extrac
     {% for name in processes %}
     process_{{ name }} = PythonOperator(
         task_id="process_{{ name }}",
-        python_callable=run_{{ name }},
+        python_callable=run_processor,
         {% raw %}
         op_kwargs={
-            "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
+            "process": "{{ name }}",
+            "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}",
+            "credentials": minio_creds
         },
         {% endraw %}
         dag=dag,
@@ -66,7 +84,7 @@ with TaskGroup("extract_transform", tooltip="JSON→Parquet", dag=dag) as extrac
 # Trigger next DAG
 trigger_process = TriggerDagRunOperator(
     task_id         = "trigger_parquet_staging_dag",
-    trigger_dag_id  = "03_dag_weather_load_parquet",
+    trigger_dag_id  = "03_dag_weather_load_parquet_daily",
     {% raw %}
     conf            = {
                         "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"

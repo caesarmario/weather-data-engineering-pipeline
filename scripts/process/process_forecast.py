@@ -7,20 +7,23 @@
 from utils.etl_utils import ETLHelper
 from utils.logging_utils import logger
 
+import argparse
+import json
+
 # --- Processor class: encapsulates setup and execution
 class ProcessForecast:
-    def __init__(self, exec_date=None):
+    def __init__(self, exec_date, credentials: dict):
         try:
             # Initialize helpers and load configuration
             self.helper            = ETLHelper()
             self.batch_id          = self.helper.generate_batch_id()
-            self.config            = self.helper.load_config("process", "forecast_config")
+            self.config            = self.helper.load_config("raw", "forecast_config")
             self.load_dt           = self.helper.get_load_timestamp()
 
             # Define source JSON path and target table
-            self.bucket            = self.helper.staging_bucket
             self.object_name       = f"data/weather_data_{exec_date}.json"
             self.table_name        = "forecast"
+            self.bucket            = credentials.get("MINIO_BUCKET_STAGING")
 
             logger.info("Initialized forecast table class successfully.")
         except Exception as e:
@@ -70,16 +73,33 @@ class ProcessForecast:
             logger.error(f"!! Error uploading Parquet to MinIO: {e}")
             raise
 
-def run(exec_date, **kwargs):
-    """
-    Airflow entry-point for PythonOperator.
-    """
+
+    def run(self, exec_date, credentials: dict, **kwargs):
+        """
+        Airflow entry-point for PythonOperator.
+        """
+        try:
+            processor = ProcessForecast(exec_date, credentials)
+            processor.process()
+        except Exception as e:
+            logger.error(f"!! forecast processing failed: {e}")
+            raise
+
+
+def main():
+    # Retrieving arguments
     try:
-        processor = ProcessForecast(exec_date)
-        processor.process()
+        parser = argparse.ArgumentParser(description="Process 'forecast' JSON → Parquet")
+        parser.add_argument("--exec_date", type=str, required=True, help="Execution date in YYYY-MM-DD format")
+        parser.add_argument("--credentials", type=str, required=True, help="MinIO credentials")
+        args = parser.parse_args()
     except Exception as e:
-        logger.error(f"!! forecast processing failed: {e}")
-        raise
+        logger.error(f"!! One of the arguments is empty! - {e}")
+
+    try:
+        run(args.exec_date, args.credentials)
+    except Exception as e:
+        logger.error(f"!! Error running data generator - {e}")
 
 if __name__ == "__main__":
-    run()
+    main()
