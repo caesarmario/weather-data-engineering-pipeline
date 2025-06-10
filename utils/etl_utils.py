@@ -62,7 +62,7 @@ class ETLHelper:
         )
 
 
-    def read_json(self, object_name: str):
+    def read_json(self, bucket_name, object_name: str, credentials):
         """
         Read JSON from MinIO raw bucket, parse, dan return dict.
 
@@ -73,17 +73,22 @@ class ETLHelper:
             dict: parsed JSON data
         """
         try:
-            resp = self.minio_client.get_object(self.raw_bucket, object_name)
-            data = json.loads(resp.read().decode("utf-8"))
+            minio_client = self.create_minio_conn(credentials)
+            resp         = minio_client.get_object(bucket_name, object_name)
+            data         = json.loads(resp.read().decode("utf-8"))
             return data
 
         except Exception as e:
-            logger.error(f"!! Failed to read JSON from MinIO bucket '{self.raw_bucket}', object '{object_name}': {e}")
+            logger.error(f"!! Failed to read JSON from MinIO bucket '{bucket_name}', object '{object_name}': {e}")
             raise
 
         finally:
-            resp.close()
-            resp.release_conn()
+            if resp is not None:
+                try:
+                    resp.close()
+                    resp.release_conn()
+                except Exception:
+                    pass
 
 
     def load_config(self, subfolder, config_name):
@@ -102,7 +107,7 @@ class ETLHelper:
             return json.load(file)
 
 
-    def upload_parquet_to_minio(self, data, context, bucket, date_parquet):
+    def upload_parquet_to_minio(self, data, context, bucket, date_parquet, credentials):
         """
         Convert records to Parquet and upload to MinIO staging bucket.
 
@@ -111,6 +116,7 @@ class ETLHelper:
             context (str): Table/context name for path.
             bucket (str): Target bucket name.
             date_parquet (str): Date string 'YYYY-MM-DD' for file naming.
+            credentials (str): MinIO credentials.
 
         Returns:
             str: Uploaded object path in bucket.
@@ -127,8 +133,11 @@ class ETLHelper:
             year, month, day = date_parquet.split("-")
             object_name      = f"{context}/{year}/{month}/{day}/{context}_{date_parquet}.parquet"
 
+            # Create MinIO connection
+            minio_client = self.create_minio_conn(credentials)
+
             # Upload
-            self.minio_client.put_object(
+            minio_client.put_object(
                 bucket_name=bucket,
                 object_name=object_name,
                 data=buffer,
@@ -137,7 +146,7 @@ class ETLHelper:
             )
             return object_name
         except Exception as e:
-            logger.error(f"!! Failed to upload Parquet file to MinIO bucket '{self.raw_bucket}', object '{object_name}': {e}")
+            logger.error(f"!! Failed to upload Parquet file to MinIO bucket '{bucket}', object '{object_name}': {e}")
             raise
 
 
@@ -345,7 +354,7 @@ class ETLHelper:
 
         Returns:
             sqlalchemy.Engine: A SQLAlchemy engine instance connected to the specified Postgres database.
-    """
+        """
         try:
             user           = postgre_creds["POSTGRES_USER"]
             password       = postgre_creds["POSTGRES_PASSWORD"]
@@ -357,4 +366,26 @@ class ETLHelper:
             return create_engine(dsn)
         except Exception as e:
             logger.error(f"!! Creating postgres connection failed: {e}")
+            raise
+
+    
+    def read_parquet_from_s3(self, bucket_name, table_name, exec_date, fs):
+        """
+        ################## TO DO 20250610
+        """
+        try:
+            year, month, day = exec_date.split('-')
+
+            path = (
+                f"{bucket_name}/{table_name}/"
+                f"{year}/{month}/{day}/"
+                f"{table}_{day}.parquet"
+            )
+
+            df = pd.read_parquet(path, filesystem=fs)
+            logger.info(f"Loaded {len(df)} rows into DataFrame")
+
+            return df
+        except Exception as e:
+            logger.error(f"!! Failed to read Parquet from S3: {e}")
             raise

@@ -11,14 +11,14 @@ import pandas as pd
 import argparse
 
 class ParquetLoader:
-    def __init__(self, table: str, minio_creds: dict, postgre_creds: dict, exec_date: str):
+    def __init__(self, table: str, minio_creds: dict, postgres_creds: dict, exec_date: str):
         """
         Initialize loader with table name and execution date.
 
         Args:
             table (str): Target table in schema 'raw'.
             minio_creds: MinIO credentials.
-            postgre_creds: Postgres credentials.
+            postgres_creds: Postgres credentials.
             exec_date (str): Date string in 'YYYY-MM-DD'.
 
         Returns:
@@ -29,15 +29,13 @@ class ParquetLoader:
 
         # MinIO filesystem
         self.fs        = self.helper.get_minio_s3fs(minio_creds)
+        self.bucket    = minio_creds["MINIO_BUCKET_STAGING"]
 
         # Postgres connection
         self.engine    = self.helper.create_postgre_conn()
 
         self.table     = table
         self.exec_date = exec_date
-
-        # Parse date for partition path and deletion filter
-        self.year, self.month, self.day = exec_date.split('-')
 
         # Postgres connection
         logger.info(f"Initialized ParquetLoader for {self.table} @ {self.exec_date}")
@@ -49,18 +47,11 @@ class ParquetLoader:
         Returns:
             None
         """
-        # Build S3 path for Parquet
-        path = (
-            f"staging/{self.table}/"
-            f"{self.year}/{self.month}/{self.day}/"
-            f"{self.table}_{self.day}.parquet"
-        )
-        logger.info(f"Reading Parquet from {path}")
+        # Read Parquet from S3
+        logger.info(f"Reading Parquet from {self.bucket}, table {self.table}, exec date {self.exec_date}")
+        df = self.helper.read_parquet_from_s3(self.bucket, self.table, self.exec_date, self.fs)
 
-        # Read cleaned Parquet
-        df = pd.read_parquet(path, filesystem=self.fs)
-        logger.info(f"Loaded {len(df)} rows into DataFrame")
-
+################## TO DO 20250610
         # Write into Postgres: idempotent partition overwrite
         with self.engine.begin() as conn:
             # Delete existing partition for exec_date
