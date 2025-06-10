@@ -17,10 +17,9 @@ import logging
 import json
 import subprocess
 
-# -- DAG-level settings: job name, schedule, and credentials
+# -- DAG-level settings: job name and schedule
 job_name        = "weather_json_to_parquet"
 duration        = "daily"
-minio_creds     = Variable.get("minio_creds")
 
 default_args = {
     "owner"             : "caesarmario87@gmail.com",
@@ -44,7 +43,9 @@ def run_processor(process: str, exec_date: str, **kwargs):
     """
     Execute process scripts by pass exec_date and MinIO creds.
     """
-    
+    # MinIO Credentials
+    minio_creds     = Variable.get("minio_creds")
+
     # Build command
     cmd = [
         "python", f"scripts/process/process_{process}.py",
@@ -68,11 +69,9 @@ with TaskGroup("extract_transform", tooltip="JSON→Parquet", dag=dag) as extrac
     process_current = PythonOperator(
         task_id="process_current",
         python_callable=run_processor,
-
         op_kwargs={
-            "process": "{{ name }}",
-            "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}",
-            "credentials": minio_creds
+            "process": "current",
+            "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
         },
         dag=dag,
     )
@@ -80,11 +79,9 @@ with TaskGroup("extract_transform", tooltip="JSON→Parquet", dag=dag) as extrac
     process_location = PythonOperator(
         task_id="process_location",
         python_callable=run_processor,
-
         op_kwargs={
-            "process": "{{ name }}",
-            "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}",
-            "credentials": minio_creds
+            "process": "location",
+            "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
         },
         dag=dag,
     )
@@ -92,11 +89,9 @@ with TaskGroup("extract_transform", tooltip="JSON→Parquet", dag=dag) as extrac
     process_forecast = PythonOperator(
         task_id="process_forecast",
         python_callable=run_processor,
-
         op_kwargs={
-            "process": "{{ name }}",
-            "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}",
-            "credentials": minio_creds
+            "process": "forecast",
+            "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
         },
         dag=dag,
     )

@@ -23,7 +23,9 @@ class ProcessForecast:
             # Define source JSON path and target table
             self.object_name       = f"data/weather_data_{exec_date}.json"
             self.table_name        = "forecast"
-            self.bucket            = credentials.get("MINIO_BUCKET_STAGING")
+            self.credentials       = credentials
+            self.bucket_raw        = credentials.get("MINIO_BUCKET_RAW")
+            self.bucket_staging    = credentials.get("MINIO_BUCKET_STAGING")
 
             logger.info("Initialized forecast table class successfully.")
         except Exception as e:
@@ -37,7 +39,7 @@ class ProcessForecast:
 
         # Read JSON input
         try:
-            data = self.helper.read_json(self.object_name)
+            data = self.helper.read_json(self.bucket_raw, self.object_name, self.credentials)
         except Exception as e:
             logger.error(f"!! Unexpected error during reading JSON from bucket: {e}")
             raise
@@ -66,23 +68,11 @@ class ProcessForecast:
         try:
             # Write to a Parquet file
             date_parquet = self.helper.date_filename(processed_data[0]["date"])
-            object_name  = self.helper.upload_parquet_to_minio(processed_data, "forecast", self.bucket, date_parquet)
+            object_name  = self.helper.upload_parquet_to_minio(processed_data, "forecast", self.bucket_staging, date_parquet, self.credentials)
 
-            logger.info(f">> Uploaded to MinIO bucket '{self.bucket}', object '{object_name}'")
+            logger.info(f">> Uploaded to MinIO bucket '{self.bucket_staging}', object '{object_name}'")
         except Exception as e:
             logger.error(f"!! Error uploading Parquet to MinIO: {e}")
-            raise
-
-
-    def run(self, exec_date, credentials: dict, **kwargs):
-        """
-        Airflow entry-point for PythonOperator.
-        """
-        try:
-            processor = ProcessForecast(exec_date, credentials)
-            processor.process()
-        except Exception as e:
-            logger.error(f"!! forecast processing failed: {e}")
             raise
 
 
@@ -96,10 +86,19 @@ def main():
     except Exception as e:
         logger.error(f"!! One of the arguments is empty! - {e}")
 
+    # Preparing variables & creds
     try:
-        run(args.exec_date, args.credentials)
+        creds         = json.loads(args.credentials)
     except Exception as e:
-        logger.error(f"!! Error running data generator - {e}")
+        logger.error(f"!! Failed to parse JSON credentials: {e}")
+        raise ValueError("!! Invalid credentials JSON format")
+
+    # Running processor
+    try:
+        processor = ProcessForecast(args.exec_date, creds)
+        processor.process()
+    except Exception as e:
+        logger.error(f"!! Error running processor - {e}")
 
 if __name__ == "__main__":
     main()

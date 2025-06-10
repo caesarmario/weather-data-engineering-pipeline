@@ -362,6 +362,7 @@ def main():
     except Exception as e:
         logger.error(f"!! One of the arguments is empty! - {e}")
 
+    # Preparing variables
     try:
         creds         = json.loads(args.credentials)
         exec_date_str = args.exec_date
@@ -370,6 +371,7 @@ def main():
         logger.error(f"!! Failed to parse JSON credentials: {e}")
         raise ValueError("!! Invalid credentials JSON format")
 
+    # Running data generator
     try:
         gen = DataGenerator(args.empty_rate, args.error_rate, creds, exec_date)
         gen.run()
