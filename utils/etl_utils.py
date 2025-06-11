@@ -7,7 +7,7 @@
 from datetime import datetime
 from minio import Minio
 from io import BytesIO
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine, text, inspect
 
 import json
 import uuid
@@ -316,35 +316,6 @@ class ETLHelper:
         return processed_record
 
 
-    def get_minio_s3fs(self, minio_creds):
-        """
-        Create and return an s3fs filesystem client for MinIO access.
-
-        Args:
-            minio_creds (dict): Dictionary containing MinIO credentials:
-
-        Returns:
-            s3fs.S3FileSystem: Initialized filesystem client pointed at the MinIO endpoint.
-        """
-
-        try:
-            endpoint       = minio_creds["MINIO_ENDPOINT"]
-            access_key     = minio_creds["MINIO_ROOT_USER"]
-            secret_key     = minio_creds["MINIO_ROOT_PASSWORD"]
-
-            fs = s3fs.S3FileSystem(
-                key             = access_key,
-                secret          = secret_key,
-                client_kwargs   = {
-                    'endpoint_url': endpoint
-                }
-            )
-            return fs
-        except Exception as e:
-            logger.error(f"!! S3 File System creation failed: {e}")
-            raise
-
-
     def create_postgre_conn(self, postgres_creds):
         """
         Initialize and return a SQLAlchemy engine for Postgres connections.
@@ -356,11 +327,11 @@ class ETLHelper:
             sqlalchemy.Engine: A SQLAlchemy engine instance connected to the specified Postgres database.
         """
         try:
-            user           = postgre_creds["POSTGRES_USER"]
-            password       = postgre_creds["POSTGRES_PASSWORD"]
-            host           = postgre_creds["POSTGRES_HOST"]
-            port           = postgre_creds["POSTGRES_PORT"]
-            dbname         = postgre_creds["POSTGRES_DB"]
+            user           = postgres_creds["POSTGRES_USER"]
+            password       = postgres_creds["POSTGRES_PASSWORD"]
+            host           = postgres_creds["POSTGRES_HOST"]
+            port           = postgres_creds["POSTGRES_PORT"]
+            dbname         = postgres_creds["POSTGRES_DB"]
 
             dsn = f"postgresql://{user}:{password}@{host}:{port}/{dbname}"
             return create_engine(dsn)
@@ -369,7 +340,7 @@ class ETLHelper:
             raise
 
     
-    def read_parquet_from_s3(self, bucket_name, table_name, exec_date, fs):
+    def read_parquet(self, bucket_name, credentials, table_name, exec_date):
         """
         ################## TO DO 20250610
         """
@@ -377,15 +348,102 @@ class ETLHelper:
             year, month, day = exec_date.split('-')
 
             path = (
-                f"{bucket_name}/{table_name}/"
+                f"{table_name}/"
                 f"{year}/{month}/{day}/"
-                f"{table}_{day}.parquet"
+                f"{table_name}_{exec_date}.parquet"
             )
 
-            df = pd.read_parquet(path, filesystem=fs)
-            logger.info(f"Loaded {len(df)} rows into DataFrame")
+            minio_client = self.create_minio_conn(credentials)
+            resp         = minio_client.get_object(bucket_name, path)
+
+            byte_data    = BytesIO(resp.read())
+            df           = pd.read_parquet(byte_data)
 
             return df
+
         except Exception as e:
-            logger.error(f"!! Failed to read Parquet from S3: {e}")
+            logger.error(f"!! Failed to read Parquet from MinIO bucket '{bucket_name}', path '{path}': {e}")
+            raise
+            
+        finally:
+            if 'resp' in locals() and resp is not None:
+                try:
+                    resp.close()
+                    resp.release_conn()
+                except Exception:
+                    pass
+
+
+    def check_and_create_table(conn, table_name: str, schema: str, df: pd.DataFrame):
+        """
+        ################## TO DO 20250610
+        Check if the table exists in the given schema, and create it if it doesn't.
+        """
+        # Get the inspector object to check the table existence
+        inspector = inspect(conn)
+        
+        # Check if the table exists in the specified schema
+        if not inspector.has_table(table_name, schema=schema):
+            logger.info(f"Table {schema}.{table_name} does not exist. Creating table...")
+            
+            # Create the table from the DataFrame
+            df.head(0).to_sql(
+                name=table_name,
+                con=conn,
+                schema=schema,
+                if_exists='replace',
+                index=False
+            )
+            logger.info(f"Table {schema}.{table_name} created successfully.")
+        else:
+            logger.info(f"Table {schema}.{table_name} already exists.")
+
+
+    def merge_data_into_table(conn, df: pd.DataFrame, table_name: str, schema: str, exec_date: str):
+        """
+        ################## TO DO 20250610
+        Insert data into the table by creating a temp table, merging the data and cleaning up.
+        """
+        temp_table_name = f"current_temp_{exec_date.replace('-', '_')}"
+        
+        try:
+            # Create a temporary table
+            df.head(0).to_sql(
+                name=temp_table_name,
+                con=conn,
+                schema=schema,
+                if_exists='replace',  # Creates the temp table
+                index=False
+            )
+            logger.info(f"Temporary table {schema}.{temp_table_name} created.")
+
+            # Insert data into the temporary table
+            df.to_sql(
+                name=temp_table_name,
+                con=conn,
+                schema=schema,
+                if_exists='append',
+                index=False
+            )
+            logger.info(f"Inserted data into temp table {schema}.{temp_table_name}.")
+            
+            # Now, merge the data into the main table (assuming no unique conflicts on primary key)
+            merge_sql = f"""
+            INSERT INTO raw.{table_name} (SELECT * FROM raw.{temp_table_name})
+            ON CONFLICT (your_primary_key_column) DO UPDATE
+            SET column1 = EXCLUDED.column1, column2 = EXCLUDED.column2, ... ;
+            """
+            
+            # Execute the merge SQL
+            with conn.begin():
+                conn.execute(text(merge_sql))
+            
+            logger.info(f"Successfully merged data from temp table {schema}.{temp_table_name} into {schema}.{table_name}.")
+
+            # Drop the temporary table after merging
+            conn.execute(f"DROP TABLE IF EXISTS raw.{temp_table_name};")
+            logger.info(f"Dropped temporary table {schema}.{temp_table_name}.")
+        
+        except Exception as e:
+            logger.error(f"Error during merging process: {e}")
             raise

@@ -12,9 +12,7 @@ from io import BytesIO
 import json
 import random
 import time
-import sys
 import argparse
-import os
 
 from utils.logging_utils import logger
 from utils.etl_utils import ETLHelper
