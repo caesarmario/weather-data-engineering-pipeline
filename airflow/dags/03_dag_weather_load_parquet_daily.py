@@ -20,8 +20,6 @@ import subprocess
 # -- DAG-level settings: job name, schedule, and credentials
 job_name        = "weather_load_parquet"
 duration        = "daily"
-minio_creds     = Variable.get("minio_creds")
-postgres_creds  = Variable.get("postgresql_creds")
 
 default_args = {
     "owner"             : "caesarmario87@gmail.com",
@@ -41,10 +39,13 @@ dag = DAG(
 )
 
 # -- Function: run the load parquet script
-def run_loader(**kwargs):
+def run_loader(table, exec_date, **kwargs):
     """
     Execute sample_data_generator.py with XCom rates and pass exec_date.
     """
+    # Credentials
+    minio_creds     = Variable.get("minio_creds")
+    postgres_creds  = Variable.get("postgresql_creds")
 
     # Build command
     cmd = [
@@ -57,6 +58,7 @@ def run_loader(**kwargs):
 
     # Execute script
     subprocess.run(cmd, check=True)
+
 
 # -- Tasks: start, run loader, end
 # Dummy Start
@@ -73,8 +75,6 @@ with TaskGroup("load_data", tooltip="Parquet→Staging db", dag=dag) as load_gro
 
         op_kwargs={
             "table": "current",
-            "minio_creds": minio_creds,
-            "postgres_creds": postgres_creds,
             "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
         },
         dag=dag,
@@ -86,8 +86,6 @@ with TaskGroup("load_data", tooltip="Parquet→Staging db", dag=dag) as load_gro
 
         op_kwargs={
             "table": "location",
-            "minio_creds": minio_creds,
-            "postgres_creds": postgres_creds,
             "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
         },
         dag=dag,
@@ -99,12 +97,21 @@ with TaskGroup("load_data", tooltip="Parquet→Staging db", dag=dag) as load_gro
 
         op_kwargs={
             "table": "forecast",
-            "minio_creds": minio_creds,
-            "postgres_creds": postgres_creds,
             "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
         },
         dag=dag,
     )
+
+# Trigger next DAG
+trigger_process = TriggerDagRunOperator(
+    task_id         = "trigger_weather_run_dbt_staging",
+    trigger_dag_id  = "04_dag_weather_run_dbt_staging_daily",
+
+    conf            = {
+                        "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
+                    },
+    dag             = dag
+)
 
 # Dummy End
 task_end = EmptyOperator(
