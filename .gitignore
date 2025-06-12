@@ -5,6 +5,7 @@
 utils/__pycache__/etl_utils.cpython-312.pyc
 utils/__pycache__/validation_utils.cpython-312.pyc
 utils/__pycache__/logging_utils.cpython-312.pyc
+.vscode/
 
 # Logs
 *.log

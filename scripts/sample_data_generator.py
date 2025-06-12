@@ -20,34 +20,37 @@ from utils.etl_utils import ETLHelper
 class DataGenerator:
 
     def __init__(self, empty_rate: float, error_rate: float, credentials: dict, base_date: datetime):
+        try:
+            # Load helper
+            self.helper = ETLHelper()
 
-        # Load helper
-        self.helper = ETLHelper()
+            # MinIO client setup
+            self.raw_bucket  = credentials["MINIO_BUCKET_RAW"]
+            self.client      = self.helper.create_minio_conn(credentials)
+            self.base_date   = base_date
 
-        # MinIO client setup
-        self.raw_bucket  = credentials["MINIO_BUCKET_RAW"]
-        self.client      = self.helper.create_minio_conn(credentials)
-        self.base_date   = base_date
+            # Rates
+            self.empty_rate = max(0.0, min(empty_rate, 100.0))
+            self.error_rate = max(0.0, min(error_rate, 100.0))
+            if self.empty_rate + self.error_rate > 100.0:
+                logger.warning(
+                    "empty_rate + error_rate > 100; reducing error_rate"
+                )
+                self.error_rate = 100.0 - self.empty_rate
+            
+            # Load Mapping JSONs
+            with open(f'schema_config/data_gen/conditions_mapping.json', 'r') as file:
+                self.conditions_mapping = json.load(file)
+            with open(f'schema_config/data_gen/locations_mapping.json', 'r') as file:
+                self.locations_mapping = json.load(file)
 
-        # Rates
-        self.empty_rate = max(0.0, min(empty_rate, 100.0))
-        self.error_rate = max(0.0, min(error_rate, 100.0))
-        if self.empty_rate + self.error_rate > 100.0:
-            logger.warning(
-                "empty_rate + error_rate > 100; reducing error_rate"
+            logger.info(
+                f"Initialized DataGenerator with empty_rate={self.empty_rate}%, "
+                f"error_rate={self.error_rate}%"
             )
-            self.error_rate = 100.0 - self.empty_rate
-        
-        # Load Mapping JSONs
-        with open(f'schema_config/data_gen/conditions_mapping.json', 'r') as file:
-            self.conditions_mapping = json.load(file)
-        with open(f'schema_config/data_gen/locations_mapping.json', 'r') as file:
-            self.locations_mapping = json.load(file)
-
-        logger.info(
-            f"Initialized DataGenerator with empty_rate={self.empty_rate}%, "
-            f"error_rate={self.error_rate}%"
-        )
+        except Exception as e:
+            logger.error(f"!! Failed to load configuration: {e}")
+            raise
 
 
     def generate_forecast_days(self, start_date: datetime, num_days: int = 3):
@@ -269,9 +272,9 @@ class DataGenerator:
         return data
 
 
-    def upload_to_minio(self, data: dict, object_name: str):
+    def upload_json_to_minio(self, data: dict, object_name: str):
         """
-        Upload file to MinIO bucket (raw).
+        Upload JSON file to MinIO bucket (raw).
 
         Args:
             data: weather data in JSON format
@@ -336,7 +339,7 @@ class DataGenerator:
         # Saving data
         try:
             object_name = f"data/weather_data_{self.base_date.strftime('%Y-%m-%d')}.json"
-            self.upload_to_minio(weather_data, object_name)
+            self.upload_json_to_minio(weather_data, object_name)
             logger.info(f"Uploaded to MinIO bucket '{self.raw_bucket}', object '{object_name}'")
         except Exception as e:
             logger.error(f"!! Failed to save data - {e}")

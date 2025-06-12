@@ -13,33 +13,25 @@ import json
 
 class ParquetLoader:
     def __init__(self, table: str, minio_creds: dict, postgres_creds: dict, exec_date: str):
-        """
-        Initialize loader with table name and execution date.
+        try:
+            # Load helper
+            self.helper         = ETLHelper()
 
-        Args:
-            table (str): Target table in schema 'raw'.
-            minio_creds: MinIO credentials.
-            postgres_creds: Postgres credentials.
-            exec_date (str): Date string in 'YYYY-MM-DD'.
+            # MinIO filesystem
+            self.minio_creds    = minio_creds
+            self.bucket_staging = minio_creds["MINIO_BUCKET_STAGING"]
 
-        Returns:
-            None
-        """
-        # Load helper
-        self.helper         = ETLHelper()
+            # Postgres credentials
+            self.postgres_creds = postgres_creds
 
-        # MinIO filesystem
-        self.minio_creds    = minio_creds
-        self.bucket_staging = self.minio_creds["MINIO_BUCKET_STAGING"]
+            self.table          = table
+            self.exec_date      = exec_date
 
-        # Postgres connection
-        self.engine         = self.helper.create_postgre_conn(postgres_creds)
+            logger.info(f"Initialized ParquetLoader for {self.table} @ {self.exec_date}")
+        except Exception as e:
+            logger.error(f"!! Failed to load configuration: {e}")
+            raise
 
-        self.table          = table
-        self.exec_date      = exec_date
-
-        # Postgres connection
-        logger.info(f"Initialized ParquetLoader for {self.table} @ {self.exec_date}")
 
     def load(self):
         """
@@ -52,18 +44,20 @@ class ParquetLoader:
         try:
             logger.info(f"Reading Parquet from {self.bucket_staging}, table {self.table}, exec date {self.exec_date}")
             df = self.helper.read_parquet(self.bucket_staging, self.minio_creds, self.table, self.exec_date)
-            logger.info(df) ########
         except Exception as e:
             logger.error(f"!! Error reading Parquet from {self.bucket_staging} - {e}")
 
-#         try:
-#             with self.engine.begin() as conn:
-#                 # Checking table in `raw`
-#                 self.helper.check_and_create_table(conn, self.table, 'raw', df)
+        try:
+            # Postgres connection
+            conn = self.helper.create_postgre_conn(self.postgres_creds)
+            with conn.cursor() as cursor:
+                # Checking table in `raw`
+                self.helper.check_and_create_table(conn, self.table, 'raw', df)
                 
-#                 # Merge data into main table
-#                 self.helper.merge_data_into_table(conn, df, self.table, 'raw', self.exec_date)
-
+                # Merge data into main table
+                # self.helper.merge_data_into_table(conn, df, self.table, 'raw', self.exec_date)
+        except Exception as e:
+            logger.error(f"!! Error when merging data to main table @ {self.table} - {e}")
 
 
 
