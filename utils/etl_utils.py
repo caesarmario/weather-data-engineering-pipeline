@@ -368,14 +368,13 @@ class ETLHelper:
     
     def create_postgre_conn(self, postgres_creds):
         """
-        ################## TO DO 20250610
-        Initialize and return a SQLAlchemy engine for Postgres connections.
+        Initialize and return a pyscopg2 engine for Postgres connections.
 
         Args:
             postgres_creds (dict): Dictionary containing connection parameters:
 
         Returns:
-            sqlalchemy.Engine: A SQLAlchemy engine instance connected to the specified Postgres database.
+            psycopg2 conn: A psycopg2 connection connected to the specified Postgres database.
         """
         try:
             user           = postgres_creds["POSTGRES_USER"]
@@ -401,9 +400,9 @@ class ETLHelper:
             logger.error(f"!! Creating postgres connection failed: {e}")
             raise
 
+
     def load_reserved_keywords(self):
         """
-        ################## TO DO 20250610
         Load configuration from a JSON file.
 
         Args:
@@ -425,7 +424,6 @@ class ETLHelper:
 
     def check_and_create_table(self, conn, table_name: str, schema: str, df: pd.DataFrame):
         """
-        ################## TO DO 20250610
         Check if the table exists in the given schema, and create it if it doesn't.
 
         Args:
@@ -437,15 +435,36 @@ class ETLHelper:
         try:
             # Create a cursor to execute SQL queries
             with conn.cursor() as cursor:
+                
+                # Check if the schema exists in the database
+                cursor.execute(
+                    sql.SQL("SELECT EXISTS (SELECT 1 FROM information_schema.schemata WHERE schema_name = %s)"),
+                    [schema]
+                )
+                schema_exists = cursor.fetchone()[0]  # Fetch the result of the query, which is a boolean
+
+                if not schema_exists:
+                    logger.info(f"Schema {schema} does not exist. Creating schema...")
+                    try:
+                        cursor.execute(
+                            sql.SQL("CREATE SCHEMA {}").format(sql.Identifier(schema))
+                        )
+                        conn.commit()
+                        logger.info(f"Schema {schema} created successfully.")
+                    except Exception as e:
+                        logger.error(f"Error creating schema {schema}: {e}")
+                        if "duplicate key" in str(e):  # Ignore error if schema already exists
+                            logger.info(f"Schema {schema} already exists. Skipping creation.")
+
 
                 # Check if the table exists in the schema by querying the information_schema.tables
                 cursor.execute(
                     sql.SQL("SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = %s AND table_schema = %s)"),
                     [table_name, schema]
                 )
-                exists = cursor.fetchone()[0]  # Fetch the result of the query, which is a boolean
+                table_exists = cursor.fetchone()[0]  # Fetch the result of the query, which is a boolean
                 
-                if not exists:
+                if not table_exists:
                     logger.info(f"Table {schema}.{table_name} does not exist. Creating table...")
 
                     # Generate the SQL columns based on the config file and pandas DataFrame
@@ -489,10 +508,69 @@ class ETLHelper:
                     conn.commit()
                     logger.info(f"Table {schema}.{table_name} created successfully. Proceed to next step")
                 else:
-                    logger.info(f"Table {schema}.{table_name} already exists. Proceed to next step!")
+                    # Checking schema changes if exists
+                    logger.info(f"Table {schema}.{table_name} already exists. Checking for schema changes...")
+                    self.alter_table_schema(conn, dtype_mapping, table_name, schema, df)
 
         except Exception as e:
             logger.error(f"Error in checking or creating table {schema}.{table_name}: {e}")
+            raise
+    
+
+    def alter_table_schema(self, conn, dtype_mapping: dict, table_name: str, schema: str, df: pd.DataFrame):
+        """
+        Alter the table schema by adding new columns or updating data types of existing columns
+        to match the given DataFrame.
+
+        Args:
+            conn (psycopg2.connection): The psycopg2 connection object to interact with the database.
+            table_name (str): The name of the table.
+            schema (str): The schema where the table is located.
+            df (pandas.DataFrame): DataFrame with the data to be inserted or used to alter the table schema.
+        """
+        try:
+            with conn.cursor() as cursor:
+                # Get existing columns and data types from the database
+                cursor.execute(
+                    sql.SQL("SELECT column_name, data_type FROM information_schema.columns WHERE table_name = %s AND table_schema = %s"),
+                    [table_name, schema]
+                )
+                existing_columns = {row[0]: row[1] for row in cursor.fetchall()}
+
+                # Get new columns from DataFrame
+                new_columns = df.columns.tolist()
+
+                # Add new columns or alter existing columns
+                for column in new_columns:
+                    pg_data_type = dtype_mapping.get(str(df[column].dtype), 'TEXT')
+
+                    if column not in existing_columns:
+                        logger.info(f"Adding new column {column} with type {pg_data_type} to {schema}.{table_name}.")
+                        cursor.execute(
+                            sql.SQL("ALTER TABLE {}.{} ADD COLUMN {} {};").format(
+                                sql.Identifier(schema),
+                                sql.Identifier(table_name),
+                                sql.Identifier(column),
+                                sql.SQL(pg_data_type)
+                            )
+                        )
+                        conn.commit()
+                        logger.info(f"Column {column} added to {schema}.{table_name}.")
+                    elif existing_columns[column] != pg_data_type:
+                        logger.info(f"Updating column {column} from {existing_columns[column]} to {pg_data_type}.")
+                        cursor.execute(
+                            sql.SQL("ALTER TABLE {}.{} ALTER COLUMN {} SET DATA TYPE {};").format(
+                                sql.Identifier(schema),
+                                sql.Identifier(table_name),
+                                sql.Identifier(column),
+                                sql.SQL(pg_data_type)
+                            )
+                        )
+                        conn.commit()
+                        logger.info(f"Column {column} updated to {pg_data_type} in {schema}.{table_name}.")
+
+        except Exception as e:
+            logger.error(f"Error in altering table schema for {schema}.{table_name}: {e}")
             raise
 
 
