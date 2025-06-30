@@ -55,35 +55,9 @@ class ParquetLoader:
                 self.helper.check_and_create_table(conn, self.table, 'raw', df)
                 
                 # Merge data into main table
-                # self.helper.merge_data_into_table(conn, df, self.table, 'raw', self.exec_date)
+                self.helper.truncate_insert_data(conn, self.table, 'raw', df, self.exec_date)
         except Exception as e:
             logger.error(f"!! Error when merging data to main table @ {self.table} - {e}")
-
-
-
-
-
-
-
-# ################## TO DO 20250610
-#         # Write into Postgres: idempotent partition overwrite
-#         with self.engine.begin() as conn:
-#             # Delete existing partition for exec_date
-#             delete_sql = text(
-#                 f"DELETE FROM raw.{self.table} WHERE date = :d"
-#             )
-#             conn.execute(delete_sql, {'d': self.exec_date})
-#             logger.info(f"Deleted existing rows for {self.exec_date}")
-
-#             # Insert new data
-#             df.to_sql(
-#                 name=self.table,
-#                 con=conn,
-#                 schema='raw',
-#                 if_exists='append',
-#                 index=False
-#             )
-#             logger.info(f"Inserted {len(df)} rows into raw.{self.table}")
 
 
 def main():
