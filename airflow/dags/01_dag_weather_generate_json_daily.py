@@ -45,9 +45,9 @@ def set_env_vars(**kwargs):
     """
     Push EMPTY_RATE and ERROR_RATE into XCom for downstream tasks.
     """
-    # Draw rates from a triangular distribution with mode=10
-    empty_rate = 0 ### [WIP] int(random.triangular(0, 100, 10))
-    error_rate = 0 ### [WIP] int(random.triangular(0, 100, 10))
+    # Draw rates from a triangular distribution with mode=5
+    empty_rate = 0 ### [WIP] int(random.triangular(0, 100, 5))
+    error_rate = 0 ### [WIP] int(random.triangular(0, 100, 5))
 
     # Assemble environment dict
     env = {

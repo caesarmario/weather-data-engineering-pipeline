@@ -238,7 +238,6 @@ class DataGenerator:
             ("day", ["avgtemp_c", "avgtemp_f"]),
             ("day", ["maxwind_mph", "maxwind_kph"]),
             ("day", ["totalprecip_mm", "totalprecip_in"]),
-            ("day", ["totalsnow_cm"]),
             ("day", ["avgvis_km", "avgvis_miles"]),
         ]
         for city, city_data in data.items():
@@ -249,9 +248,16 @@ class DataGenerator:
 
                 # Inject into 'current' section if chosen
                 for section, keys in chosen_groups:
+
+                    # Randomly choose one key to be invalidated in the group
+                    key_to_invalidate = random.choice(keys)     # Select one of the pair
+
                     if section == "current":
-                        for k in keys:
-                            city_data["current"][k] = "invalid_data"
+                        city_data["current"][key_to_invalidate] = "invalid_data"
+
+                    elif section == "day":
+                        # Randomly choose one key in the "day" section to invalidate
+                        city_data["forecast"]["forecastday"][0]["day"][key_to_invalidate] = "invalid_data"
 
                 # Determine forecast forecasts length
                 forecast_days = city_data.get("forecast", {}).get("forecastday", [])
