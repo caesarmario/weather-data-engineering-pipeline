@@ -120,4 +120,4 @@ task_end = EmptyOperator(
 )
 
 # -- Define execution order
-task_start >> load_group >> task_end
+task_start >> load_group >> trigger_process >> task_end

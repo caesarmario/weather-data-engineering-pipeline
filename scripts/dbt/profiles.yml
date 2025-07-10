@@ -1,0 +1,12 @@
+weather_profile:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: "host.docker.internal"
+      user: "postgres"
+      password: "admin123"
+      port: 5433
+      dbname: "postgres"
+      schema: raw
+      threads: 4

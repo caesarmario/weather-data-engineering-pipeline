@@ -1,0 +1,16 @@
+name: weather_pipeline
+version: '1.0'
+
+config-version: 2
+
+profile: weather_profile
+
+model-paths: ["models"]
+target-path: "target"
+clean-targets: ["target", "dbt_modules"]
+
+models:
+  weather_pipeline:
+    staging:
+      +schema: dwh
+      +materialized: view

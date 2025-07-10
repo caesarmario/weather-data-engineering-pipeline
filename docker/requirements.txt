@@ -1,0 +1,7 @@
+minio>=7.1.12
+pyyaml>=6.0
+jinja2>=3.1.2
+click==8.2.1
+psycopg2-binary>=2.7
+great_expectations>=1.5.2
+dbt-postgres==1.9.0
