@@ -4,21 +4,21 @@ services:
   airflow:
     build:
       context: .
-      dockerfile: airflow/Dockerfile
+      dockerfile: ${PWD}/docker/Dockerfile
     restart: always
     env_file:
-      - .env
+      - ${PWD}/docker/.env
     environment:
       - AIRFLOW__CORE__AIRFLOW_HOME=/opt/airflow
       - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://${AIRFLOW_DB_USER}:${AIRFLOW_DB_PASS}@${AIRFLOW_DB_HOST}:5432/${AIRFLOW_DB_NAME}
       - AIRFLOW__CORE__EXECUTOR=LocalExecutor
       - PYTHONPATH=/opt/project
     volumes:
-      - ./airflow/dags:/opt/airflow/dags
-      - ./airflow/logs:/opt/airflow/logs
-      - ./airflow/plugins:/opt/airflow/plugins
-      - ./:/opt/project:delegated
-      - ./scripts/dbt:/dbt
+      - ${PWD}/airflow/dags:/opt/airflow/dags
+      - ${PWD}/airflow/logs:/opt/airflow/logs
+      - ${PWD}/airflow/plugins:/opt/airflow/plugins
+      - ${PWD}/:/opt/project:delegated
+      - ${PWD}/scripts/dbt:/dbt
     working_dir: /opt/project
     ports:
       - "8080:8080"
@@ -30,14 +30,14 @@ services:
   postgres:
     image: postgres:latest
     env_file:
-      - .env
+      - ${PWD}/docker/.env
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - postgres-data:/var/lib/postgresql/data
-      - ${PWD}/docker/initdb/init-multiple-db.sh:/docker-entrypoint-initdb.d/init-multiple-db.sh
+      - ./docker/initdb:/docker-entrypoint-initdb.d
     ports:
       - "${POSTGRES_PORT}:5432"
 
@@ -46,7 +46,7 @@ services:
     container_name: minio
     command: server /data --console-address ":9001"
     env_file:
-      - .env
+      - ${PWD}/docker/.env
     ports:
       - "9000:9000"
       - "9001:9001"
@@ -59,7 +59,7 @@ services:
     image: ghcr.io/dbt-labs/dbt-postgres:1.6.0
     container_name: dbt
     volumes:
-      - ./dbt:/dbt
+      - ${PWD}/scripts/dbt:/dbt
     working_dir: /dbt
     entrypoint: ["tail", "-f", "/dev/null"]
     depends_on:
@@ -76,7 +76,7 @@ services:
     image: python:3.10
     container_name: great_expectations
     volumes:
-      - ./great_expectations:/app
+      - ${PWD}/great_expectations:/app
     working_dir: /app
     entrypoint: ["bash", "-c", "pip install great_expectations==1.5.2 && tail -f /dev/null"]
     depends_on:
