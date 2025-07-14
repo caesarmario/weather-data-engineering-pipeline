@@ -1,3 +1,8 @@
+####
+## Docker Compose for Weather Data Engineering Pipeline
+## Mario Caesar // caesarmario87@gmail.com
+####
+
 version: '3'
 
 services:

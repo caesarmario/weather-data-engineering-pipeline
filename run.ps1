@@ -1,4 +1,10 @@
-# run.ps1
+####
+## PowerShell Script to Control Docker Compose
+## Mario Caesar // caesarmario87@gmail.com
+## Usage:
+##   .\run.ps1 up     → Starts all services with build
+##   .\run.ps1 down   → Stops and removes all services and volumes
+####
 
 param (
     [string]$Action
