@@ -511,8 +511,22 @@ class ETLHelper:
 
     def _map_dtype_to_postgres(self, dtype):
         """
-        ################## TO DO 20250620
-        Map pandas data types to PostgreSQL data types.
+        Map pandas data types to equivalent PostgreSQL data types.
+
+        Args:
+            dtype (numpy.dtype or str): The data type from a pandas DataFrame column.
+                Expected common types include:
+                - 'string'
+                - 'object'
+                - 'float64'
+                - 'int64'
+                - 'bool'
+                - 'datetime64[ns]'
+                - 'datetime'
+                - 'date'
+
+        Returns:
+            str: PostgreSQL-compatible data type string. Defaults to 'TEXT' if no match found.
         """
         dtype_mapping = {
             'string': 'TEXT',
@@ -530,7 +544,21 @@ class ETLHelper:
 
     def _map_dtype_to_postgres_from_config(self, column_data_type):
         """
-        Map data types from the config to PostgreSQL data types.
+        Map abstract data types (as defined in config files) to PostgreSQL-compatible data types.
+
+        Args:
+            column_data_type (str): Logical or abstract data type defined in the schema config file.
+                Supported types (case-sensitive):
+                    - 'STRING'     → 'TEXT'
+                    - 'DATE'       → 'DATE'
+                    - 'DATETIME'   → 'TIMESTAMP'
+                    - 'TIMESTAMP'  → 'TIMESTAMP'
+                    - 'FLOAT'      → 'DOUBLE PRECISION'
+                    - 'BOOLEAN'    → 'BOOLEAN'
+                    - 'INTEGER'    → 'INTEGER'
+
+        Returns:
+            str: Corresponding PostgreSQL data type. Defaults to 'TEXT' if no match is found.
         """
         dtype_mapping = {
             'STRING': 'TEXT',
@@ -604,7 +632,15 @@ class ETLHelper:
 
     def truncate_insert_data(self, conn, table_name: str, schema: str, df: pd.DataFrame, exec_date: str):
         """
-        ########### WIP 20250630
+        Truncate-insert approach to load transformed data into a target PostgreSQL table by ensuring
+        duplicate business keys are removed and leverage temporary table.
+
+        Args:
+            conn (psycopg2.connection): PostgreSQL connection.
+            table_name (str): Target table name for inserting cleaned data.
+            schema (str): Target schema (e.g., l0_weather, l1_weather).
+            df (pandas.DataFrame): Cleaned and transformed data to be loaded.
+            exec_date (str): Execution date (used for temp table naming).
         """
         try:
             exec_date = datetime.now().strftime("%Y%m%d")

@@ -3,10 +3,10 @@ weather_profile:
   outputs:
     dev:
       type: postgres
-      host: "host.docker.internal"
-      user: "postgres"
-      password: "admin123"
-      port: 5433
-      dbname: "postgres"
+      host: "{{ env_var('DBT_PG_HOST') }}"
+      user: "{{ env_var('DBT_PG_USER') }}"
+      password: "{{ env_var('DBT_PG_PASSWORD') }}"
+      port: "{{ env_var('DBT_PG_PORT') | int }}"
+      dbname: "{{ env_var('DBT_PG_DBNAME') }}"
       schema: raw
       threads: 4

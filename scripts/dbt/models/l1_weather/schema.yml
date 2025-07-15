@@ -1,0 +1,141 @@
+# [WIP 20250715]
+version: 2
+
+# l0_weather
+sources:
+  - name: l0_weather
+    schema: l0_weather
+    description: "Raw ingested weather data from MinIO."
+    tables:
+      - name: current
+        description: "Current weather observations."
+        freshness:
+          warn_after: { count: 1, period: day }
+          error_after: { count: 2, period: day }
+        loaded_at_field: load_dt
+
+      - name: forecast
+        description: "Weather forecast data up to 7 days."
+        freshness:
+          warn_after: { count: 1, period: day }
+          error_after: { count: 2, period: day }
+        loaded_at_field: load_dt
+
+      - name: location
+        description: "Metadata and geolocation of weather observation points."
+        freshness:
+          warn_after: { count: 1, period: day }
+          error_after: { count: 2, period: day }
+        loaded_at_field: load_dt
+
+
+# l1_weather (cleaned layer)
+models:
+  - name: l1_current
+    description: "Cleaned weather current observation data from l0_weather.current."
+    columns:
+      - name: location_id
+        description: "Primary location identifier."
+        tests: [not_null]
+      - name: date
+        description: "Observation date."
+      - name: last_updated
+        description: "Timestamp when data was last updated from source."
+      - name: temp_c
+        description: "Temperature in Celsius."
+      - name: temp_f
+        description: "Temperature in Fahrenheit."
+      - name: is_day
+        description: "Flag whether it's day (1) or night (0)."
+      - name: condition_text
+        description: "Description of weather condition."
+      - name: condition_code
+        description: "Numeric weather condition code."
+      - name: batch_id
+        description: "Batch execution identifier."
+      - name: load_dt
+        description: "Timestamp when record was transformed into L1."
+
+  - name: l1_forecast
+    description: "Cleaned weather forecast data with temperature, wind, precipitation and other metrics."
+    columns:
+      - name: location_id
+        description: "Foreign key to location dimension."
+        tests: [not_null]
+      - name: date
+        description: "Forecast date."
+      - name: date_epoch
+        description: "Unix timestamp of forecast date."
+      - name: maxtemp_c
+        description: "Max temperature in Celsius."
+      - name: maxtemp_f
+        description: "Max temperature in Fahrenheit."
+      - name: mintemp_c
+        description: "Min temperature in Celsius."
+      - name: mintemp_f
+        description: "Min temperature in Fahrenheit."
+      - name: avgtemp_c
+        description: "Average temperature in Celsius."
+      - name: avgtemp_f
+        description: "Average temperature in Fahrenheit."
+      - name: maxwind_mph
+        description: "Max wind speed in mph."
+      - name: maxwind_kph
+        description: "Max wind speed in kph."
+      - name: totalprecip_mm
+        description: "Total precipitation in millimeters."
+      - name: totalprecip_in
+        description: "Total precipitation in inches."
+      - name: totalsnow_cm
+        description: "Total snowfall in centimeters."
+      - name: avgvis_km
+        description: "Average visibility in kilometers."
+      - name: avgvis_miles
+        description: "Average visibility in miles."
+      - name: avghumidity
+        description: "Average humidity (percentage)."
+      - name: daily_will_it_rain
+        description: "Will it rain? (boolean)"
+      - name: daily_chance_of_rain
+        description: "Chance of rain (percentage)."
+      - name: daily_will_it_snow
+        description: "Will it snow? (boolean)"
+      - name: daily_chance_of_snow
+        description: "Chance of snow (percentage)."
+      - name: condition_text
+        description: "Weather condition text description."
+      - name: condition_code
+        description: "Weather condition numeric code."
+      - name: uv
+        description: "UV index."
+      - name: batch_id
+        description: "Batch execution identifier."
+      - name: load_dt
+        description: "Timestamp when record was transformed into L1."
+
+  - name: l1_location
+    description: "Canonical location metadata dimension cleaned from l0_weather.location."
+    columns:
+      - name: location_id
+        description: "Unique identifier for location."
+        tests: [not_null, unique]
+      - name: name
+        description: "City or location name."
+      - name: region
+        description: "Administrative region or state."
+      - name: country
+        description: "Country of the location."
+      - name: latitude
+        description: "Latitude in decimal degrees."
+      - name: longitude
+        description: "Longitude in decimal degrees."
+      - name: timezone_id
+        description: "Timezone identifier (e.g., Asia/Jakarta)."
+      - name: localtime_epoch
+        description: "Epoch timestamp of local time."
+      - name: localtime
+        description: "Timestamp of local time at the location."
+      - name: batch_id
+        description: "Batch execution identifier."
+      - name: load_dt
+        description: "Timestamp when record was transformed into L1."
