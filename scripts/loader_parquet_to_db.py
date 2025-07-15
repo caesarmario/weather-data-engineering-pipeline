@@ -51,11 +51,11 @@ class ParquetLoader:
             # Postgres connection
             conn = self.helper.create_postgre_conn(self.postgres_creds)
             with conn.cursor() as cursor:
-                # Checking table in `raw`
-                self.helper.check_and_create_table(conn, self.table, 'raw', df)
+                # Checking table in `l0_weather`
+                self.helper.check_and_create_table(conn, self.table, 'l0_weather', df)
                 
                 # Merge data into main table
-                self.helper.truncate_insert_data(conn, self.table, 'raw', df, self.exec_date)
+                self.helper.truncate_insert_data(conn, self.table, 'l0_weather', df, self.exec_date)
         except Exception as e:
             logger.error(f"!! Error when merging data to main table @ {self.table} - {e}")
 

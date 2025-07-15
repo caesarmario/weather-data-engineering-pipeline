@@ -17,7 +17,7 @@ class ProcessCurrent:
             # Initialize helpers and load configuration
             self.helper            = ETLHelper()
             self.batch_id          = self.helper.generate_batch_id()
-            self.config            = self.helper.load_config("raw", "current_config")
+            self.config            = self.helper.load_config("l0_weather", "current_config")
             self.load_dt           = self.helper.get_load_timestamp()
 
             # Define source JSON path and target table

@@ -1,3 +1,8 @@
+####
+## dbt Project Configuration for weather_pipeline
+## Mario Caesar // caesarmario87@gmail.com
+####
+
 name: weather_pipeline
 version: '1.0'
 
@@ -6,11 +11,24 @@ config-version: 2
 profile: weather_profile
 
 model-paths: ["models"]
+macro-paths: ["macros"]
 target-path: "target"
 clean-targets: ["target", "dbt_modules"]
 
 models:
   weather_pipeline:
-    staging:
+
+    # L0
+    l0_weather:
+      +schema: l0_weather
+      +materialized: table
+
+    # L1
+    l1_weather:
+      +schema: l1_weather
+      +materialized: view
+
+    # DWH
+    dwh:
       +schema: dwh
       +materialized: view

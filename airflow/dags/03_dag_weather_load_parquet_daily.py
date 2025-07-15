@@ -13,8 +13,6 @@ from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 
 from datetime import datetime, timedelta
 
-import logging
-import json
 import subprocess
 
 # -- DAG-level settings: job name, schedule, and credentials
