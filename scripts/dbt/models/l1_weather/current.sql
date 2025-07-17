@@ -25,7 +25,7 @@ typed as (
         {{ cast_safe("condition_text", "text") }} as condition_text,
         {{ cast_safe("condition_code", "int") }} as condition_code,
         {{ cast_safe("batch_id", "text") }} as batch_id,
-        {{ dbt_utils.current_timestamp() }} as load_dt
+        {{ current_timestamp() }} as load_dt
     from source
 )
 

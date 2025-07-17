@@ -18,17 +18,14 @@ clean-targets: ["target", "dbt_modules"]
 models:
   weather_pipeline:
 
-    # L0
-    l0_weather:
-      +schema: l0_weather
-      +materialized: table
+    +schema: ""
 
     # L1
     l1_weather:
       +schema: l1_weather
       +materialized: view
 
-    # DWH
-    dwh:
-      +schema: dwh
-      +materialized: view
+    # # DWH
+    # dwh:
+    #   +schema: dwh
+    #   +materialized: view

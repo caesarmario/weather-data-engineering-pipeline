@@ -34,6 +34,14 @@ dag = DAG(
     tags              = ["etl", "weather_data_engineering", f"{duration}"]
 )
 
+# -- Function: to retrieve dbt creds
+def get_dbt_env_vars():
+    """
+    Retrieve DBT credentials stored as Airflow Variable and return them as environment variables
+    """
+    dbt_pg_creds = Variable.get("dbt_pg_creds", deserialize_json=True)
+    return dbt_pg_creds
+
 # -- Tasks: start, run loader, end
 # Dummy Start
 task_start = EmptyOperator(
@@ -43,17 +51,14 @@ task_start = EmptyOperator(
 
 # Task to run dbt l1
 run_dbt_l1 = BashOperator(
-        task_id      = "run_dbt_l1",
-        bash_command = """
-            cd /dbt && \
-            dbt run --profiles-dir . --project-dir .
-        """
-)
-
-# Dummy End
-task_end = EmptyOperator(
-    task_id         = "task_end",
-    dag             = dag
+    task_id="run_dbt_l1",
+    bash_command="""
+        export PATH=$PATH:/home/airflow/.local/bin && \
+        cd /dbt && \
+        dbt run --profiles-dir . --project-dir .
+    """,
+    env=get_dbt_env_vars(),
+    dag=dag
 )
 
 # Trigger next DAG
@@ -64,6 +69,12 @@ trigger_process = TriggerDagRunOperator(
     conf            = {
                         "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
                     },
+    dag             = dag
+)
+
+# Dummy End
+task_end = EmptyOperator(
+    task_id         = "task_end",
     dag             = dag
 )
 
