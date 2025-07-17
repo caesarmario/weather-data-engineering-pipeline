@@ -25,9 +25,9 @@ typed as (
         {{ cast_safe("longitude", "float") }} as longitude,
         {{ cast_safe("timezone_id", "text") }} as timezone_id,
         {{ cast_safe("localtime_epoch", "int") }} as localtime_epoch,
-        {{ cast_safe("localtime", "timestamp") }} as localtime,
+        {{ cast_safe("localtime", "text") }} as localtime,
         {{ cast_safe("batch_id", "text") }} as batch_id,
-        {{ dbt_utils.current_timestamp() }} as load_dt
+        {{ current_timestamp() }} as load_dt
 
     from source
 

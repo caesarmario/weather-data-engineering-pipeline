@@ -1,4 +1,4 @@
-# [WIP 20250715]
+######## [WIP 20250715]
 version: 2
 
 # l0_weather
@@ -31,7 +31,7 @@ sources:
 
 # l1_weather (cleaned layer)
 models:
-  - name: l1_current
+  - name: current
     description: "Cleaned weather current observation data from l0_weather.current."
     columns:
       - name: location_id
@@ -56,7 +56,7 @@ models:
       - name: load_dt
         description: "Timestamp when record was transformed into L1."
 
-  - name: l1_forecast
+  - name: forecast
     description: "Cleaned weather forecast data with temperature, wind, precipitation and other metrics."
     columns:
       - name: location_id
@@ -113,7 +113,7 @@ models:
       - name: load_dt
         description: "Timestamp when record was transformed into L1."
 
-  - name: l1_location
+  - name: location
     description: "Canonical location metadata dimension cleaned from l0_weather.location."
     columns:
       - name: location_id
