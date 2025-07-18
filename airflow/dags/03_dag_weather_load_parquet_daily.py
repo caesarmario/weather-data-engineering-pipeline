@@ -8,6 +8,7 @@ from airflow import DAG
 from airflow.sdk import Variable
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
+from airflow.operators.bash import BashOperator
 from airflow.utils.task_group import TaskGroup
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 
@@ -57,6 +58,14 @@ def run_loader(table, exec_date, **kwargs):
     # Execute script
     subprocess.run(cmd, check=True)
 
+# -- Function: to retrieve dbt creds
+def get_dbt_env_vars():
+    """
+    Retrieve DBT credentials stored as Airflow Variable and return them as environment variables
+    """
+    dbt_pg_creds = Variable.get("dbt_pg_creds", deserialize_json=True)
+    return dbt_pg_creds
+
 
 # -- Tasks: start, run loader, end
 # Dummy Start
@@ -100,6 +109,18 @@ with TaskGroup("load_data", tooltip="Parquet→Staging db", dag=dag) as load_gro
         dag=dag,
     )
 
+# Run dbt test for l0 layer
+test_dbt_l0 = BashOperator(
+    task_id="test_dbt_l0",
+    bash_command="""
+        export PATH=$PATH:/home/airflow/.local/bin && \
+        cd /dbt && \
+        dbt test --select source:l0_weather.*
+    """,
+    env=get_dbt_env_vars(),
+    dag=dag
+)
+
 # Trigger next DAG
 trigger_process = TriggerDagRunOperator(
     task_id         = "trigger_weather_run_dbt_staging",
@@ -118,4 +139,4 @@ task_end = EmptyOperator(
 )
 
 # -- Define execution order
-task_start >> load_group >> trigger_process >> task_end
+task_start >> load_group >> test_dbt_l0 >> trigger_process >> task_end

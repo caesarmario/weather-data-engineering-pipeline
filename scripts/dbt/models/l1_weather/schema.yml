@@ -1,42 +1,13 @@
-######## [WIP 20250715]
 version: 2
 
-# l0_weather
-sources:
-  - name: l0_weather
-    schema: l0_weather
-    description: "Raw ingested weather data from MinIO."
-    tables:
-      - name: current
-        description: "Current weather observations."
-        freshness:
-          warn_after: { count: 1, period: day }
-          error_after: { count: 2, period: day }
-        loaded_at_field: load_dt
-
-      - name: forecast
-        description: "Weather forecast data up to 7 days."
-        freshness:
-          warn_after: { count: 1, period: day }
-          error_after: { count: 2, period: day }
-        loaded_at_field: load_dt
-
-      - name: location
-        description: "Metadata and geolocation of weather observation points."
-        freshness:
-          warn_after: { count: 1, period: day }
-          error_after: { count: 2, period: day }
-        loaded_at_field: load_dt
-
-
-# l1_weather (cleaned layer)
 models:
   - name: current
     description: "Cleaned weather current observation data from l0_weather.current."
     columns:
       - name: location_id
         description: "Primary location identifier."
-        tests: [not_null]
+        tests:
+          - not_null
       - name: date
         description: "Observation date."
       - name: last_updated
@@ -61,7 +32,11 @@ models:
     columns:
       - name: location_id
         description: "Foreign key to location dimension."
-        tests: [not_null]
+        tests:
+          - not_null
+          - relationships:
+              to: ref('location')
+              field: location_id
       - name: date
         description: "Forecast date."
       - name: date_epoch
@@ -118,7 +93,9 @@ models:
     columns:
       - name: location_id
         description: "Unique identifier for location."
-        tests: [not_null, unique]
+        tests:
+          - not_null
+          - unique
       - name: name
         description: "City or location name."
       - name: region

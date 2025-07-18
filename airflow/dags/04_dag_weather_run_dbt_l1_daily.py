@@ -8,7 +8,6 @@ from airflow import DAG
 from airflow.sdk import Variable
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.bash import BashOperator
-from airflow.utils.task_group import TaskGroup
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 
 from datetime import datetime, timedelta
@@ -61,6 +60,18 @@ run_dbt_l1 = BashOperator(
     dag=dag
 )
 
+# Run dbt test for l1 layer
+test_dbt_l1 = BashOperator(
+    task_id="test_dbt_l1",
+    bash_command="""
+        export PATH=$PATH:/home/airflow/.local/bin && \
+        cd /dbt && \
+        dbt test --select l1_weather.*
+    """,
+    env=get_dbt_env_vars(),
+    dag=dag
+)
+
 # Trigger next DAG
 trigger_process = TriggerDagRunOperator(
     task_id         = "trigger_weather_run_dbt_dwh",
@@ -79,4 +90,4 @@ task_end = EmptyOperator(
 )
 
 # -- Define execution order
-task_start >> run_dbt_l1 >> trigger_process >> task_end
+task_start >> run_dbt_l1 >> test_dbt_l1 >> trigger_process >> task_end

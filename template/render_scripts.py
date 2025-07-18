@@ -1,6 +1,10 @@
 ####
 ## Python script to render DAGs and ETL scripts
-## Mario Caesar // caesarmario87@gmail.com
+##
+## Author   : Mario Caesar
+## LinkedIn : https://www.linkedin.com/in/caesarmario/
+## Email    : caesarmario87@gmail.com
+## GitHub   : https://github.com/caesarmario/weather-data-engineering-pipeline
 ####
 
 # Importing Libraries
@@ -187,3 +191,22 @@ def genscriptprocess():
 
 if __name__ == "__main__":
     cli()
+
+
+############################################################################################################
+'''
+THANK YOU for taking the time to read through this code 🙏🏻
+
+I hope it helps you gain some insight, spark an idea, or simply shows you a different approach to solving a data engineering challenge.
+
+This project was built with curiosity, care, and a love for clean, scalable systems. If it helped you understand something new — even a small detail — I consider it a win 🎯
+
+If you'd like to share feedback or just want to connect, feel free to reach out:
+📧 caesarmario87@gmail.com
+🔗 linkedin.com/in/caesarmario/
+
+Keep building, keep learning 🚀
+
+>>>> Copyright (C) 2025 - Mario Caesar <<<<
+'''
+############################################################################################################

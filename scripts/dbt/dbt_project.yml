@@ -25,7 +25,7 @@ models:
       +schema: l1_weather
       +materialized: view
 
-    # # DWH
-    # dwh:
-    #   +schema: dwh
-    #   +materialized: view
+    # DWH
+    dwh:
+      +schema: dwh
+      +materialized: table
