@@ -1,0 +1,259 @@
+version: 2
+
+sources:
+  - name: l0_weather
+    schema: l0_weather
+    description: "Raw ingested weather data from MinIO."
+    tables:
+
+      - name: current
+        description: "Current weather observations (via API snapshot)."
+        loaded_at_field: load_dt
+        freshness:
+          warn_after: { count: 1, period: day }
+          error_after: { count: 2, period: day }
+        columns:
+          - name: location_id
+            description: "Location identifier string (e.g., Tokyo, Japan)"
+            tests: [not_null]
+
+          - name: date
+            description: "Observation date (UTC)"
+            tests: [not_null]
+
+          - name: last_updated
+            description: "Last updated timestamp from API"
+            tests: [not_null]
+
+          - name: temp_c
+            description: "Temperature in Celsius"
+            tests:
+              - not_null
+              - dbt_expectations.expect_column_values_to_be_between:
+                  min_value: -100
+                  max_value: 100
+
+          - name: temp_f
+            description: "Temperature in Fahrenheit"
+            tests:
+              - dbt_expectations.expect_column_values_to_be_between:
+                  min_value: -200
+                  max_value: 200
+
+          - name: is_day
+            description: "Flag for daytime (1) or night (0)"
+            tests:
+              - accepted_values:
+                  values: [0, 1]
+
+          - name: condition_text
+            description: "Weather condition text"
+            tests:
+              - accepted_values:
+                  values: ["Sunny", "Partly cloudy", "Patchy rain nearby", "Moderate rain", "Cloudy", "Light rain"]
+
+          - name: condition_code
+            description: "Standardized condition code"
+            tests:
+              - accepted_values:
+                  values: [1000, 1003, 1063, 1186, 1006, 1150]
+
+          - name: batch_id
+            description: "Batch identifier for ingestion session"
+
+          - name: load_dt
+            description: "Ingestion timestamp"
+            tests: [not_null]
+
+      - name: forecast
+        description: "3-day forecast weather observations."
+        loaded_at_field: load_dt
+        freshness:
+          warn_after: { count: 1, period: day }
+          error_after: { count: 2, period: day }
+        columns:
+          - name: location_id
+            description: "Forecast location identifier"
+            tests:
+              - not_null
+              - relationships:
+                  to: source('l0_weather', 'location')
+                  field: location_id
+
+          - name: date
+            description: "Forecast date"
+            tests: [not_null]
+
+          - name: date_epoch
+            description: "Epoch time of date"
+
+          - name: maxtemp_c
+            description: "Maximum temperature in Celsius"
+            tests:
+              - dbt_expectations.expect_column_values_to_be_between:
+                  min_value: -50
+                  max_value: 60
+          
+          - name: maxtemp_f
+            description: "Maximum temperature in Fahrenheit"
+            tests:
+              - dbt_expectations.expect_column_values_to_be_between:
+                  min_value: -60
+                  max_value: 140
+          
+          - name: mintemp_c
+            description: "Minimum temperature in Celsius"
+          
+          - name: mintemp_f
+            description: "Minimum temperature in Fahrenheit"
+          
+          - name: avgtemp_c
+            description: "Average temperature in Celsius"
+          
+          - name: avgtemp_f
+            description: "Average temperature in Fahrenheit"
+
+          - name: maxwind_mph
+            description: "Max wind speed in mph"
+          
+          - name: maxwind_kph
+            description: "Max wind speed in kph"
+
+          - name: totalprecip_mm
+            description: "Total precipitation in mm"
+            tests:
+              - dbt_expectations.expect_column_values_to_be_between:
+                  min_value: 0
+                  max_value: 500
+          
+          - name: totalprecip_in
+            description: "Total precipitation in inches"
+
+          - name: totalsnow_cm
+            description: "Total snow in cm"
+            tests:
+              - dbt_expectations.expect_column_values_to_be_between:
+                  min_value: 0
+                  max_value: 100
+
+          - name: avgvis_km
+            description: "Average visibility in km"
+            tests:
+              - dbt_expectations.expect_column_values_to_be_between:
+                  min_value: 0
+                  max_value: 100
+          
+          - name: avgvis_miles
+            description: "Average visibility in miles"
+
+          - name: avghumidity
+            description: "Average humidity"
+            tests:
+              - dbt_expectations.expect_column_values_to_be_between:
+                  min_value: 0
+                  max_value: 100
+
+          - name: daily_will_it_rain
+            description: "1 if rain expected, else 0"
+            tests:
+              - accepted_values:
+                  values: [0, 1]
+          
+          - name: daily_chance_of_rain
+            description: "Chance of rain in %"
+            tests:
+              - dbt_expectations.expect_column_values_to_be_between:
+                  min_value: 0
+                  max_value: 100
+
+          - name: daily_will_it_snow
+            description: "1 if snow expected, else 0"
+            tests:
+              - accepted_values:
+                  values: [0, 1]
+          
+          - name: daily_chance_of_snow
+            description: "Chance of snow in %"
+            tests:
+              - dbt_expectations.expect_column_values_to_be_between:
+                  min_value: 0
+                  max_value: 100
+
+          - name: condition_text
+            description: "Forecasted weather condition"
+            tests:
+              - accepted_values:
+                  values: ["Sunny", "Partly cloudy", "Patchy rain nearby", "Moderate rain", "Cloudy", "Light rain"]
+          
+          - name: condition_code
+            description: "Forecasted weather condition code"
+            tests:
+              - accepted_values:
+                  values: [1000, 1003, 1063, 1186, 1006, 1150]
+
+          - name: uv
+            description: "UV Index value"
+            tests:
+              - dbt_expectations.expect_column_values_to_be_between:
+                  min_value: 0
+                  max_value: 15
+
+          - name: batch_id
+            description: "ETL batch identifier"
+
+          - name: load_dt
+            description: "Ingestion timestamp"
+            tests: [not_null]
+
+      - name: location
+        description: "City geolocation and metadata"
+        loaded_at_field: load_dt
+        freshness:
+          warn_after: { count: 1, period: day }
+          error_after: { count: 2, period: day }
+        columns:
+          - name: location_id
+            description: "Unique location ID (e.g., Tokyo, Japan)"
+            tests:
+              - not_null
+              - unique
+
+          - name: name
+            description: "City name"
+
+          - name: region
+            description: "Region or province name"
+
+          - name: country
+            description: "Country name"
+            tests:
+              - not_null
+              - accepted_values:
+                  values: ["Japan"]
+
+          - name: latitude
+            description: "Latitude"
+            tests:
+              - dbt_expectations.expect_column_values_to_be_between:
+                  min_value: -90
+                  max_value: 90
+
+          - name: longitude
+            description: "Longitude"
+            tests:
+              - dbt_expectations.expect_column_values_to_be_between:
+                  min_value: -180
+                  max_value: 180
+
+          - name: timezone_id
+            description: "Timezone string (e.g., Asia/Tokyo)"
+
+          - name: localtime_epoch
+            description: "Epoch time of local weather update"
+
+          - name: localtime
+            description: "Timestamp of local update"
+
+          - name: batch_id
+          - name: load_dt
+            tests: [not_null]
