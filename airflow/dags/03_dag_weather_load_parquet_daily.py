@@ -1,5 +1,5 @@
 ####
-## Airflow v3 DAG to load parquet into staging db
+## Airflow v3 DAG to load parquet into staging db and dbt tests
 ## Mario Caesar // caesarmario87@gmail.com
 ####
 
@@ -34,7 +34,7 @@ dag = DAG(
     default_args      = default_args,
     catchup           = False,
     max_active_runs   = 1,
-    tags              = ["etl", "weather_data_engineering", f"{duration}"]
+    tags              = ["el", "weather_data_engineering", f"{duration}"]
 )
 
 # -- Function: run the load parquet script

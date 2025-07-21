@@ -1,5 +1,5 @@
 ####
-## Airflow v3 DAG to run dbt models [Mockup // WIP]
+## Airflow v3 DAG to run dbt models for l1
 ## Mario Caesar // caesarmario87@gmail.com
 ####
 
@@ -30,7 +30,7 @@ dag = DAG(
     default_args      = default_args,
     catchup           = False,
     max_active_runs   = 1,
-    tags              = ["etl", "weather_data_engineering", f"{duration}"]
+    tags              = ["dbt", "l1", "weather_data_engineering", f"{duration}"]
 )
 
 # -- Function: to retrieve dbt creds

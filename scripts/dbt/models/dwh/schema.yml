@@ -1,0 +1,101 @@
+version: 2
+
+models:
+  - name: fact_temperature_statistics
+    description: "Temperature statistics aggregated per city from l0 forecast data."
+    columns:
+      - name: location_id
+        description: "Location identifier"
+        tests: [not_null]
+      - name: min_temp_c
+        description: "Minimum temperature in Celsius"
+      - name: max_temp_c
+        description: "Maximum temperature in Celsius"
+      - name: avg_temp_c
+        description: "Average temperature in Celsius"
+      - name: min_temp_f
+        description: "Minimum temperature in Fahrenheit"
+      - name: max_temp_f
+        description: "Maximum temperature in Fahrenheit"
+      - name: avg_temp_f
+        description: "Average temperature in Fahrenheit"
+      - name: date_range_start
+        description: "Start date of forecast range"
+      - name: date_range_end
+        description: "End date of forecast range"
+      - name: temperature_variation_c
+        description: "Temperature range variation in Celsius"
+      - name: temperature_variation_f
+        description: "Temperature range variation in Fahrenheit"
+      - name: total_days
+        description: "Total number of forecast days"
+      - name: load_process_dt
+        description: "Processing date"
+
+  - name: dwh_city_temperature_comparison
+    description: "City-level comparison between forecasted and current temperatures."
+    columns:
+      - name: name
+        description: "City name"
+      - name: avg_max_temp_c
+        description: "Average maximum temperature forecasted"
+      - name: avg_min_temp_c
+        description: "Average minimum temperature forecasted"
+      - name: avg_temp_c
+        description: "Average temperature forecasted"
+      - name: avg_current_temp_c
+        description: "Average observed current temperature"
+      - name: load_process_dt
+        description: "Processing timestamp"
+
+  - name: fact_weather_alerts
+    description: "Alert-level information per city based on max temp, wind, or precipitation."
+    columns:
+      - name: location_id
+        description: "Location identifier"
+      - name: date
+        description: "Date of forecast"
+      - name: maxtemp_c
+        description: "Max temperature forecasted (C)"
+      - name: totalprecip_mm
+        description: "Total precipitation forecasted (mm)"
+      - name: maxwind_kph
+        description: "Max wind speed forecasted (kph)"
+      - name: alert_extreme_heat
+        description: "Whether alert for extreme heat is raised"
+      - name: alert_storm
+        description: "Whether alert for storm is raised"
+      - name: load_process_dt
+        description: "Processing date"
+
+  - name: fact_highest_temperature
+    description: "Identifies the highest forecasted temperature per city."
+    columns:
+      - name: location_id
+        description: "Location identifier"
+      - name: date
+        description: "Date with highest temperature"
+      - name: maxtemp_c
+        description: "Maximum temperature forecasted"
+      - name: load_process_dt
+        description: "Processing date"
+
+  - name: fact_temperature_comparison
+    description: "Row-level comparison between forecast and current temperatures."
+    columns:
+      - name: location_id
+        description: "Location identifier"
+      - name: current_date
+        description: "Date of observed current data"
+      - name: forecast_date
+        description: "Forecasted date"
+      - name: current_temp_c
+        description: "Observed current temperature (C)"
+      - name: forecast_temp_c
+        description: "Forecasted temperature (C)"
+      - name: difference_temp_c
+        description: "Difference between current and forecast temperatures"
+      - name: comparison
+        description: "Categorical comparison: Higher/Lower/Equal"
+      - name: load_process_dt
+        description: "Processing timestamp"
