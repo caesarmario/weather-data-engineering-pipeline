@@ -41,7 +41,7 @@ models:
         description: "Average maximum temperature forecasted"
       - name: avg_min_temp_c
         description: "Average minimum temperature forecasted"
-      - name: avg_temp_c
+      - name: avg_forecast_temp_c  
         description: "Average temperature forecasted"
       - name: avg_current_temp_c
         description: "Average observed current temperature"

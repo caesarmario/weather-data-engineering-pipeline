@@ -26,7 +26,7 @@ default_args = {
 }
 
 dag = DAG(
-    dag_id            = f"04_dag_{job_name}_{duration}",
+    dag_id            = f"042_dag_{job_name}_{duration}",
     default_args      = default_args,
     catchup           = False,
     max_active_runs   = 1,
@@ -54,7 +54,7 @@ run_dbt_dwh = BashOperator(
     bash_command="""
         export PATH=$PATH:/home/airflow/.local/bin && \
         cd /dbt && \
-        dbt run --profiles-dir . --project-dir .
+        dbt run --profiles-dir . --project-dir . --select dwh
     """,
     env=get_dbt_env_vars(),
     dag=dag
@@ -66,7 +66,7 @@ test_dbt_dwh = BashOperator(
     bash_command="""
         export PATH=$PATH:/home/airflow/.local/bin && \
         cd /dbt && \
-        dbt test --select l1_weather.*
+        dbt test --select dwh.*
     """,
     env=get_dbt_env_vars(),
     dag=dag

@@ -123,8 +123,8 @@ test_dbt_l0 = BashOperator(
 
 # Trigger next DAG
 trigger_process = TriggerDagRunOperator(
-    task_id         = "trigger_weather_run_dbt_staging",
-    trigger_dag_id  = "04_dag_weather_run_dbt_staging_daily",
+    task_id         = "trigger_weather_run_dbt_l1",
+    trigger_dag_id  = "041_dag_weather_run_dbt_l1_daily",
 
     conf            = {
                         "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"

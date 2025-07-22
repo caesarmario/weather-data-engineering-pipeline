@@ -1,0 +1,34 @@
+## MOCKUP TO GENERATE DBT DOCS (every 4 hours)
+## ADD DBT TEST RESULTS (run_results.json), ingest to db
+
+from airflow import DAG
+from airflow.operators.bash import BashOperator
+from datetime import datetime, timedelta
+
+default_args = {
+    "owner": "data_team",
+    "start_date": datetime(2025, 7, 1),
+    "retries": 1,
+    "retry_delay": timedelta(minutes=5),
+}
+
+with DAG(
+    dag_id="999_generate_dbt_docs_daily",
+    schedule_interval="0 */4 * * *"
+    catchup=False,
+    default_args=default_args,
+    tags=["dbt", "docs"],
+) as dag:
+
+    generate_dbt_docs = BashOperator(
+        task_id="generate_dbt_docs",
+        bash_command="""
+        cd /opt/project/scripts/dbt && \
+        dbt docs generate --profiles-dir . --project-dir .
+        """,
+        env={
+            **get_dbt_env_vars(),  # from airflow variables or your helper
+        },
+    )
+
+    generate_dbt_docs

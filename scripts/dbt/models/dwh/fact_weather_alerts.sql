@@ -8,19 +8,14 @@
     materialized = 'incremental',
     unique_key = ['location_id', 'date'],
     schema = 'dwh',
-    incremental_strategy = 'insert_overwrite',
-    on_schema_change = 'sync_all_columns',
-    partition_by = {
-      "field": "load_process_dt",
-      "data_type": "date"
-    }
+    on_schema_change = 'sync_all_columns'
 ) }}
 
 with forecast as (
-    select * from {{ ref('forecast') }}
+    select * FROM {{ ref('forecast') }}
 
     {% if is_incremental() %}
-      where date > (select coalesce(max(date), '2000-01-01') from {{ this }})
+      where date > (select coalesce(max({{ cast_safe('date', 'date') }}), '2000-01-01') from {{ this }})
     {% endif %}
 ),
 
@@ -39,7 +34,7 @@ flagged as (
         *,
         (maxtemp_c > 35) as alert_extreme_heat,
         ((totalprecip_mm > 20) or (maxwind_kph > 15)) as alert_storm,
-        current_timestamp::date as load_process_dt
+        {{ current_timestamp() }} as load_process_dt
     from casted
 ),
 

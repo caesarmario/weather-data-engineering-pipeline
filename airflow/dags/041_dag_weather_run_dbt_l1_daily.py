@@ -26,7 +26,7 @@ default_args = {
 }
 
 dag = DAG(
-    dag_id            = f"04_dag_{job_name}_{duration}",
+    dag_id            = f"041_dag_{job_name}_{duration}",
     default_args      = default_args,
     catchup           = False,
     max_active_runs   = 1,
@@ -54,7 +54,7 @@ run_dbt_l1 = BashOperator(
     bash_command="""
         export PATH=$PATH:/home/airflow/.local/bin && \
         cd /dbt && \
-        dbt run --profiles-dir . --project-dir .
+        dbt run --profiles-dir . --project-dir . --select l1_weather
     """,
     env=get_dbt_env_vars(),
     dag=dag
@@ -75,7 +75,7 @@ test_dbt_l1 = BashOperator(
 # Trigger next DAG
 trigger_process = TriggerDagRunOperator(
     task_id         = "trigger_weather_run_dbt_dwh",
-    trigger_dag_id  = "05_dag_weather_run_dbt_dwh_daily",
+    trigger_dag_id  = "042_dag_weather_run_dbt_dwh_daily",
 
     conf            = {
                         "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"

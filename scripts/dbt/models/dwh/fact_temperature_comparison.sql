@@ -8,30 +8,30 @@
     materialized = 'incremental',
     unique_key = ['location_id', 'forecast_date'],
     schema = 'dwh',
-    incremental_strategy = 'insert_overwrite',
-    on_schema_change = 'sync_all_columns',
-    partition_by = {
-      "field": "load_process_dt",
-      "data_type": "date"
-    }
+    on_schema_change = 'sync_all_columns'
 ) }}
 
-with forecast as (
-    select *
-    from {{ source('l0_weather', 'forecast') }}
+{% if is_incremental() %}
+with max_loaded as (
+    select coalesce(max(forecast_date), '2000-01-01') as max_loaded_date
+    from {{ this }}
+),
+{% else %}
+with max_loaded as (
+    select '2000-01-01'::date as max_loaded_date
+),
+{% endif %}
 
-    {% if is_incremental() %}
-      where load_dt > (select coalesce(max(load_process_dt), '2000-01-01') from {{ this }})
-    {% endif %}
+forecast as (
+    select *
+    from {{ ref('forecast') }}
+    where date > (select max_loaded_date from max_loaded)
 ),
 
 current as (
     select *
-    from {{ source('l0_weather', 'current') }}
-
-    {% if is_incremental() %}
-      where load_dt > (select coalesce(max(load_process_dt), '2000-01-01') from {{ this }})
-    {% endif %}
+    from {{ ref('current') }}
+    where date > (select max_loaded_date from max_loaded)
 ),
 
 casted_forecast as (
@@ -57,13 +57,13 @@ comparison as (
         fct.forecast_date,
         cur.current_temp_c,
         fct.forecast_temp_c,
-        round(cur.current_temp_c - fct.forecast_temp_c, 2) as difference_temp_c,
+        round((cur.current_temp_c - fct.forecast_temp_c)::numeric, 2) as difference_temp_c,
         case
             when cur.current_temp_c > fct.forecast_temp_c then 'Higher'
             when cur.current_temp_c < fct.forecast_temp_c then 'Lower'
             else 'Equal'
         end as comparison,
-        {{ current_timestamp() }}::date as load_process_dt
+        {{ current_timestamp() }} as load_process_dt
     from casted_current cur
     join casted_forecast fct
       on cur.location_id = fct.location_id
