@@ -1,4 +1,5 @@
 ####
+###### WIP ALERT
 ## Airflow v3 DAG to run dbt models for dwh
 ## Mario Caesar // caesarmario87@gmail.com
 ####
@@ -11,6 +12,7 @@ from airflow.operators.bash import BashOperator
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 
 from datetime import datetime, timedelta
+from utils.alert_utils import send_alert
 
 # -- DAG-level settings: job name, schedule, and credentials
 job_name        = "weather_run_dbt_dwh"
@@ -20,7 +22,7 @@ default_args = {
     "owner"             : "caesarmario87@gmail.com",
     "depends_on_past"   : False,
     "start_date"        : datetime(2025, 5, 1),
-    "retries"           : 1,
+    "retries"           : 0, #### 1
     "max_active_runs"   : 1,
     "retry_delay"       : timedelta(minutes=2),
 }
@@ -41,6 +43,15 @@ def get_dbt_env_vars():
     dbt_pg_creds = Variable.get("dbt_pg_creds", deserialize_json=True)
     return dbt_pg_creds
 
+# -- Function: to sent alert to messaging apps
+def alert_failure(context):
+    """
+    Sends a formatted alert message to the messaging platform.
+    """
+    creds         = Variable.get("messaging_creds", deserialize_json=True)
+
+    send_alert(creds=creds, alert_type="ERROR", context=context)
+
 # -- Tasks: start, run loader, end
 # Dummy Start
 task_start = EmptyOperator(
@@ -49,14 +60,16 @@ task_start = EmptyOperator(
 )
 
 # Task to run dbt l1
+#### dbts --> dbt
 run_dbt_dwh = BashOperator(
     task_id="run_dbt_dwh",
     bash_command="""
         export PATH=$PATH:/home/airflow/.local/bin && \
         cd /dbt && \
-        dbt run --profiles-dir . --project-dir . --select dwh
+        dbts run --profiles-dir . --project-dir . --select dwh
     """,
     env=get_dbt_env_vars(),
+    on_failure_callback=alert_failure,
     dag=dag
 )
 
@@ -69,18 +82,18 @@ test_dbt_dwh = BashOperator(
         dbt test --select dwh.*
     """,
     env=get_dbt_env_vars(),
+    on_failure_callback=alert_failure,
     dag=dag
 )
 
 # Trigger next DAG
 trigger_process = TriggerDagRunOperator(
-    task_id         = "xxx",
-    trigger_dag_id  = "xxx",
-
-    conf            = {
+    task_id             = "xxx",
+    trigger_dag_id      = "xxx",
+    conf                = {
                         "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
                     },
-    dag             = dag
+    dag                 = dag
 )
 
 # Dummy End
