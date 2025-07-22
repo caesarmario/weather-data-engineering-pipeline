@@ -6,21 +6,26 @@
 
 {{ config(
     materialized = 'incremental',
-    unique_key = 'location_id',
+    unique_key = ['location_id', 'date_range_start', 'date_range_end'],
     schema = 'dwh',
-    incremental_strategy = 'insert_overwrite',
-    on_schema_change = 'sync_all_columns',
-    partition_by = {
-      "field": "load_process_dt",
-      "data_type": "date"
-    }
+    on_schema_change = 'sync_all_columns'
 ) }}
 
-WITH base_data AS (
+WITH latest_load AS (
 
+    {% if is_incremental() %}
+        SELECT COALESCE(MAX(date_range_end), '2000-01-01') AS max_loaded_date
+        FROM {{ this }}
+    {% else %}
+        SELECT '2000-01-01'::date AS max_loaded_date
+    {% endif %}
+
+),
+
+base_data AS (
     SELECT *
-    FROM {{ ref('forecast') }}
-
+    FROM {{ ref('forecast') }}, latest_load
+    WHERE date > latest_load.max_loaded_date
 ),
 
 numeric_cast AS (
@@ -51,7 +56,7 @@ aggregated AS (
         MIN(date) AS date_range_start,
         MAX(date) AS date_range_end,
         MAX(date) - MIN(date) + 1 AS total_days,
-        {{ current_timestamp() }}::DATE AS load_process_dt
+        {{ current_timestamp() }} AS load_process_dt
     FROM numeric_cast
     GROUP BY location_id
 
@@ -60,17 +65,21 @@ aggregated AS (
 final AS (
 
     SELECT
-        *,
+        location_id,
+        min_temp_c,
+        max_temp_c,
+        avg_temp_c,
+        min_temp_f,
+        max_temp_f,
+        avg_temp_f,
+        date_range_start,
+        date_range_end,
+        total_days,
         max_temp_c - min_temp_c AS temperature_variation_c,
-        max_temp_f - min_temp_f AS temperature_variation_f
+        max_temp_f - min_temp_f AS temperature_variation_f,
+        load_process_dt
     FROM aggregated
 
 )
 
 SELECT * FROM final
-
-{% if is_incremental() %}
-WHERE load_process_dt > (
-    SELECT COALESCE(MAX(load_process_dt), '2000-01-01') FROM {{ this }}
-)
-{% endif %}

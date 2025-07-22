@@ -1,5 +1,5 @@
 -- ##############################################
--- dbt SQL Model for `dwh.fact_temperature_daily_stats`
+-- dbt SQL Model for dwh.dwh_city_temperature_comparison daily
 -- Comparing daily stats of temperatures in each cities
 -- Mario Caesar // caesarmario87@gmail.com
 -- ##############################################
@@ -37,7 +37,7 @@ combined as (
         f.avg_max_temp_c,
         f.avg_min_temp_c,
         f.avg_forecast_temp_c,
-        current_timestamp as load_dt
+        {{ current_timestamp() }} as load_dt
     from forecast f
     left join current c on f.name = c.name
 )

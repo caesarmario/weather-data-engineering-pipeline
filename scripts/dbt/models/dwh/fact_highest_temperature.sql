@@ -8,17 +8,12 @@
     materialized = 'incremental',
     unique_key = ['location_id', 'date'],
     schema = 'dwh',
-    incremental_strategy = 'insert_overwrite',
-    on_schema_change = 'sync_all_columns',
-    partition_by = {
-      "field": "load_process_dt",
-      "data_type": "date"
-    }
+    on_schema_change = 'sync_all_columns'
 ) }}
 
 with forecast as (
     select *
-    from {{ source('l0_weather', 'forecast') }}
+    FROM {{ ref('forecast') }}
 
     {% if is_incremental() %}
       where load_dt > (select coalesce(max(load_process_dt), '2000-01-01') from {{ this }})
@@ -30,7 +25,7 @@ casted as (
         {{ cast_safe('location_id', 'text') }} as location_id,
         {{ cast_safe('date', 'date') }} as date,
         {{ cast_safe('maxtemp_c', 'float') }} as maxtemp_c,
-        {{ current_timestamp() }}::date as load_process_dt
+        {{ current_timestamp() }} as load_process_dt
     from forecast
 ),
 
