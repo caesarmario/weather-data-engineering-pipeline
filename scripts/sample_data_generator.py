@@ -5,8 +5,6 @@
 
 # Importing Libraries
 from datetime import datetime, timedelta
-from pathlib import Path
-from minio import Minio
 from io import BytesIO
 
 import json
@@ -49,8 +47,7 @@ class DataGenerator:
                 f"error_rate={self.error_rate}%"
             )
         except Exception as e:
-            logger.error(f"!! Failed to load configuration: {e}")
-            raise
+            raise RuntimeError(f"!! Failed to load configuration: {e}")
 
 
     def generate_forecast_days(self, start_date: datetime, num_days: int = 3):
@@ -138,7 +135,7 @@ class DataGenerator:
                     }
                 })
             except Exception as e:
-                    logger.error(f"!! Error generating forecast for day offset {day_offset} - {e}")
+                    raise RuntimeError(f"!! Error generating forecast for day offset {day_offset} - {e}")
 
         return forecast
 
@@ -211,7 +208,7 @@ class DataGenerator:
                 city_data = self.generate_location_weather(city, meta, self.base_date, forecast_days)
                 all_data.update(city_data)
             except Exception as e:
-                logger.error(f"!! Error processing city: {city} - {e}")
+                raise RuntimeError(f"!! Error processing city: {city} - {e}")
 
         return all_data
 
@@ -302,7 +299,7 @@ class DataGenerator:
 
             logger.info(f"Uploaded {object_name} to bucket '{self.raw_bucket}'")
         except Exception as e:
-            logger.error(f"!! Failed to upload to MinIO - {e}")
+            raise RuntimeError(f"!! Failed to upload to MinIO - {e}")
 
     
     def run(self):
@@ -319,7 +316,7 @@ class DataGenerator:
 
             logger.info(f"Rates: empty_rate={empty_rate}%%, error_rate={error_rate}%%")
         except Exception as e:
-            logger.error(f"!! Failed to generate bound rates! - {e}")
+            raise RuntimeError(f"!! Failed to generate bound rates! - {e}")
 
         # Generate weather data
         try:
@@ -340,7 +337,7 @@ class DataGenerator:
             else:
                 weather_data = self.generate_all_weather_data(self.locations_mapping, self.base_date, forecast_days=3)
         except Exception as e:
-            logger.error(f"!! Failed to generate weather data - {e}")
+            raise RuntimeError(f"!! Failed to generate weather data - {e}")
 
         # Saving data
         try:
@@ -348,7 +345,7 @@ class DataGenerator:
             self.upload_json_to_minio(weather_data, object_name)
             logger.info(f"Uploaded to MinIO bucket '{self.raw_bucket}', object '{object_name}'")
         except Exception as e:
-            logger.error(f"!! Failed to save data - {e}")
+            raise RuntimeError(f"!! Failed to save data - {e}")
 
         # If invalid or empty, exit with non-zero to signal anomaly if desired
         if not weather_data:
@@ -367,7 +364,7 @@ def main():
         parser.add_argument("--exec_date", type=str, required=True, help="Execution date in YYYY-MM-DD format")
         args = parser.parse_args()
     except Exception as e:
-        logger.error(f"!! One of the arguments is empty! - {e}")
+        raise RuntimeError(f"!! One of the arguments is empty! - {e}")
 
     # Preparing variables
     try:
@@ -375,15 +372,14 @@ def main():
         exec_date_str = args.exec_date
         exec_date     = datetime.strptime(exec_date_str, "%Y-%m-%d")
     except Exception as e:
-        logger.error(f"!! Failed to parse JSON credentials: {e}")
-        raise ValueError("!! Invalid credentials JSON format")
+        raise RuntimeError(f"!! Failed to parse JSON credentials: {e}")
 
     # Running data generator
     try:
         gen = DataGenerator(args.empty_rate, args.error_rate, creds, exec_date)
         gen.run()
     except Exception as e:
-        logger.error(f"!! Error running data generator - {e}")
+        raise RuntimeError(f"!! Error running data generator - {e}")
 
 if __name__ == "__main__":
     main()

@@ -48,7 +48,7 @@ def run_processor(process: str, exec_date: str, **kwargs):
 
     # Build command
     cmd = [
-        "python", f"scripts/process/process_{process}.py",
+        "python", f"scripts/process_raw/process_raw_{process}.py",
         "--exec_date", exec_date,
         "--credentials", minio_creds
     ]
@@ -62,12 +62,12 @@ def alert_failure(context):
     """
     Sends a formatted alert message to the messaging platform.
     """
-    creds         = Variable.get("messaging_creds", deserialize_json=True)
+    creds         = Variable.get("messaging_creds")
 
     send_alert(creds=creds, alert_type="ERROR", context=context)
 
 
-# -- Tasks: start, extract transform to parquet in staging, trigger dag, end
+# -- Tasks: start, extract transform parquet, trigger dag, end
 # Dummy Start
 task_start = EmptyOperator(
     task_id = "task_start",

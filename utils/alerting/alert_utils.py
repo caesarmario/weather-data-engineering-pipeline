@@ -10,12 +10,12 @@ import requests
 
 # -- Functions
 # Function to send alert to messaging apps
-def send_alert(creds, alert_type: str, context: dict):
+def send_alert(creds: dict, alert_type: str, context: dict):
     """
     Send alert message to messaging apps based on alert type and detail.
 
     Parameters:
-        creds (str): json of messaging apps credentials (token, user id, and url)
+        creds (dict): json of messaging apps credentials (token, user id, and url)
         alert_type (str): Type of alert: "ERROR", "WARNING", "DQ_ISSUE"
         context (dict): Airflow context.
     """
@@ -53,9 +53,6 @@ def send_alert(creds, alert_type: str, context: dict):
 🔧 *Task ID*        : `{task_id}`
 🌀 *Run ID*          : `{dag_run_id}`
 ⏱️ *Exec Date*    : `{exec_date}`
-
-❌ *Exception*:
-`{str(context.get("exception")) or getattr(ti, 'exception', None) or "No exception found."}`
 
 🔗 Please check the complete logs [here]({log_url}).
 

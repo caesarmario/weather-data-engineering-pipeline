@@ -150,7 +150,7 @@ def gendag03():
 # ETL script rendering command
 # --------------------------------------------------------------------------------
 @cli.command()
-def genscriptprocess():
+def genscriptprocessraw():
     """
     Generate per-table ETL scripts from a Jinja template.
 
@@ -160,8 +160,8 @@ def genscriptprocess():
     Returns:
         None
     """
-    filename  = "process_template"
-    config    = "process_config"
+    filename  = "process_raw_template"
+    config    = "process_raw_config"
     
     # Load script config
     cfg_path  = f"template/script/config/{config}.yaml"
@@ -175,8 +175,8 @@ def genscriptprocess():
 
     # Loop & render one file per process
     for table_name, props in processes.items():
-        out_dir  = f"scripts/process"
-        out_file = f"process_{table_name}.py"
+        out_dir  = f"scripts/process_raw"
+        out_file = f"process_raw_{table_name}.py"
         os.makedirs(out_dir, exist_ok=True)
 
         template.stream(
