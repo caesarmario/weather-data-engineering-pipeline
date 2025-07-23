@@ -3,6 +3,7 @@
 ## Mario Caesar // caesarmario87@gmail.com
 ####
 
+# -- Imports: Airflow core, operators, and Python stdlib
 from airflow import DAG
 from airflow.decorators import task
 from airflow.operators.empty import EmptyOperator
@@ -10,10 +11,9 @@ from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 
 from datetime import datetime, timedelta
 
-# Variables
+# -- DAG-level settings: job name, schedule, and credentials
 job_name        = "weather_trigger_backfill"
 
-# Default args
 default_args = {
     "owner"           : "caesarmario87@gmail.com",
     "depends_on_past" : False,
@@ -21,19 +21,19 @@ default_args = {
     "retry_delay"     : timedelta(minutes=5),
 }
 
-# Define DAGs
 with DAG(
     dag_id          = f"99_dag_{job_name}",
     default_args    = default_args,
     schedule        = None,
     catchup         = False,
+    max_active_runs = 1,
     tags            = ["backfill", "weather_data_engineering"],
 ) as dag:
 
     # Dummy Start
     task_start = EmptyOperator(
-        task_id         = "task_start",
-        dag             = dag
+        task_id = "task_start",
+        dag     = dag
     )
 
 
@@ -67,17 +67,17 @@ with DAG(
 
     # Trigger child DAG per date in date_confs
     trigger_backfill = TriggerDagRunOperator.partial(
-        task_id="trigger_backfill_01_dag",
-        trigger_dag_id="01_dag_weather_generate_json_daily",
+        task_id        = "trigger_backfill_01_dag",
+        trigger_dag_id = "01_dag_weather_generate_json_daily",
     ).expand(
-        conf=date_confs
+        conf = date_confs
     )
 
 
     # Dummy End
     task_end = EmptyOperator(
-        task_id         = "task_end",
-        dag             = dag
+        task_id = "task_end",
+        dag     = dag
     )
 
     # Define task dependencies

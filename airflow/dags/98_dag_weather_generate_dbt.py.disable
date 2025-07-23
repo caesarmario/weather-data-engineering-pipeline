@@ -1,5 +1,5 @@
 ## MOCKUP TO GENERATE DBT DOCS (every 4 hours)
-## ADD DBT TEST RESULTS (run_results.json), ingest to db
+## -- TO DO: ADD DBT TEST RESULTS (run_results.json), ingest to db
 
 from airflow import DAG
 from airflow.operators.bash import BashOperator
