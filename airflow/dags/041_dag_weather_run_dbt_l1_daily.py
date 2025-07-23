@@ -11,6 +11,7 @@ from airflow.operators.bash import BashOperator
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 
 from datetime import datetime, timedelta
+from utils.alerting.alert_utils import send_alert
 
 # -- DAG-level settings: job name, schedule, and credentials
 job_name        = "weather_run_dbt_l1"
@@ -33,6 +34,7 @@ dag = DAG(
     tags              = ["dbt", "l1", "weather_data_engineering", f"{duration}"]
 )
 
+
 # -- Function: to retrieve dbt creds
 def get_dbt_env_vars():
     """
@@ -41,52 +43,65 @@ def get_dbt_env_vars():
     dbt_pg_creds = Variable.get("dbt_pg_creds", deserialize_json=True)
     return dbt_pg_creds
 
-# -- Tasks: start, run loader, end
+
+# -- Function: to sent alert to messaging apps
+def alert_failure(context):
+    """
+    Sends a formatted alert message to the messaging platform.
+    """
+    creds         = Variable.get("messaging_creds", deserialize_json=True)
+
+    send_alert(creds=creds, alert_type="ERROR", context=context)
+
+
+# -- Tasks: start, run dbt l1, dbt test, trigger next dag, end
 # Dummy Start
 task_start = EmptyOperator(
-    task_id         = "task_start",
-    dag             = dag
+    task_id = "task_start",
+    dag     = dag
 )
 
 # Task to run dbt l1
 run_dbt_l1 = BashOperator(
-    task_id="run_dbt_l1",
-    bash_command="""
+    task_id             = "run_dbt_l1",
+    bash_command        = """
         export PATH=$PATH:/home/airflow/.local/bin && \
         cd /dbt && \
         dbt run --profiles-dir . --project-dir . --select l1_weather
     """,
-    env=get_dbt_env_vars(),
-    dag=dag
+    env                 = get_dbt_env_vars(),
+    on_failure_callback = alert_failure,
+    dag                 = dag
 )
 
 # Run dbt test for l1 layer
 test_dbt_l1 = BashOperator(
-    task_id="test_dbt_l1",
-    bash_command="""
+    task_id             = "test_dbt_l1",
+    bash_command        = """
         export PATH=$PATH:/home/airflow/.local/bin && \
         cd /dbt && \
         dbt test --select l1_weather.*
     """,
-    env=get_dbt_env_vars(),
-    dag=dag
+    on_failure_callback = alert_failure,
+    env                 = get_dbt_env_vars(),
+    dag                 = dag
 )
 
 # Trigger next DAG
 trigger_process = TriggerDagRunOperator(
-    task_id         = "trigger_weather_run_dbt_dwh",
-    trigger_dag_id  = "042_dag_weather_run_dbt_dwh_daily",
+    task_id        = "trigger_weather_run_dbt_dwh",
+    trigger_dag_id = "042_dag_weather_run_dbt_dwh_daily",
 
-    conf            = {
+    conf           = {
                         "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
                     },
-    dag             = dag
+    dag            = dag
 )
 
 # Dummy End
 task_end = EmptyOperator(
-    task_id         = "task_end",
-    dag             = dag
+    task_id = "task_end",
+    dag     = dag
 )
 
 # -- Define execution order

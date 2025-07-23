@@ -13,6 +13,7 @@ from airflow.utils.task_group import TaskGroup
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 
 from datetime import datetime, timedelta
+from utils.alerting.alert_utils import send_alert
 
 import subprocess
 
@@ -37,6 +38,7 @@ dag = DAG(
     tags              = ["el", "weather_data_engineering", f"{duration}"]
 )
 
+
 # -- Function: run the load parquet script
 def run_loader(table, exec_date, **kwargs):
     """
@@ -58,6 +60,7 @@ def run_loader(table, exec_date, **kwargs):
     # Execute script
     subprocess.run(cmd, check=True)
 
+
 # -- Function: to retrieve dbt creds
 def get_dbt_env_vars():
     """
@@ -67,75 +70,89 @@ def get_dbt_env_vars():
     return dbt_pg_creds
 
 
-# -- Tasks: start, run loader, end
+# -- Function: to sent alert to messaging apps
+def alert_failure(context):
+    """
+    Sends a formatted alert message to the messaging platform.
+    """
+    creds         = Variable.get("messaging_creds", deserialize_json=True)
+
+    send_alert(creds=creds, alert_type="ERROR", context=context)
+
+
+# -- Tasks: start, run loader, dbt test, trigger next dag, end
 # Dummy Start
 task_start = EmptyOperator(
-    task_id         = "task_start",
-    dag             = dag
+    task_id = "task_start",
+    dag     = dag
 )
 
 # Task to run data generator
 with TaskGroup("load_data", tooltip="Parquet→Staging db", dag=dag) as load_group:
     load_current = PythonOperator(
-        task_id="load_current",
-        python_callable=run_loader,
+        task_id             = "load_current",
+        python_callable     = run_loader,
 
-        op_kwargs={
+        op_kwargs           = {
             "table": "current",
             "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
         },
-        dag=dag,
+        on_failure_callback = alert_failure,
+        dag                 = dag,
     )
 
     load_location = PythonOperator(
-        task_id="load_location",
-        python_callable=run_loader,
+        task_id             = "load_location",
+        python_callable     = run_loader,
 
-        op_kwargs={
+        op_kwargs           = {
             "table": "location",
             "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
         },
-        dag=dag,
+        on_failure_callback = alert_failure,
+        dag                 = dag,
     )
 
     load_forecast = PythonOperator(
-        task_id="load_forecast",
-        python_callable=run_loader,
+        task_id             = "load_forecast",
+        python_callable     = run_loader,
 
-        op_kwargs={
+        op_kwargs           = {
             "table": "forecast",
             "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
         },
-        dag=dag,
+        on_failure_callback = alert_failure,
+        dag                 = dag,
     )
 
 # Run dbt test for l0 layer
 test_dbt_l0 = BashOperator(
-    task_id="test_dbt_l0",
-    bash_command="""
+    task_id             = "test_dbt_l0",
+    bash_command        = """
         export PATH=$PATH:/home/airflow/.local/bin && \
         cd /dbt && \
         dbt test --select source:l0_weather.*
     """,
-    env=get_dbt_env_vars(),
-    dag=dag
+    env                 = get_dbt_env_vars(),
+    on_failure_callback = alert_failure,
+    dag                 = dag
 )
 
 # Trigger next DAG
 trigger_process = TriggerDagRunOperator(
-    task_id         = "trigger_weather_run_dbt_l1",
-    trigger_dag_id  = "041_dag_weather_run_dbt_l1_daily",
+    task_id        = "trigger_weather_run_dbt_l1",
+    trigger_dag_id = "041_dag_weather_run_dbt_l1_daily",
 
-    conf            = {
+    conf           = {
                         "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
                     },
-    dag             = dag
+    dag            = dag
 )
 
 # Dummy End
 task_end = EmptyOperator(
-    task_id         = "task_end",
-    dag             = dag
+    task_id = "task_end",
+    dag     = dag
 )
 
 # -- Define execution order

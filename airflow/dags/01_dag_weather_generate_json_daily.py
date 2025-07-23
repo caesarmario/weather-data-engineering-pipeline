@@ -4,16 +4,16 @@
 ####
 
 # -- Imports: Airflow core, operators, and Python stdlib
-from airflow import DAG, macros
+from airflow import DAG
 from airflow.sdk import Variable
 from airflow.operators.empty import EmptyOperator
-from airflow.operators.python import PythonOperator, BranchPythonOperator
+from airflow.operators.python import PythonOperator
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 
 from datetime import datetime, timedelta
+from utils.alerting.alert_utils import send_alert
 
 import logging
-import random
 import subprocess
 
 # -- DAG-level settings: job name, schedule, and credentials
@@ -96,6 +96,16 @@ def run_generator(**kwargs):
     subprocess.run(cmd, check=True)
 
 
+# -- Function: to sent alert to messaging apps
+def alert_failure(context):
+    """
+    Sends a formatted alert message to the messaging platform.
+    """
+    creds         = Variable.get("messaging_creds", deserialize_json=True)
+
+    send_alert(creds=creds, alert_type="ERROR", context=context)
+
+
 # -- Tasks: start, set env, run generator, trigger next DAG, end
 # Dummy Start
 task_start = EmptyOperator(
@@ -105,21 +115,23 @@ task_start = EmptyOperator(
 
 # Task to set environment variables
 set_env_task = PythonOperator(
-    task_id         = "set_env_vars",
-    python_callable = set_env_vars,
-    dag             = dag,
+    task_id             = "set_env_vars",
+    python_callable     = set_env_vars,
+    on_failure_callback = alert_failure,
+    dag                 = dag,
 )
 
 # Task to run data generator
 run_generator_task = PythonOperator(
-    task_id         = f"run_{job_name}",
-    python_callable = run_generator,
-    dag             = dag
+    task_id             = f"run_{job_name}",
+    python_callable     = run_generator,
+    on_failure_callback = alert_failure,
+    dag                 = dag
 )
 
 # Trigger next DAG
 trigger_process = TriggerDagRunOperator(
-    task_id         = "trigger_json_to_parquet",
+    task_id         = "trigger_parquet_staging_dag",
     trigger_dag_id  = "02_dag_weather_json_to_parquet_daily",
 
     conf            = {

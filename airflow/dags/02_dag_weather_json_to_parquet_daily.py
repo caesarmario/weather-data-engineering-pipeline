@@ -12,6 +12,7 @@ from airflow.utils.task_group import TaskGroup
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 
 from datetime import datetime, timedelta
+from utils.alerting.alert_utils import send_alert
 
 import subprocess
 
@@ -36,6 +37,7 @@ dag = DAG(
     tags              = ["etl", "weather_data_engineering", f"{duration}"]
 )
 
+
 # -- Function: run the external data generator script
 def run_processor(process: str, exec_date: str, **kwargs):
     """
@@ -55,43 +57,56 @@ def run_processor(process: str, exec_date: str, **kwargs):
     subprocess.run(cmd, check=True)
 
 
-# -- Tasks: start, extract transform, parquet staging, end
+# -- Function: to sent alert to messaging apps
+def alert_failure(context):
+    """
+    Sends a formatted alert message to the messaging platform.
+    """
+    creds         = Variable.get("messaging_creds", deserialize_json=True)
+
+    send_alert(creds=creds, alert_type="ERROR", context=context)
+
+
+# -- Tasks: start, extract transform to parquet in staging, trigger dag, end
 # Dummy Start
 task_start = EmptyOperator(
-    task_id="task_start",
-    dag=dag
+    task_id = "task_start",
+    dag     = dag
 )
 
 # Extract & transform JSON to Parquet files
 with TaskGroup("extract_transform", tooltip="JSON→Parquet", dag=dag) as extract_group:
     process_current = PythonOperator(
-        task_id="process_current",
-        python_callable=run_processor,
-        op_kwargs={
+        task_id             = "process_current",
+        python_callable     = run_processor,
+        op_kwargs           = {
             "process": "current",
             "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
         },
-        dag=dag,
+        on_failure_callback = alert_failure,
+        dag                 = dag,
     )
 
     process_location = PythonOperator(
-        task_id="process_location",
-        python_callable=run_processor,
-        op_kwargs={
+        task_id             = "process_location",
+        python_callable     = run_processor,
+        op_kwargs           = {
             "process": "location",
             "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
         },
-        dag=dag,
+        on_failure_callback = alert_failure,
+        dag                 = dag,
     )
 
     process_forecast = PythonOperator(
-        task_id="process_forecast",
-        python_callable=run_processor,
-        op_kwargs={
+        task_id             = "process_forecast",
+        python_callable     = run_processor,
+        op_kwargs           = {
             "process": "forecast",
             "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
         },
-        dag=dag,
+        on_failure_callback = alert_failure,
+        dag                 = dag,
     )
 
 
@@ -108,8 +123,8 @@ trigger_process = TriggerDagRunOperator(
 
 # Dummy End
 task_end = EmptyOperator(
-    task_id="task_end",
-    dag=dag
+    task_id = "task_end",
+    dag     = dag
 )
 
 # -- Define execution order
