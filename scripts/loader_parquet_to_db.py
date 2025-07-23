@@ -29,7 +29,7 @@ class ParquetLoader:
 
             logger.info(f"Initialized ParquetLoader for {self.table} @ {self.exec_date}")
         except Exception as e:
-            logger.error(f"!! Failed to load configuration: {e}")
+            raise RuntimeError(f"!! Failed to load configuration: {e}")
             raise
 
 
@@ -45,7 +45,7 @@ class ParquetLoader:
             logger.info(f"Reading Parquet from {self.bucket_staging}, table {self.table}, exec date {self.exec_date}")
             df = self.helper.read_parquet(self.bucket_staging, self.minio_creds, self.table, self.exec_date)
         except Exception as e:
-            logger.error(f"!! Error reading Parquet from {self.bucket_staging} - {e}")
+            raise RuntimeError(f"!! Error reading Parquet from {self.bucket_staging} - {e}")
 
         try:
             # Postgres connection
@@ -57,7 +57,7 @@ class ParquetLoader:
                 # Merge data into main table
                 self.helper.truncate_insert_data(conn, self.table, 'l0_weather', df, self.exec_date)
         except Exception as e:
-            logger.error(f"!! Error when merging data to main table @ {self.table} - {e}")
+            raise RuntimeError(f"!! Error when merging data to main table @ {self.table} - {e}")
 
 
 def main():
@@ -70,23 +70,21 @@ def main():
         parser.add_argument('--exec_date', required=True,help='Execution date in YYYY-MM-DD')
         args = parser.parse_args()
     except Exception as e:
-        logger.error(f"!! One of the arguments is empty! - {e}")
+        raise RuntimeError(f"!! One of the arguments is empty! - {e}")
     
     # Preparing variables & creds
     try:
         minio_creds    = json.loads(args.minio_creds)
         postgres_creds = json.loads(args.postgres_creds)
     except Exception as e:
-        logger.error(f"!! Failed to parse JSON credentials: {e}")
-        raise ValueError("!! Invalid credentials JSON format")
+        raise RuntimeError(f"!! Failed to parse JSON credentials: {e}")
 
     # Running parquet loader
     try:
         loader = ParquetLoader(args.table, minio_creds, postgres_creds, args.exec_date)
         loader.load()
     except Exception as e:
-        logger.error(f"Failed to load Parquet for {args.table} @ {args.exec_date}: {e}")
-        raise
+        raise RuntimeError(f"Failed to load Parquet for {args.table} @ {args.exec_date}: {e}")
 
 if __name__ == '__main__':
     main()

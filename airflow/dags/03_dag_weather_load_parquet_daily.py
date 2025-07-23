@@ -16,6 +16,7 @@ from datetime import datetime, timedelta
 from utils.alerting.alert_utils import send_alert
 
 import subprocess
+import json
 
 # -- DAG-level settings: job name, schedule, and credentials
 job_name        = "weather_load_parquet"
@@ -66,7 +67,7 @@ def get_dbt_env_vars():
     """
     Retrieve DBT credentials stored as Airflow Variable and return them as environment variables
     """
-    dbt_pg_creds = Variable.get("dbt_pg_creds", deserialize_json=True)
+    dbt_pg_creds = json.loads(Variable.get("dbt_pg_creds"))
     return dbt_pg_creds
 
 
@@ -75,7 +76,7 @@ def alert_failure(context):
     """
     Sends a formatted alert message to the messaging platform.
     """
-    creds         = Variable.get("messaging_creds", deserialize_json=True)
+    creds         = Variable.get("messaging_creds")
 
     send_alert(creds=creds, alert_type="ERROR", context=context)
 
