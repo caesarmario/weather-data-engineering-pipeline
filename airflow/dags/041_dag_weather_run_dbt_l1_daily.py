@@ -95,17 +95,6 @@ test_dbt_l1 = PythonOperator(
     dag                 = dag
 )
 
-# Trigger next DAG
-trigger_process = TriggerDagRunOperator(
-    task_id        = "trigger_weather_run_dbt_dwh",
-    trigger_dag_id = "042_dag_weather_run_dbt_dwh_daily",
-
-    conf           = {
-                        "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
-                    },
-    dag            = dag
-)
-
 # Dummy End
 task_end = EmptyOperator(
     task_id = "task_end",
@@ -113,4 +102,4 @@ task_end = EmptyOperator(
 )
 
 # -- Define execution order
-task_start >> run_dbt_l1 >> test_dbt_l1 >> trigger_process >> task_end
+task_start >> run_dbt_l1 >> test_dbt_l1 >> task_end

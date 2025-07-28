@@ -34,7 +34,7 @@ dag = DAG(
     default_args      = default_args,
     catchup           = False,
     max_active_runs   = 1,
-    tags              = ["etl", "weather_data_engineering", f"{duration}"]
+    tags              = ["dbt", "weather_data_engineering", f"{duration}"]
 )
 
 
@@ -95,16 +95,6 @@ test_dbt_dwh = PythonOperator(
     dag                 = dag
 )
 
-# Trigger next DAG
-trigger_process = TriggerDagRunOperator(
-    task_id             = "xxx",
-    trigger_dag_id      = "xxx",
-    conf                = {
-                        "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
-                    },
-    dag                 = dag
-)
-
 # Dummy End
 task_end = EmptyOperator(
     task_id         = "task_end",
@@ -112,4 +102,4 @@ task_end = EmptyOperator(
 )
 
 # -- Define execution order
-task_start >> run_dbt_dwh >> test_dbt_dwh >> trigger_process >> task_end
+task_start >> run_dbt_dwh >> test_dbt_dwh >> task_end

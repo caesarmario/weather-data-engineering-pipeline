@@ -72,3 +72,46 @@ def send_alert(creds: dict, alert_type: str, context: dict):
         response.raise_for_status()
     except requests.exceptions.RequestException as e:
         print(f"!! Failed to send alert: {e}")
+
+
+def send_weather_alert_summary(creds: dict, exec_date, alerts: list):
+    """
+    Send weather alert summary to Telegram. [WIP 20250728]
+    """
+    token       = creds["MESSAGING_BOT_TOKEN"]
+    chat_id     = creds["MESSAGING_USER_ID"]
+    bot_url     = creds["MESSAGING_URL"]
+
+    date_str = exec_date.strftime("%Y-%m-%d")
+    title = f"🌦️ *Weather Alerts Summary for {date_str}* 🌦️"
+
+    if not alerts:
+        message = f"""{title}\n\n✅ No weather alerts detected for today."""
+    else:
+        rows = []
+        for alert in alerts:
+            conditions = []
+            if alert['alert_extreme_heat']:
+                conditions.append("🔥 Heat")
+            if alert['alert_storm']:
+                conditions.append("🌪️ Storm")
+
+            condition_str = ', '.join(conditions)
+            rows.append(f"• *{alert['location_id']}* — `{condition_str}`")
+
+        alert_lines = "\n".join(rows)
+        message = f"""{title}\n\n{alert_lines}"""
+
+    url = f"{bot_url}{token}/sendMessage"
+    payload = {
+        "chat_id": chat_id,
+        "text": message,
+        "parse_mode": "Markdown",
+        "disable_web_page_preview": True
+    }
+
+    try:
+        response = requests.post(url, json=payload)
+        response.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        print(f"!! Failed to send alert summary: {e}")
