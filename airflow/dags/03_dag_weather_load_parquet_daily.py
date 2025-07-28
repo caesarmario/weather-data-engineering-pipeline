@@ -43,7 +43,7 @@ dag = DAG(
 # -- Function: run the load parquet script
 def run_loader(table, exec_date, **kwargs):
     """
-    Execute sample_data_generator.py with XCom rates and pass exec_date.
+    Execute loader_parquet_to_db.py by pass exec date and creds.
     """
     # Credentials
     minio_creds     = Variable.get("minio_creds")
@@ -142,7 +142,7 @@ test_dbt_l0 = BashOperator(
 # Trigger next DAG
 trigger_process = TriggerDagRunOperator(
     task_id        = "trigger_weather_run_dbt_l1",
-    trigger_dag_id = "041_dag_weather_run_dbt_l1_daily",
+    trigger_dag_id = "04_dag_weather_master_run_dbt_daily",
 
     conf           = {
                         "exec_date": "{{ dag_run.conf.get('exec_date', macros.ds_add(ds, 1)) }}"
