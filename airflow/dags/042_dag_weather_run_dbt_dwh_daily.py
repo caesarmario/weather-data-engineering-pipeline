@@ -7,12 +7,13 @@
 from airflow import DAG
 from airflow.sdk import Variable
 from airflow.operators.empty import EmptyOperator
-from airflow.operators.bash import BashOperator
+from airflow.operators.python import PythonOperator
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 
 from datetime import datetime, timedelta
 from utils.alerting.alert_utils import send_alert
 
+import subprocess
 import json
 
 # -- DAG-level settings: job name, schedule, and credentials
@@ -51,9 +52,22 @@ def alert_failure(context):
     """
     Sends a formatted alert message to the messaging platform.
     """
-    creds         = Variable.get("messaging_creds")
+    creds         = json.loads(Variable.get("messaging_creds"))
 
     send_alert(creds=creds, alert_type="ERROR", context=context)
+
+
+# -- Function: run dbt with error handling
+def run_dbt_command(command: str):
+    """
+    Function to run dbt command using subprocess.
+    """
+    env = get_dbt_env_vars()
+    cmd = [
+        "bash", "-c",
+        f"export PATH=$PATH:/home/airflow/.local/bin && cd /dbt && {command}"
+    ]
+    subprocess.run(cmd, check=True, env=env)
 
 
 # -- Tasks: start, run dbt dwh, dbt test, trigger next dag, end
@@ -63,30 +77,22 @@ task_start = EmptyOperator(
     dag             = dag
 )
 
-# Task to run dbt l1
-run_dbt_dwh = BashOperator(
-    task_id="run_dbt_dwh",
-    bash_command="""
-        export PATH=$PATH:/home/airflow/.local/bin && \
-        cd /dbt && \
-        dbt run --profiles-dir . --project-dir . --select dwh
-    """,
-    env=get_dbt_env_vars(),
-    on_failure_callback=alert_failure,
-    dag=dag
+# Task to run dbt dwh
+run_dbt_dwh = PythonOperator(
+    task_id             = "run_dbt_dwh",
+    python_callable     = run_dbt_command,
+    op_kwargs           = {"command": "dbt run --select dwh"},
+    on_failure_callback = alert_failure,
+    dag                 = dag
 )
 
-# Run dbt test for l1 layer
-test_dbt_dwh = BashOperator(
-    task_id="test_dbt_dwh",
-    bash_command="""
-        export PATH=$PATH:/home/airflow/.local/bin && \
-        cd /dbt && \
-        dbt test --select dwh.*
-    """,
-    env=get_dbt_env_vars(),
-    on_failure_callback=alert_failure,
-    dag=dag
+# Run dbt test for dwh layer
+test_dbt_dwh = PythonOperator(
+    task_id             = "test_dbt_dwh",
+    python_callable     = run_dbt_command,
+    op_kwargs           = {"command": "dbt test --select dwh.*"},
+    on_failure_callback = alert_failure,
+    dag                 = dag
 )
 
 # Trigger next DAG
