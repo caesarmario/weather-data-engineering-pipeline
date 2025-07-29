@@ -4,7 +4,9 @@
 ####
 
 # -- Importing Libraries
+from collections import defaultdict
 from datetime import datetime, timezone, timedelta
+
 import requests
 
 
@@ -74,33 +76,73 @@ def send_alert(creds: dict, alert_type: str, context: dict):
         print(f"!! Failed to send alert: {e}")
 
 
-def send_weather_alert_summary(creds: dict, exec_date, alerts: list):
+def send_weather_alert(creds: dict, exec_date, alerts: list):
     """
-    Send weather alert summary to Telegram. [WIP 20250728]
-    """
-    token       = creds["MESSAGING_BOT_TOKEN"]
-    chat_id     = creds["MESSAGING_USER_ID"]
-    bot_url     = creds["MESSAGING_URL"]
+    Send weather alert summary message to Telegram.
 
-    date_str = exec_date.strftime("%Y-%m-%d")
-    title = f"🌦️ *Weather Alerts Summary for {date_str}* 🌦️"
+    Parameters:
+        creds (dict): JSON object containing messaging credentials.
+        exec_date (str): Execution date in 'YYYY-MM-DD' format.
+        alerts (list): List of alert records retrieved from the database
+    """
+    token     = creds["MESSAGING_BOT_TOKEN"]
+    chat_id   = creds["MESSAGING_USER_ID"]
+    bot_url   = creds["MESSAGING_URL"]
+    exec_date = datetime.strptime(exec_date, "%Y-%m-%d")
+    date_str  = exec_date.strftime("%Y-%m-%d")
+
+    title     = f"🌦️ *Weather Alerts Summary for {date_str}* 🌦️"
 
     if not alerts:
-        message = f"""{title}\n\n✅ No weather alerts detected for today."""
+        message = f"{title}\n\n✅ No weather alerts detected for today."
     else:
-        rows = []
+        grouped_alerts = defaultdict(list)
+        heat_detected = False
+
         for alert in alerts:
-            conditions = []
-            if alert['alert_extreme_heat']:
-                conditions.append("🔥 Heat")
-            if alert['alert_storm']:
-                conditions.append("🌪️ Storm")
+            loc     = alert['location_id']
+            date    = str(alert['date'])
+            temp    = alert['maxtemp_c']
+            precip  = alert['totalprecip_mm']
+            wind    = alert['maxwind_kph']
 
-            condition_str = ', '.join(conditions)
-            rows.append(f"• *{alert['location_id']}* — `{condition_str}`")
+            is_heat  = temp > 35
+            is_storm = precip > 20 or wind > 15
 
-        alert_lines = "\n".join(rows)
-        message = f"""{title}\n\n{alert_lines}"""
+            if is_heat or is_storm:
+                conds = []
+                if is_heat:
+                    conds.append(f"🔥 Heat ({temp:.1f}°C)")
+                    heat_detected = True
+                if is_storm:
+                    conds.append(f"🌪️ Storm (🌧️ {precip:.2f}mm, 💨 {wind:.2f} kph)")
+
+                grouped_alerts[date].append(f"• *{loc}* → {', '.join(conds)}")
+
+        # Build message
+        lines = [title, ""]
+
+        if not grouped_alerts:
+            lines.append("✅ No weather alerts detected above threshold.")
+        else:
+            for dt in sorted(grouped_alerts):
+                lines.append(f"📅 *{dt}*")
+                lines.extend(grouped_alerts[dt])
+                lines.append("")
+
+        if not heat_detected:
+            lines.append("✅ No cities with 🔥 Extreme Heat today.")
+
+        # Post Script - thresholds
+        lines.extend([
+            "",
+            "_PS:_",
+            "📌 *Thresholds:*",
+            "• 🔥 Extreme Heat: Max Temp > 35°C",
+            "• 🌪️ Storm: Precip > 20mm or Wind > 15 kph"
+        ])
+
+        message = "\n".join(lines).strip()
 
     url = f"{bot_url}{token}/sendMessage"
     payload = {
