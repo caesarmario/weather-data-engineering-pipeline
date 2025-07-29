@@ -33,7 +33,7 @@ dag = DAG(
 )
 
 
-# -- Tasks: start, run dbt dwh, dbt test, trigger next dag, end
+# -- Tasks: start, run trigger dag, end
 # Dummy Start
 task_start = EmptyOperator(
     task_id         = "task_start",
