@@ -1,0 +1,23 @@
+####
+## [WIP] Docker Compose for Grafana Weather Data Engineering Pipeline
+## Mario Caesar // caesarmario87@gmail.com
+####
+
+version: '3'
+services:
+  grafana:
+    image: grafana/grafana:10.4.3
+    container_name: grafana_weather
+    ports:
+      - "3003:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - postgres
+volumes:
+  grafana-data:

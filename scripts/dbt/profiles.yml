@@ -1,6 +1,13 @@
+####
+## dbt Profiles for Weather Data Engineering Pipeline
+## Mario Caesar // caesarmario87@gmail.com
+####
+
 weather_profile:
-  target: dev
+  target: "{{ env_var('DBT_TARGET') }}"
   outputs:
+
+    # --- Postgres ---
     dev:
       type: postgres
       host: "{{ env_var('DBT_PG_HOST') }}"
@@ -9,4 +16,17 @@ weather_profile:
       port: "{{ env_var('DBT_PG_PORT') | int }}"
       dbname: "{{ env_var('DBT_PG_DBNAME') }}"
       schema: raw
+      threads: 4
+
+    # --- ClickHouse ---
+    clickhouse:
+      type: clickhouse
+      host: "{{ env_var('DBT_CH_HOST') }}"
+      port: "{{ env_var('DBT_CH_PORT') | int }}"
+      user: "{{ env_var('DBT_CH_USER') }}"
+      password: "{{ env_var('DBT_CH_PASSWORD') }}"
+      database: "{{ env_var('DBT_CH_DATABASE') }}"
+      schema: "{{ env_var('DBT_CH_SCHEMA') }}"
+      secure: "{{ env_var('DBT_CH_SECURE') | as_bool }}"
+      verify: "{{ env_var('DBT_CH_VERIFY') | as_bool }}"
       threads: 4
