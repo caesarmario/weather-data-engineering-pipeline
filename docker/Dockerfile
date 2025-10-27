@@ -3,7 +3,7 @@
 ## Mario Caesar // caesarmario87@gmail.com
 ####
 
-FROM apache/airflow:3.0.2
+FROM apache/airflow:3.1.0
 COPY /docker/requirements.txt /requirements.txt
 USER airflow
 RUN pip install --no-cache-dir --upgrade pip \

@@ -1,0 +1,20 @@
+####
+## [WIP] Data Source Provisioning file - Weather Data Engineering Pipeline
+## Mario Caesar // caesarmario87@gmail.com
+####
+
+apiVersion: 1
+datasources:
+  - name: Weather Postgres
+    type: postgres
+    access: proxy
+    isDefault: true
+    editable: true
+    url: postgres:5432
+    user: ${POSTGRES_USER}
+    secureJsonData:
+      password: ${POSTGRES_PASSWORD}
+    jsonData:
+      database: ${POSTGRES_DB}
+      sslmode: "disable"
+      postgresVersion: 1500

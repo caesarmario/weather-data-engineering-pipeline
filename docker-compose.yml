@@ -45,6 +45,23 @@ services:
     ports:
       - "${POSTGRES_PORT}:5432"
 
+  clickhouse:
+    image: clickhouse/clickhouse-server:23.8
+    container_name: clickhouse
+    environment:
+      - CLICKHOUSE_DB=${CLICKHOUSE_DB}
+      - CLICKHOUSE_USER=${CLICKHOUSE_USER}
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
+      - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1
+    volumes:
+      - clickhouse-data:/var/lib/clickhouse
+    ports:
+      - "${CLICKHOUSE_HTTP_PORT}:8123"
+      - "${CLICKHOUSE_NATIVE_DRIVER_PORT}:9000"
+    depends_on:
+      - minio
+      - postgres
+
   minio:
     image: minio/minio
     container_name: minio
@@ -52,8 +69,8 @@ services:
     env_file:
       - ${PWD}/docker/.env
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - "${MINIO_API_PORT}:9000"
+      - "${MINIO_CONSOLE_PORT}:9001"
     environment:
       - MINIO_KMS_SECRET_KEY=${MINIO_KMS_SECRET_KEY}
     volumes:
@@ -68,11 +85,24 @@ services:
     entrypoint: ["tail", "-f", "/dev/null"]
     depends_on:
       - postgres
+
+  dbt_clickhouse:
+    image: python:3.10-slim
+    container_name: dbt_clickhouse
+    working_dir: /dbt
+    entrypoint: ["tail", "-f", "/dev/null"]
+    depends_on:
+      - clickhouse
+    volumes:
+      - ${PWD}/scripts/dbt:/dbt
+    environment:
+      - DBT_PROFILES_DIR=/dbt
+    command: bash -c "pip install 'dbt-core==1.6.0' 'dbt-clickhouse==1.6.4' && tail -f /dev/null"
   
   adminer:
     image: adminer
     ports:
-      - "8081:8080"
+      - "${ADMINER_PORT}:8080"
     depends_on:
       - postgres
 
@@ -82,7 +112,7 @@ services:
     volumes:
       - ${PWD}/great_expectations:/app
     working_dir: /app
-    entrypoint: ["bash", "-c", "pip install great_expectations==1.5.2 && tail -f /dev/null"]
+    entrypoint: ["bash", "-c", "pip install 'great_expectations==1.5.2' 'clickhouse-connect==0.7.*' 'SQLAlchemy==1.4.*' && tail -f /dev/null"]
     depends_on:
       - postgres
     command: tail -f /dev/null
@@ -91,8 +121,11 @@ services:
     image: metabase/metabase
     container_name: metabase_weather
     ports:
-      - "3002:3000"
+      - "${METABASE_PORT}:3000"
+    volumes:
+      - ./metabase/plugins:/plugins
     environment:
+      - MB_PLUGINS_DIR=/plugins
       - MB_DB_TYPE=${METABASE_DB_TYPE}
       - MB_DB_DBNAME=${METABASE_DB_DBNAME}
       - MB_DB_PORT=${METABASE_DB_PORT}
@@ -101,7 +134,9 @@ services:
       - MB_DB_HOST=${METABASE_DB_HOST}
     depends_on:
       - postgres
+      - clickhouse
 
 volumes:
   postgres-data:
+  clickhouse-data:
   minio-data:
