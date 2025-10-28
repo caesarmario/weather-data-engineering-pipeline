@@ -14,7 +14,12 @@ scripts/dbt/logs
 *.log
 *.py.log
 airflow/logs/
+logs/
 
 # Sensitive files
 .env
 dev_notes.txt
+
+# Metabase plugin files
+assets/metabase/plugins/*
+!assets/metabase/plugins/clickhouse.metabase-driver.jar

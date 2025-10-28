@@ -28,6 +28,7 @@ services:
       - "8080:8080"
     depends_on:
       - postgres
+      - clickhouse
       - minio
     command: ["bash","-c","exec airflow standalone"]
 
@@ -76,9 +77,9 @@ services:
     volumes:
       - minio-data:/data
 
-  dbt:
+  dbt_postgres:
     image: ghcr.io/dbt-labs/dbt-postgres:1.6.0
-    container_name: dbt
+    container_name: dbt_postgres
     volumes:
       - ${PWD}/scripts/dbt:/dbt
     working_dir: /dbt
@@ -86,18 +87,20 @@ services:
     depends_on:
       - postgres
 
-  dbt_clickhouse:
-    image: python:3.10-slim
-    container_name: dbt_clickhouse
-    working_dir: /dbt
-    entrypoint: ["tail", "-f", "/dev/null"]
-    depends_on:
-      - clickhouse
-    volumes:
-      - ${PWD}/scripts/dbt:/dbt
-    environment:
-      - DBT_PROFILES_DIR=/dbt
-    command: bash -c "pip install 'dbt-core==1.6.0' 'dbt-clickhouse==1.6.4' && tail -f /dev/null"
+  # dbt_clickhouse:
+  #   image: python:3.10-slim
+  #   container_name: dbt_clickhouse
+  #   working_dir: /dbt
+  #   entrypoint: ["sh", "-lc"]
+  #   depends_on:
+  #     - clickhouse
+  #   volumes:
+  #     - ${PWD}/scripts/dbt:/dbt
+  #   environment:
+  #     - DBT_PROFILES_DIR=/dbt
+  #   command: >
+  #     pip install --no-cache-dir "dbt-core==1.6.0" "dbt-clickhouse==1.6.4"
+  #     && tail -f /dev/null
   
   adminer:
     image: adminer
@@ -123,7 +126,7 @@ services:
     ports:
       - "${METABASE_PORT}:3000"
     volumes:
-      - ./metabase/plugins:/plugins
+      - ./assets/metabase/plugins:/plugins
     environment:
       - MB_PLUGINS_DIR=/plugins
       - MB_DB_TYPE=${METABASE_DB_TYPE}
